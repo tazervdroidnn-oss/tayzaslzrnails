@@ -36,7 +36,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const WHATSAPP_URL = "https://wa.me/5500000000000";
+const WHATSAPP_URL = "https://wa.me/5599991797424";
 const INSTAGRAM_URL = "https://instagram.com/seu.perfil";
 
 function Index() {
