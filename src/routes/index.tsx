@@ -58,20 +58,7 @@ function Index() {
 
   return (
     <>
-      <style>{`
-        :root {
-          --background: 42 33% 98%;
-          --foreground: 30 18% 16%;
-          --surface: 0 0% 100%;
-          --muted-foreground: 30 8% 42%;
-          --gold: 42 75% 42%;
-        }
-        body {
-          background-color: #fffdf8;
-          background-image: repeating-linear-gradient(135deg, transparent 0, transparent 105px, rgba(190, 145, 35, 0.16) 105px, rgba(190, 145, 35, 0.16) 108px, transparent 108px, transparent 210px);
-        }
-      `}</style>
-      <div className="relative min-h-screen overflow-hidden bg-background/90">
+      <div className="relative min-h-screen overflow-hidden bg-background">
       {/* Ambient glow */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="glow-ambient animate-float -left-40 -top-40 size-[34rem] bg-primary/25" />
