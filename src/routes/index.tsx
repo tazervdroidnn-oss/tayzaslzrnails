@@ -217,7 +217,7 @@ function Index() {
             </h2>
             <span className="hidden text-sm text-muted-foreground sm:block">@tayzaslzr_nails</span>
           </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <div className="overflow-hidden rounded-2xl border border-gold/25 shadow-deep">
               <img src={galleryNails} alt="Unhas em gel marrom e nude com nail art dourada" loading="lazy" width={1614} height={1920} className="aspect-[3/4] w-full object-cover transition duration-500 hover:scale-105" />
             </div>
@@ -229,16 +229,6 @@ function Index() {
             </div>
             <div className="overflow-hidden rounded-2xl border border-gold/25 shadow-deep">
               <img src={galleryLashesBrown} alt="Design de sobrancelhas e cílios com extensão, close-up do rosto" loading="lazy" width={820} height={820} className="aspect-[3/4] w-full object-cover transition duration-500 hover:scale-105" />
-            </div>
-            <div className="group relative flex aspect-[3/4] items-center justify-center overflow-hidden rounded-2xl border border-gold/35 bg-surface shadow-deep">
-              <div className="absolute inset-0 bg-gold-gradient opacity-5 transition group-hover:opacity-10" />
-              <div className="relative z-10 flex flex-col items-center px-4 text-center">
-                <span className="grid size-14 place-items-center rounded-full bg-gold-gradient text-xl text-primary-foreground shadow-gold transition group-hover:scale-110">
-                  ▶
-                </span>
-                <p className="mt-4 font-display text-xl text-gold-gradient">Vídeo do trabalho</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Em breve, um resultado real em vídeo</p>
-              </div>
             </div>
           </div>
         </section>
