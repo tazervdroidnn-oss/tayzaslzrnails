@@ -37,7 +37,7 @@ export const Route = createFileRoute("/")({
 });
 
 const WHATSAPP_URL = "https://wa.me/5599991797424";
-const INSTAGRAM_URL = "https://instagram.com/seu.perfil";
+const INSTAGRAM_URL = "https://instagram.com/tayzaslzr_nails";
 
 function Index() {
   const [flashServices, setFlashServices] = useState(false);
