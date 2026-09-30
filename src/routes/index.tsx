@@ -91,8 +91,7 @@ function Index() {
         <section className="grid items-center gap-14 py-14 lg:grid-cols-[1.05fr_.95fr] lg:py-20">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-surface px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold backdrop-blur-xl">
-              UNHAS · CÍLIOS · SOMBRACELHAS
-· MANUTENÇÃO 
+              UNHAS · CÍLIOS · SOMBRACELHAS · MANUTENÇÃO
             </span>
             <h1 className="mt-7 font-display text-6xl leading-[0.95] sm:text-7xl lg:text-8xl">
               <span className="text-gold-gradient font-semibold drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]">
@@ -205,7 +204,7 @@ function Index() {
                 Design de sombrancelha com henna, alinhando formato, preenchimento
                 e simetria para um olhar marcado e natural.
               </p>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-gold">{"A PARTIR DE R$ 45\n\n"}</p>
+              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-gold">A PARTIR DE R$ 45</p>
             </div>
           </div>
         </section>
@@ -216,9 +215,9 @@ function Index() {
             <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">
               <span className="text-gold-gradient">Resultados reais</span>
             </h2>
-             <span className="hidden text-sm text-muted-foreground sm:block">@tayzaslzr_nails</span>
+            <span className="hidden text-sm text-muted-foreground sm:block">@tayzaslzr_nails</span>
           </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
             <div className="overflow-hidden rounded-2xl border border-gold/25 shadow-deep">
               <img src={galleryNails} alt="Unhas em gel marrom e nude com nail art dourada" loading="lazy" width={1614} height={1920} className="aspect-[3/4] w-full object-cover transition duration-500 hover:scale-105" />
             </div>
@@ -230,6 +229,16 @@ function Index() {
             </div>
             <div className="overflow-hidden rounded-2xl border border-gold/25 shadow-deep">
               <img src={galleryLashesBrown} alt="Design de sobrancelhas e cílios com extensão, close-up do rosto" loading="lazy" width={820} height={820} className="aspect-[3/4] w-full object-cover transition duration-500 hover:scale-105" />
+            </div>
+            <div className="group relative flex aspect-[3/4] items-center justify-center overflow-hidden rounded-2xl border border-gold/35 bg-surface shadow-deep">
+              <div className="absolute inset-0 bg-gold-gradient opacity-5 transition group-hover:opacity-10" />
+              <div className="relative z-10 flex flex-col items-center px-4 text-center">
+                <span className="grid size-14 place-items-center rounded-full bg-gold-gradient text-xl text-primary-foreground shadow-gold transition group-hover:scale-110">
+                  ▶
+                </span>
+                <p className="mt-4 font-display text-xl text-gold-gradient">Vídeo do trabalho</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Em breve, um resultado real em vídeo</p>
+              </div>
             </div>
           </div>
         </section>
@@ -259,8 +268,7 @@ function Index() {
               {[
                 { label: "Retoque Design com Henna", cadence: "em 7 em 7 dias" },
                 { label: "Manunteção de unhas", cadence: "de 20 a 35 dias" },
-                { label: "Manunteção  de cílios", cadence: "de 15 a 20 dias" },
-                { label: "", cadence: "" },
+                { label: "Manunteção de cílios", cadence: "de 15 a 20 dias" },
               ].map((item) => (
                 <li key={item.label} className="flex items-center justify-between gap-4 py-4">
                   <span className="font-medium text-foreground">{item.label}</span>
