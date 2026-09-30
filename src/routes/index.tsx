@@ -301,6 +301,32 @@ function Index() {
           </div>
         </section>
 
+        {/* Pagamento */}
+        <section id="pagamento" className="scroll-mt-8 py-16">
+          <div className="rounded-[2.5rem] border border-gold/30 bg-surface p-10 text-center shadow-deep backdrop-blur-2xl sm:p-14">
+            <span className="grid size-14 mx-auto place-items-center rounded-full bg-gold-gradient text-2xl text-primary-foreground shadow-gold">💳</span>
+            <h2 className="mt-5 font-display text-4xl font-semibold sm:text-5xl">
+              <span className="text-gold-gradient">Formas de pagamento</span>
+            </h2>
+            <p className="mt-3 text-muted-foreground">Aceitamos cartão, Pix e dinheiro em espécie.</p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              <div className="rounded-2xl border border-gold/20 bg-background/40 p-5">
+                <p className="text-2xl">💳</p>
+                <p className="mt-2 font-semibold text-foreground">Cartão</p>
+              </div>
+              <div className="rounded-2xl border border-gold/20 bg-background/40 p-5">
+                <p className="text-2xl">📱</p>
+                <p className="mt-2 font-semibold text-foreground">Pix</p>
+                <p className="mt-1 text-xs text-muted-foreground">CPF: 615.109.533-29</p>
+              </div>
+              <div className="rounded-2xl border border-gold/20 bg-background/40 p-5">
+                <p className="text-2xl">💵</p>
+                <p className="mt-2 font-semibold text-foreground">Dinheiro em espécie</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Footer */}
         <footer className="flex flex-col items-center justify-between gap-3 border-t border-gold/20 py-8 text-sm text-muted-foreground sm:flex-row">
           <span className="font-display text-xl italic text-foreground">TayzaSlzr_Nails</span>
