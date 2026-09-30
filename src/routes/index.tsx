@@ -94,11 +94,12 @@ function Index() {
             <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-surface px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold backdrop-blur-xl">
               UNHAS · CÍLIOS · SOMBRACELHAS · MANUTENÇÃO
             </span>
-            <h1 className="mt-7 font-display text-6xl leading-[0.95] sm:text-7xl lg:text-8xl">
-              <span className="text-gold-gradient font-semibold drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]">
+            <h1 className="mt-7 font-display text-6xl leading-[0.88] tracking-[-0.035em] sm:text-7xl lg:text-[6.5rem]">
+              <span className="relative inline-block text-gold-gradient font-semibold italic drop-shadow-[0_4px_22px_rgba(0,0,0,0.32)]">
                 A arte de
                 <br />
-                cuidar de você
+                <span className="not-italic">cuidar de você</span>
+                <span aria-hidden="true" className="absolute -bottom-3 left-1/2 h-1 w-28 -translate-x-1/2 rounded-full bg-gold-gradient shadow-gold" />
               </span>
             </h1>
             <p className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">
