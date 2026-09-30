@@ -324,6 +324,9 @@ function Index() {
                 <p className="mt-2 font-semibold text-foreground">Dinheiro em espécie</p>
               </div>
             </div>
+            <p className="mt-8 border-t border-gold/20 pt-6 font-display text-2xl italic text-gold-gradient sm:text-3xl">
+              “Tudo é possível com Deus.”
+            </p>
           </div>
         </section>
 
