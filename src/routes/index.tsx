@@ -60,15 +60,15 @@ function Index() {
     <>
       <style>{`
         :root {
-          --background: 275 35% 10%;
-          --foreground: 300 20% 98%;
-          --surface: 275 28% 16%;
-          --muted-foreground: 285 15% 75%;
-          --gold: 43 90% 58%;
+          --background: 42 33% 98%;
+          --foreground: 30 18% 16%;
+          --surface: 0 0% 100%;
+          --muted-foreground: 30 8% 42%;
+          --gold: 42 75% 42%;
         }
         body {
-          background-color: #180d22;
-          background-image: repeating-linear-gradient(135deg, transparent 0, transparent 92px, rgba(234, 190, 55, 0.55) 92px, rgba(255, 215, 90, 0.8) 97px, rgba(234, 190, 55, 0.55) 102px, transparent 102px, transparent 184px), linear-gradient(135deg, #180d22 0%, #321344 48%, #16091f 100%);
+          background-color: #fffdf8;
+          background-image: repeating-linear-gradient(135deg, transparent 0, transparent 105px, rgba(190, 145, 35, 0.16) 105px, rgba(190, 145, 35, 0.16) 108px, transparent 108px, transparent 210px);
         }
       `}</style>
       <div className="relative min-h-screen overflow-hidden bg-background/90">
