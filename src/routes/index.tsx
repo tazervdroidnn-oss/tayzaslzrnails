@@ -219,20 +219,6 @@ function Index() {
             </h2>
             <span className="hidden text-sm text-muted-foreground sm:block">@tayzaslzr_nails</span>
           </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            <div className="overflow-hidden rounded-2xl border border-gold/25 shadow-deep">
-              <img src={galleryNails} alt="Unhas em gel marrom e nude com nail art dourada" loading="lazy" width={1614} height={1920} className="aspect-[3/4] w-full object-cover transition duration-500 hover:scale-105" />
-            </div>
-            <div className="overflow-hidden rounded-2xl border border-gold/25 shadow-deep">
-              <img src={galleryLashesTayza} alt="Cílios volume russo, close-up, trabalho do studio" loading="lazy" width={828} height={990} className="aspect-[3/4] w-full object-cover transition duration-500 hover:scale-105" />
-            </div>
-            <div className="overflow-hidden rounded-2xl border border-gold/25 shadow-deep">
-              <img src={galleryLashesCloseup} alt="Extensão de cílios, close-up dos olhos, trabalho do studio" loading="lazy" width={1170} height={1170} className="aspect-[3/4] w-full object-cover transition duration-500 hover:scale-105" />
-            </div>
-            <div className="overflow-hidden rounded-2xl border border-gold/25 shadow-deep">
-              <img src={galleryLashesBrown} alt="Design de sobrancelhas e cílios com extensão, close-up do rosto" loading="lazy" width={820} height={820} className="aspect-[3/4] w-full object-cover transition duration-500 hover:scale-105" />
-            </div>
-          </div>
 
           <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
             {[
