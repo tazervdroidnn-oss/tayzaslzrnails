@@ -4,10 +4,11 @@ import heroTayzaAsset from "@/assets/hero-tayza.jpg.asset.json";
 import galleryNailsAsset from "@/assets/gallery-brown-gold.jpeg.asset.json";
 import galleryLashesCloseupAsset from "@/assets/gallery-lashes-closeup.jpg.asset.json";
 const galleryLashesCloseup = galleryLashesCloseupAsset.url;
-import galleryLashesTayzaAsset from "@/assets/gallery-lashes-tayza.jpg.asset.json";
 import galleryLashesBrownAsset from "@/assets/gallery-lashes-brown.jpg.asset.json";
 import galleryBrazilianBrownTayzaAsset from "@/assets/gallery-brazilian-brown-tayza.jpg.asset.json";
 import galleryMegaFoxYesAsset from "@/assets/gallery-mega-fox-yes.jpg.asset.json";
+import galleryMega6DAsset from "@/assets/gallery-mega-6d.jpg.asset.json";
+import galleryBrasileiroAsset from "@/assets/gallery-brasileiro.jpg.asset.json";
 
 const heroTayza = heroTayzaAsset.url;
 const galleryNails = galleryNailsAsset.url;
