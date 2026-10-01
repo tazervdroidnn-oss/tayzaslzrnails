@@ -233,6 +233,23 @@ function Index() {
               <img src={galleryLashesBrown} alt="Design de sobrancelhas e cílios com extensão, close-up do rosto" loading="lazy" width={820} height={820} className="aspect-[3/4] w-full object-cover transition duration-500 hover:scale-105" />
             </div>
           </div>
+
+          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-3">
+            {[
+              { name: "Fio a fio clássico", image: galleryLashesCloseup, alt: "Close-up de extensão de cílios para referência do estilo fio a fio clássico" },
+              { name: "Volume brasileiro", image: galleryLashesBrown, alt: "Close-up de cílios para referência do volume brasileiro" },
+              { name: "Volume russo", image: galleryLashesTayza, alt: "Close-up de cílios volume russo realizado no studio" },
+            ].map((style) => (
+              <article key={style.name} className="group overflow-hidden rounded-2xl border border-gold/30 bg-surface shadow-deep transition duration-300 hover:-translate-y-1 hover:border-gold/60 hover:shadow-gold">
+                <div className="relative aspect-square overflow-hidden">
+                  <img src={style.image} alt={style.alt} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent px-4 pb-4 pt-12">
+                    <h3 className="text-center font-display text-xl font-semibold text-white sm:text-2xl">{style.name}</h3>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
         {/* Manutenção */}
