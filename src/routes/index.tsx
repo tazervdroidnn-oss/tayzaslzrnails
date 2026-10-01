@@ -319,7 +319,6 @@ function Index() {
               <div className="rounded-2xl border border-gold/20 bg-background/40 p-5">
                 <p className="text-2xl">📱</p>
                 <p className="mt-2 font-semibold text-foreground">Pix</p>
-                <p className="mt-1 text-xs text-muted-foreground">CPF: 615.109.533-29</p>
               </div>
               <div className="rounded-2xl border border-gold/20 bg-background/40 p-5">
                 <p className="text-2xl">💵</p>
