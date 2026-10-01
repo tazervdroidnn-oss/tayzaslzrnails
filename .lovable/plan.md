@@ -6,4 +6,5 @@
 - [x] Imagens geradas (hero + galeria)
 - [x] Metadados head() e fontes no __root.tsx
 - [x] Build verificado + screenshot
-- [ ] Substituir contatos placeholders (WhatsApp, @perfil) — aguardando dados reais do usuário
+- [x] Substituir contatos placeholders (WhatsApp, @perfil) — aguardando dados reais do usuário
+- [x] Trocar imagem do card "Volume Brasileiro Marrom" (nova foto gerada de cílios brasileiro marrom)
