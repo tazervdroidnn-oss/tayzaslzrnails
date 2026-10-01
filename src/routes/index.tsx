@@ -14,6 +14,7 @@ const galleryNails = galleryNailsAsset.url;
 const galleryLashesTayza = galleryLashesTayzaAsset.url;
 const galleryLashesBrown = galleryLashesBrownAsset.url;
 const galleryBrazilianBrownTayza = galleryBrazilianBrownTayzaAsset.url;
+const galleryMegaFoxYes = galleryMegaFoxYesAsset.url;
 
 export const Route = createFileRoute("/")({
   head: () => ({
