@@ -230,7 +230,6 @@ function Index() {
               { name: "Volume Brasileiro Marrom", price: "R$ 85,00", image: "/volume_brasileiro_marrom_1.jpeg", alt: "Referência visual de extensão de cílios brasileiro marrom" },
               { name: "Volume Mega Brasileiro", price: "R$ 100,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios mega brasileiro" },
               { name: "Volume 5D", price: "R$ 125,00", image: galleryLashesTayza, alt: "Referência visual de extensão de cílios volume 5D" },
-              { name: "Volume Mega 5D", price: "R$ 135,00", image: galleryLashesBrown, alt: "Referência visual de extensão de cílios mega 5D" },
             ].map((style) => (
               <article key={style.name} className="group overflow-hidden rounded-2xl border border-gold/35 bg-surface shadow-deep transition duration-300 hover:-translate-y-1 hover:border-gold/70 hover:shadow-gold">
                 <div className="relative aspect-[4/5] overflow-hidden">
