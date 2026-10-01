@@ -232,7 +232,7 @@ function Index() {
               { name: "Volume Mega Fox Yes", price: "R$ 165,00", image: galleryMegaFoxYes, alt: "Cílios volume mega fox yes, close-up do olhar, trabalho do studio" },
               { name: "Volume Brasileiro", price: "R$ 90,00", image: galleryLashesTayza, alt: "Referência visual de extensão de cílios volume brasileiro" },
               { name: "Volume Brasileiro Marrom", price: "R$ 85,00", image: galleryBrazilianBrownTayza, alt: "Cílios volume brasileiro marrom, close-up do olhar, trabalho do studio" },
-              { name: "Volume Mega Brasileiro", price: "R$ 100,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios mega brasileiro" },
+              { name: "Volume Fox", price: "R$ 100,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios volume fox" },
               { name: "Volume 5D", price: "R$ 125,00", image: galleryLashesTayza, alt: "Referência visual de extensão de cílios volume 5D" },
             ].map((style) => (
               <article key={style.name} className="group overflow-hidden rounded-2xl border border-gold/35 bg-surface shadow-deep transition duration-300 hover:-translate-y-1 hover:border-gold/70 hover:shadow-gold">
