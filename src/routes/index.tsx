@@ -228,7 +228,7 @@ function Index() {
 
           <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
             {[
-              { name: "Volume 6D", price: "R$ 145,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios volume 6D" },
+              { name: "Volume Fio a Fio Efeito Molhado", price: "R$ 145,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios fio a fio efeito molhado" },
               { name: "Volume Mega 6D", price: "R$ 155,00", image: galleryMega6D, alt: "Cílios volume mega 6D, close-up do olhar, trabalho do studio" },
               { name: "Volume Mega Fox Yes", price: "R$ 165,00", image: galleryMegaFoxYes, alt: "Cílios volume mega fox yes, close-up do olhar, trabalho do studio" },
               { name: "Volume Brasileiro", price: "R$ 90,00", image: galleryBrasileiro, alt: "Cílios volume brasileiro, close-up do rosto, trabalho do studio" },
