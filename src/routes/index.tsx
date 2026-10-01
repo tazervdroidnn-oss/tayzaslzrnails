@@ -73,7 +73,7 @@ function Index() {
             <span className="grid size-10 place-items-center rounded-full bg-gold-gradient font-display text-xl font-semibold text-primary-foreground shadow-gold">
               ✦
             </span>
-            <span className="relative inline-block border-b border-gold/70 pb-1 font-display text-2xl font-semibold italic tracking-wide text-gold-gradient drop-shadow-[0_2px_12px_rgba(212,175,55,0.45)] sm:text-3xl">tayzaslzr_nails<span aria-hidden="true" className="absolute -right-1 -top-5 rotate-[-18deg] text-base drop-shadow-[0_2px_8px_rgba(212,175,55,0.55)]">💅</span></span>
+            <span className="relative inline-block border-b-2 border-gold/80 pb-1 font-[cursive] text-2xl font-semibold italic tracking-wide text-gold-gradient drop-shadow-[0_2px_14px_rgba(212,175,55,0.6)] sm:text-3xl">tayzaslzr_nails<span aria-hidden="true" className="absolute -right-1 -top-6 rotate-[-18deg] text-lg drop-shadow-[0_2px_9px_rgba(212,175,55,0.65)]">💅</span><span aria-hidden="true" className="absolute -bottom-[5px] left-1/2 h-px w-3/4 -translate-x-1/2 bg-gold-gradient shadow-gold" /></span>
           </a>
           <div className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
             <a href="#servicos" className="transition hover:text-gold">Serviços</a>
