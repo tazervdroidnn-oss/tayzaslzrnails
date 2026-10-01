@@ -229,7 +229,7 @@ function Index() {
               { name: "Volume 6D", price: "R$ 145,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios volume 6D" },
               { name: "Volume Mega 6D", price: "R$ 155,00", image: galleryLashesTayza, alt: "Referência visual de extensão de cílios volume mega 6D" },
               { name: "Volume Fox Yes", price: "R$ 150,00", image: galleryLashesBrown, alt: "Referência visual de extensão de cílios Fox Yes" },
-              { name: "Volume Mega Fox Yes", price: "R$ 165,00", image: "/img_0978_original-3d3ce70083377f7f7817519383757048-480-0.jpeg", alt: "Referência visual de extensão de cílios mega Fox Yes" },
+              { name: "Volume Mega Fox Yes", price: "R$ 165,00", image: galleryMegaFoxYes, alt: "Cílios volume mega fox yes, close-up do olhar, trabalho do studio" },
               { name: "Volume Brasileiro", price: "R$ 90,00", image: galleryLashesTayza, alt: "Referência visual de extensão de cílios volume brasileiro" },
               { name: "Volume Brasileiro Marrom", price: "R$ 85,00", image: galleryBrazilianBrownTayza, alt: "Cílios volume brasileiro marrom, close-up do olhar, trabalho do studio" },
               { name: "Volume Mega Brasileiro", price: "R$ 100,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios mega brasileiro" },
