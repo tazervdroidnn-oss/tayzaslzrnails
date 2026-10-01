@@ -12,10 +12,11 @@ import galleryBrasileiroAsset from "@/assets/gallery-brasileiro.jpg.asset.json";
 
 const heroTayza = heroTayzaAsset.url;
 const galleryNails = galleryNailsAsset.url;
-const galleryLashesTayza = galleryLashesTayzaAsset.url;
 const galleryLashesBrown = galleryLashesBrownAsset.url;
 const galleryBrazilianBrownTayza = galleryBrazilianBrownTayzaAsset.url;
 const galleryMegaFoxYes = galleryMegaFoxYesAsset.url;
+const galleryMega6D = galleryMega6DAsset.url;
+const galleryBrasileiro = galleryBrasileiroAsset.url;
 
 export const Route = createFileRoute("/")({
   head: () => ({
