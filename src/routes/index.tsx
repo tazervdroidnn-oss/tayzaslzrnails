@@ -229,13 +229,12 @@ function Index() {
           <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
             {[
               { name: "Volume 6D", price: "R$ 145,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios volume 6D" },
-              { name: "Volume Mega 6D", price: "R$ 155,00", image: galleryLashesTayza, alt: "Referência visual de extensão de cílios volume mega 6D" },
-              { name: "Volume Fox Yes", price: "R$ 150,00", image: galleryLashesBrown, alt: "Referência visual de extensão de cílios Fox Yes" },
+              { name: "Volume Mega 6D", price: "R$ 155,00", image: galleryMega6D, alt: "Cílios volume mega 6D, close-up do olhar, trabalho do studio" },
               { name: "Volume Mega Fox Yes", price: "R$ 165,00", image: galleryMegaFoxYes, alt: "Cílios volume mega fox yes, close-up do olhar, trabalho do studio" },
-              { name: "Volume Brasileiro", price: "R$ 90,00", image: galleryLashesTayza, alt: "Referência visual de extensão de cílios volume brasileiro" },
+              { name: "Volume Brasileiro", price: "R$ 90,00", image: galleryBrasileiro, alt: "Cílios volume brasileiro, close-up do rosto, trabalho do studio" },
               { name: "Volume Brasileiro Marrom", price: "R$ 85,00", image: galleryBrazilianBrownTayza, alt: "Cílios volume brasileiro marrom, close-up do olhar, trabalho do studio" },
               { name: "Volume Fox", price: "R$ 100,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios volume fox" },
-              { name: "Volume 5D", price: "R$ 125,00", image: galleryLashesTayza, alt: "Referência visual de extensão de cílios volume 5D" },
+              { name: "Volume 5D", price: "R$ 125,00", image: galleryLashesBrown, alt: "Cílios volume 5D com sobrancelhas desenhadas, close-up do rosto, trabalho do studio" },
             ].map((style) => (
               <article key={style.name} className="group overflow-hidden rounded-2xl border border-gold/35 bg-surface shadow-deep transition duration-300 hover:-translate-y-1 hover:border-gold/70 hover:shadow-gold">
                 <div className="relative aspect-[4/5] overflow-hidden">
