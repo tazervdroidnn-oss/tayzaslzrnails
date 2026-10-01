@@ -238,7 +238,7 @@ function Index() {
             {[
               { name: "Fio a fio clássico", image: galleryLashesCloseup, alt: "Close-up de extensão de cílios para referência do estilo fio a fio clássico" },
               { name: "Volume borboleta", image: galleryLashesBrown, alt: "Close-up de cílios para referência do volume borboleta" },
-              { name: "Volume russo", image: galleryLashesTayza, alt: "Close-up de cílios volume russo realizado no studio" },
+              { name: "Volume 4D", image: galleryLashesTayza, alt: "Close-up de cílios volume 4D realizado no studio" },
             ].map((style) => (
               <article key={style.name} className="group overflow-hidden rounded-2xl border border-gold/30 bg-surface shadow-deep transition duration-300 hover:-translate-y-1 hover:border-gold/60 hover:shadow-gold">
                 <div className="relative aspect-square overflow-hidden">
