@@ -7,6 +7,7 @@ const galleryLashesCloseup = galleryLashesCloseupAsset.url;
 import galleryLashesTayzaAsset from "@/assets/gallery-lashes-tayza.jpg.asset.json";
 import galleryLashesBrownAsset from "@/assets/gallery-lashes-brown.jpg.asset.json";
 import galleryBrazilianBrownTayzaAsset from "@/assets/gallery-brazilian-brown-tayza.jpg.asset.json";
+import galleryMegaFoxYesAsset from "@/assets/gallery-mega-fox-yes.jpg.asset.json";
 
 const heroTayza = heroTayzaAsset.url;
 const galleryNails = galleryNailsAsset.url;
