@@ -73,7 +73,7 @@ function Index() {
             <span className="grid size-10 place-items-center rounded-full bg-gold-gradient font-display text-xl font-semibold text-primary-foreground shadow-gold">
               ✦
             </span>
-            <span className="font-display text-2xl italic text-foreground">Tayzaslzr_nails</span>
+            <span className="relative inline-block border-b border-gold/70 pb-1 font-display text-2xl font-semibold italic tracking-wide text-gold-gradient drop-shadow-[0_2px_12px_rgba(212,175,55,0.45)] sm:text-3xl">tayzaslzr_nails<span aria-hidden="true" className="absolute -right-1 -top-5 rotate-[-18deg] text-base drop-shadow-[0_2px_8px_rgba(212,175,55,0.55)]">💅</span></span>
           </a>
           <div className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
             <a href="#servicos" className="transition hover:text-gold">Serviços</a>
@@ -350,7 +350,7 @@ function Index() {
 
         {/* Footer */}
         <footer className="flex flex-col items-center justify-between gap-3 border-t border-gold/20 py-8 text-sm text-muted-foreground sm:flex-row">
-          <span className="font-display text-xl italic text-foreground">TayzaSlzr_Nails</span>
+          <span className="font-display text-xl font-semibold italic text-gold-gradient">tayzaslzr_nails ✨</span>
           <span>Unhas · Cílios · Manutenção</span>
         </footer>
       </div>
