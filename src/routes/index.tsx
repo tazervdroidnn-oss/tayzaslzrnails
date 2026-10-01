@@ -234,17 +234,24 @@ function Index() {
             </div>
           </div>
 
-          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-3">
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
             {[
-              { name: "Fio a fio clássico", image: galleryLashesCloseup, alt: "Close-up de extensão de cílios para referência do estilo fio a fio clássico" },
-              { name: "Volume borboleta", image: galleryLashesBrown, alt: "Close-up de cílios para referência do volume borboleta" },
-              { name: "Volume 4D", image: galleryLashesTayza, alt: "Close-up de cílios volume 4D realizado no studio" },
+              { name: "Volume 6D", price: "R$ 145,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios volume 6D" },
+              { name: "Volume Mega 6D", price: "R$ 155,00", image: galleryLashesTayza, alt: "Referência visual de extensão de cílios volume mega 6D" },
+              { name: "Volume Fox Yes", price: "R$ 150,00", image: galleryLashesBrown, alt: "Referência visual de extensão de cílios Fox Yes" },
+              { name: "Volume Mega Fox Yes", price: "R$ 165,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios mega Fox Yes" },
+              { name: "Volume Brasileiro", price: "R$ 90,00", image: galleryLashesTayza, alt: "Referência visual de extensão de cílios volume brasileiro" },
+              { name: "Volume Brasileiro Marrom", price: "R$ 85,00", image: galleryLashesBrown, alt: "Referência visual de extensão de cílios brasileiro marrom" },
+              { name: "Volume Mega Brasileiro", price: "R$ 100,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios mega brasileiro" },
+              { name: "Volume 5D", price: "R$ 125,00", image: galleryLashesTayza, alt: "Referência visual de extensão de cílios volume 5D" },
+              { name: "Volume Mega 5D", price: "R$ 135,00", image: galleryLashesBrown, alt: "Referência visual de extensão de cílios mega 5D" },
             ].map((style) => (
-              <article key={style.name} className="group overflow-hidden rounded-2xl border border-gold/30 bg-surface shadow-deep transition duration-300 hover:-translate-y-1 hover:border-gold/60 hover:shadow-gold">
-                <div className="relative aspect-square overflow-hidden">
+              <article key={style.name} className="group overflow-hidden rounded-2xl border border-gold/35 bg-surface shadow-deep transition duration-300 hover:-translate-y-1 hover:border-gold/70 hover:shadow-gold">
+                <div className="relative aspect-[4/5] overflow-hidden">
                   <img src={style.image} alt={style.alt} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent px-4 pb-4 pt-12">
-                    <h3 className="text-center font-display text-xl font-semibold italic tracking-wide text-gold-gradient drop-shadow-[0_2px_10px_rgba(212,175,55,0.45)] sm:text-2xl">{style.name}</h3>
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/55 to-transparent px-2 pb-3 pt-10 text-center sm:px-4 sm:pb-4">
+                    <h3 className="font-display text-base font-semibold italic tracking-wide text-gold-gradient drop-shadow-[0_2px_10px_rgba(212,175,55,0.5)] sm:text-xl">{style.name}</h3>
+                    <p className="mx-auto mt-1.5 inline-block rounded-full border border-gold/70 bg-black/70 px-3 py-1 text-xs font-bold tracking-wide text-gold sm:text-sm">{style.price}</p>
                   </div>
                 </div>
               </article>
