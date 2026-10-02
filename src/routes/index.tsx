@@ -45,19 +45,7 @@ export const Route = createFileRoute("/")({
 const WHATSAPP_URL = "https://wa.me/5599991110535";
 const INSTAGRAM_URL = "https://instagram.com/tayzaslzr_nails";
 
-const heroGentleMotionStyles = `
-    .hero-gentle-motion { animation: heroGentleMotion 7s ease-in-out infinite; transform-origin: center center; }
-    @keyframes heroGentleMotion {
-      0%, 100% { transform: scale(1) translate3d(0, 0, 0); }
-      50% { transform: scale(1.018) translate3d(0, -3px, 0); }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .hero-gentle-motion { animation: none; }
-    }
-  `;
-
 function Index() {
-  // Movimento sutil da imagem principal.
 
   const [flashServices, setFlashServices] = useState(false);
 
@@ -72,8 +60,7 @@ function Index() {
     };
     apply();
     window.addEventListener("hashchange", apply);
-    return (
-    <style>{heroGentleMotionStyles}</style>) => window.removeEventListener("hashchange", apply);
+    return () => window.removeEventListener("hashchange", apply);
   }, []);
 
   return (
