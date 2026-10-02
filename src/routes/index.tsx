@@ -5,19 +5,12 @@ import galleryNails from "@/assets/gallery-nails.jpg";
 
 const alongamentoImages = ["/alongamento1.jpeg", "/alongamento2.jpeg"];
 
-import galleryLashesCloseupAsset from "@/assets/gallery-lashes-closeup.jpg.asset.json";
-const galleryLashesCloseup = galleryLashesCloseupAsset.url;
-import galleryLashesBrownAsset from "@/assets/gallery-lashes-brown.jpg.asset.json";
-import galleryBrazilianBrownTayzaAsset from "@/assets/gallery-brazilian-brown-tayza.jpg.asset.json";
-import galleryMegaFoxYesAsset from "@/assets/gallery-mega-fox-yes.jpg.asset.json";
-import galleryMega6DAsset from "@/assets/gallery-mega-6d.jpg.asset.json";
-import galleryBrasileiroAsset from "@/assets/gallery-brasileiro.jpg.asset.json";
-
-const galleryLashesBrown = galleryLashesBrownAsset.url;
-const galleryBrazilianBrownTayza = galleryBrazilianBrownTayzaAsset.url;
-const galleryMegaFoxYes = galleryMegaFoxYesAsset.url;
-const galleryMega6D = galleryMega6DAsset.url;
-const galleryBrasileiro = galleryBrasileiroAsset.url;
+const galleryLashesCloseup = "/gallery-lashes-closeup.jpg";
+const galleryLashesBrown = "/gallery-lashes-brown.jpg";
+const galleryBrazilianBrownTayza = "/gallery-brazilian-brown-tayza.jpg";
+const galleryMegaFoxYes = "/gallery-mega-fox-yes.jpg";
+const galleryMega6D = "/gallery-mega-6d.jpg";
+const galleryBrasileiro = "/gallery-brasileiro.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
