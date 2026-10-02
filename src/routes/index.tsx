@@ -123,19 +123,30 @@ function Index() {
         <div className="glow-ambient bottom-0 left-1/4 size-[30rem] bg-primary/15" />
       </div>
 
-      {/* Doodles minimalistas de fundo */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden text-gold">
-        <LashIcon className="absolute left-[4%] top-[3%] size-20 opacity-[0.12] -rotate-12 animate-float" style={{ animationDuration: "9s" }} />
-        <NailIcon className="absolute right-[6%] top-[8%] size-16 opacity-[0.12] rotate-12 animate-float" style={{ animationDuration: "11s" }} />
-        <SparkleIcon className="absolute left-[11%] top-[14%] size-6 opacity-[0.16]" />
-        <LashIcon className="absolute right-[3%] top-[27%] size-16 opacity-[0.12] rotate-6 animate-float" style={{ animationDuration: "12s" }} />
-        <NailIcon className="absolute left-[5%] top-[37%] size-14 opacity-[0.12] -rotate-12 animate-float" style={{ animationDuration: "10s" }} />
-        <SparkleIcon className="absolute right-[10%] top-[44%] size-5 opacity-[0.16]" />
-        <LashIcon className="absolute left-[7%] top-[57%] size-20 opacity-[0.12] -rotate-6 animate-float" style={{ animationDuration: "13s" }} />
-        <NailIcon className="absolute right-[4%] top-[67%] size-16 opacity-[0.12] rotate-12 animate-float" style={{ animationDuration: "9.5s" }} />
-        <SparkleIcon className="absolute left-[9%] top-[75%] size-6 opacity-[0.16]" />
-        <LashIcon className="absolute right-[10%] top-[87%] size-14 opacity-[0.12] rotate-12 animate-float" style={{ animationDuration: "11.5s" }} />
-        <SparkleIcon className="absolute left-[5%] top-[94%] size-5 opacity-[0.16]" />
+      {/* Doodles minimalistas de fundo — branco com dourado */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <LashIcon className="absolute left-[3%] top-[2%] size-24 text-foreground opacity-[0.3] -rotate-12 animate-float drop-shadow-[0_0_14px_rgba(216,182,92,0.45)]" style={{ animationDuration: "9s" }} />
+        <NailIcon className="absolute right-[5%] top-[4%] size-20 text-gold opacity-[0.5] rotate-12 animate-float" style={{ animationDuration: "11s" }} />
+        <SparkleIcon className="absolute left-[13%] top-[9%] size-8 text-gold opacity-[0.6] drop-shadow-[0_0_10px_rgba(216,182,92,0.6)]" />
+        <PolishIcon className="absolute right-[16%] top-[13%] size-16 text-foreground opacity-[0.3] rotate-6" />
+        <LashIcon className="absolute left-[42%] top-[5%] size-14 text-gold opacity-[0.4] rotate-3 animate-float" style={{ animationDuration: "10.5s" }} />
+        <SparkleIcon className="absolute right-[40%] top-[3%] size-6 text-foreground opacity-[0.35]" />
+        <SparkleIcon className="absolute right-[4%] top-[22%] size-7 text-foreground opacity-[0.4]" />
+        <LashIcon className="absolute right-[3%] top-[28%] size-20 text-foreground opacity-[0.3] rotate-6 animate-float drop-shadow-[0_0_14px_rgba(216,182,92,0.4)]" style={{ animationDuration: "12s" }} />
+        <NailIcon className="absolute left-[4%] top-[37%] size-18 text-gold opacity-[0.5] -rotate-12 animate-float" style={{ animationDuration: "10s" }} />
+        <SparkleIcon className="absolute left-[12%] top-[46%] size-6 text-gold opacity-[0.55]" />
+        <PolishIcon className="absolute left-[38%] top-[42%] size-14 text-gold opacity-[0.35] -rotate-6" />
+        <LashIcon className="absolute left-[6%] top-[55%] size-22 text-foreground opacity-[0.3] -rotate-6 animate-float drop-shadow-[0_0_14px_rgba(216,182,92,0.4)]" style={{ animationDuration: "13s" }} />
+        <NailIcon className="absolute right-[6%] top-[52%] size-16 text-foreground opacity-[0.3] rotate-12" />
+        <SparkleIcon className="absolute right-[14%] top-[60%] size-8 text-gold opacity-[0.55] drop-shadow-[0_0_10px_rgba(216,182,92,0.55)]" />
+        <LashIcon className="absolute right-[3%] top-[68%] size-18 text-gold opacity-[0.45] rotate-12 animate-float" style={{ animationDuration: "9.5s" }} />
+        <NailIcon className="absolute left-[8%] top-[70%] size-16 text-gold opacity-[0.45] rotate-6 animate-float" style={{ animationDuration: "11.5s" }} />
+        <SparkleIcon className="absolute left-[4%] top-[80%] size-7 text-foreground opacity-[0.4]" />
+        <PolishIcon className="absolute right-[10%] top-[78%] size-14 text-foreground opacity-[0.3] -rotate-3" />
+        <LashIcon className="absolute left-[30%] top-[85%] size-16 text-gold opacity-[0.4] -rotate-3 animate-float" style={{ animationDuration: "10s" }} />
+        <NailIcon className="absolute right-[5%] top-[88%] size-18 text-foreground opacity-[0.3] -rotate-6 animate-float drop-shadow-[0_0_14px_rgba(216,182,92,0.4)]" style={{ animationDuration: "12.5s" }} />
+        <SparkleIcon className="absolute left-[6%] top-[94%] size-6 text-gold opacity-[0.6] drop-shadow-[0_0_10px_rgba(216,182,92,0.55)]" />
+        <LashIcon className="absolute right-[20%] top-[96%] size-14 text-foreground opacity-[0.25] rotate-6" />
       </div>
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
