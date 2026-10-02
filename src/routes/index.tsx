@@ -3,6 +3,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import heroTayza from "@/assets/hero.jpg";
 import galleryNails from "@/assets/gallery-nails.jpg";
 
+const alongamentoImages = ["/alongamento1.jpeg", "/alongamento2.jpeg"];
+
 import galleryLashesCloseupAsset from "@/assets/gallery-lashes-closeup.jpg.asset.json";
 const galleryLashesCloseup = galleryLashesCloseupAsset.url;
 import galleryLashesBrownAsset from "@/assets/gallery-lashes-brown.jpg.asset.json";
@@ -89,7 +91,7 @@ function Index() {
 
   const [flashServices, setFlashServices] = useState(false);
   const [heroImageIndex, setHeroImageIndex] = useState(0);
-  const heroImages = [heroTayza, galleryNails];
+  const heroImages = alongamentoImages;
 
   useEffect(() => {
     const interval = window.setInterval(() => {
