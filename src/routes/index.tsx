@@ -5,12 +5,12 @@ import galleryNails from "@/assets/gallery-nails.jpg";
 
 const alongamentoImages = ["/alongamento1.jpeg", "/alongamento2.jpeg"];
 
-const galleryLashesCloseup = "/gallery-lashes-closeup.jpg";
-const galleryLashesBrown = "/gallery-lashes-brown.jpg";
-const galleryBrazilianBrownTayza = "/gallery-brazilian-brown-tayza.jpg";
-const galleryMegaFoxYes = "/gallery-mega-fox-yes.jpg";
+const galleryLashesCloseup = "/volume%20fio%20a%20fio.jpg";
+const galleryLashesBrown = "/volume%205d.jpg";
+const galleryBrazilianBrownTayza = "/volume%20brasileiro%20marrom.jpg";
+const galleryMegaFoxYes = "/volume_brasileiro_marrom_1.jpeg";
 const galleryMega6D = "/gallery-mega-6d.jpg";
-const galleryBrasileiro = "/gallery-brasileiro.jpg";
+const galleryBrasileiro = "/volume%20brasileiro.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
