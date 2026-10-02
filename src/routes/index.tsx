@@ -257,8 +257,18 @@ function Index() {
                   <div className="relative aspect-[4/5] overflow-hidden">
                     <img src={item.image} alt={item.alt} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/55 to-transparent px-4 pb-4 pt-10">
-                      <p className="font-display text-lg font-semibold italic text-white">{item.name}</p>
-                      <p className="mt-1 inline-block rounded-full border border-gold/70 bg-black/40 px-3 py-1 text-sm font-medium text-gold">{item.price}</p>
+                      <p
+                        className="font-display text-xl font-semibold italic tracking-wide text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.85)]"
+                        style={{ WebkitTextStroke: "0.35px rgba(214,175,74,0.9)" }}
+                      >
+                        {item.name}
+                      </p>
+                      <p
+                        className="mt-1 inline-block rounded-full border border-gold/80 bg-black/55 px-3 py-1 text-sm font-semibold tracking-wide text-gold drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
+                        style={{ WebkitTextStroke: "0.2px rgba(255,255,255,0.35)" }}
+                      >
+                        {item.price}
+                      </p>
                     </div>
                   </div>
                 </article>
