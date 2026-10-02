@@ -246,6 +246,34 @@ function Index() {
               </article>
             ))}
           </div>
+
+          <div className="mt-16">
+            <div className="mb-8 flex items-end justify-between gap-4">
+              <h3 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+                <span className="text-gold-gradient">Unhas</span>
+              </h3>
+              <span className="hidden text-sm text-muted-foreground sm:block">Meus trabalhos</span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+              {[
+                { id: "unhas-1", label: "Adicionar trabalho" },
+                { id: "unhas-2", label: "Adicionar trabalho" },
+                { id: "unhas-3", label: "Adicionar trabalho" },
+              ].map((item) => (
+                <article key={item.id} className="group overflow-hidden rounded-2xl border border-gold/35 bg-surface shadow-deep transition duration-300 hover:-translate-y-1 hover:border-gold/70 hover:shadow-gold">
+                  <div className="relative aspect-[4/5] overflow-hidden bg-background/40">
+                    <div className="absolute inset-0 grid place-items-center p-6 text-center">
+                      <div>
+                        <span className="mx-auto grid size-14 place-items-center rounded-full border border-gold/40 bg-gold-gradient/10 text-3xl text-gold">✦</span>
+                        <p className="mt-4 font-display text-lg font-semibold italic text-gold-gradient">{item.label}</p>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* Manutenção */}
