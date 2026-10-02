@@ -248,11 +248,10 @@ function Index() {
           </div>
 
           <div className="mt-16">
-            <div className="mb-8 flex items-end justify-between gap-4">
-              <h3 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+            <div className="mb-8 flex items-center justify-center">
+              <h3 className="font-display text-3xl font-semibold tracking-tight text-center sm:text-4xl">
                 <span className="text-gold-gradient">Unhas</span>
               </h3>
-              <span className="hidden text-sm text-muted-foreground sm:block">Meus trabalhos</span>
             </div>
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
