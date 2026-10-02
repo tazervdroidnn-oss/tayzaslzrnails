@@ -156,18 +156,23 @@ function Index() {
 
           <div className="relative">
             <div className="relative z-10 overflow-hidden rounded-[2.5rem] border border-gold/30 shadow-deep">
-              {heroImages.map((image, index) => (
-                <img
-                  key={image}
-                  src={image}
-                  alt={index === 0 ? "Unhas em gel nude com nail art dourada, trabalho do studio" : "Trabalho de unhas do studio"}
-                  aria-hidden={index !== heroImageIndex}
-                  className={`hero-gentle-motion absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out motion-reduce:transition-none ${index === heroImageIndex ? "opacity-100" : "opacity-0"}`}
-                  width={1024}
-                  height={1024}
-                />
-              ))}
-              <div className="aspect-[4/5] w-full" aria-hidden="true" />
+              <div className="relative aspect-[4/5] w-full">
+                {heroImages.map((image, index) => (
+                  <img
+                    key={image}
+                    src={image}
+                    alt={index === 0 ? "Unhas em gel nude com nail art dourada, trabalho do studio" : "Trabalho de unhas do studio"}
+                    aria-hidden={index !== heroImageIndex}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    style={{
+                      opacity: index === heroImageIndex ? 1 : 0,
+                      transition: "opacity 1400ms ease-in-out",
+                    }}
+                    width={1024}
+                    height={1024}
+                  />
+                ))}
+              </div>
             </div>
             <div className="absolute -left-4 top-10 z-20 w-52 rounded-2xl border border-gold/30 bg-surface p-4 shadow-deep backdrop-blur-2xl sm:-left-8">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold">Agora no studio</p>
