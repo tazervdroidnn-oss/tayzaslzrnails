@@ -36,7 +36,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const WHATSAPP_URL = "https://wa.me/5599991110535";
+const WHATSAPP_URL = "https://wa.me/5599991643916";
 const INSTAGRAM_URL = "https://instagram.com/tayzaslzr_nails";
 
 function LashIcon({ className, style }: { className?: string; style?: CSSProperties }) {
