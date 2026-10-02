@@ -9,7 +9,7 @@ const galleryLashesCloseup = "/volume%20fio%20a%20fio.jpg";
 const galleryLashesBrown = "/volume%205d.jpg";
 const galleryBrazilianBrownTayza = "/volume%20brasileiro%20marrom.jpg";
 const galleryMegaFoxYes = "/volume_brasileiro_marrom_1.jpeg";
-const galleryMega6D = "/gallery-mega-6d.jpg";
+const galleryMega6D = "/mega%206d.jpg";
 const galleryBrasileiro = "/volume%20brasileiro.jpg";
 
 export const Route = createFileRoute("/")({
