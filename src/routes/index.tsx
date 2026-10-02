@@ -47,7 +47,7 @@ const INSTAGRAM_URL = "https://instagram.com/tayzaslzr_nails";
 
 function LashIcon({ className, style }: { className?: string; style?: CSSProperties }) {
   return (
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" className={className} style={style}>
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round" className={className} style={style}>
       <path d="M10 25 Q32 39 54 25" />
       <path d="M15 29.5 L10.5 37.5" />
       <path d="M23 33.5 L20 42" />
@@ -60,7 +60,7 @@ function LashIcon({ className, style }: { className?: string; style?: CSSPropert
 
 function NailIcon({ className, style }: { className?: string; style?: CSSProperties }) {
   return (
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
       <path d="M32 5 C43 17 46 33 41 47 a11 11 0 0 1 -18 0 C18 33 21 17 32 5 Z" />
       <path d="M22.5 41 Q32 49 41.5 41" />
       <path d="M27 20 Q31 26 29 33" />
