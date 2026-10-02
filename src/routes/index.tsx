@@ -257,13 +257,17 @@ function Index() {
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
               {[
-                { id: "unhas-1", image: "/banho%20de%20gel.jpg", alt: "Trabalho de unhas — banho de gel" },
-                { id: "unhas-2", image: "/gel%20na%20tips.jpg", alt: "Trabalho de unhas — gel na tips" },
-                { id: "unhas-3", image: "/postiça%20realista.jpg", alt: "Trabalho de unhas — postiça realista" },
+                { id: "unhas-1", name: "Banho de Gel", price: "R$ 55,00", image: "/banho%20de%20gel.jpg", alt: "Trabalho de unhas — banho de gel" },
+                { id: "unhas-2", name: "Gel na Tips", price: "R$ 100,00", image: "/gel%20na%20tips.jpg", alt: "Trabalho de unhas — gel na tips" },
+                { id: "unhas-3", name: "Postiça Realista", price: "R$ 55,00", image: "/postiça%20realista.jpg", alt: "Trabalho de unhas — postiça realista" },
               ].map((item) => (
                 <article key={item.id} className="group overflow-hidden rounded-2xl border border-gold/35 bg-surface shadow-deep transition duration-300 hover:-translate-y-1 hover:border-gold/70 hover:shadow-gold">
                   <div className="relative aspect-[4/5] overflow-hidden">
                     <img src={item.image} alt={item.alt} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/55 to-transparent px-4 pb-4 pt-10">
+                      <p className="font-display text-lg font-semibold italic text-white">{item.name}</p>
+                      <p className="mt-1 inline-block rounded-full border border-gold/70 bg-black/40 px-3 py-1 text-sm font-medium text-gold">{item.price}</p>
+                    </div>
                   </div>
                 </article>
               ))}
