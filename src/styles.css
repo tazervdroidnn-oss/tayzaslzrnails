@@ -155,11 +155,10 @@
 }
 
 
-/* Tipografia da seção de serviços: contorno preto definido, sem brilho */
+/* Tipografia da seção de serviços sem contorno ou brilho nas letras */
 #servicos h2 .text-gold-gradient,
 #servicos .grid > div h3 {
-  -webkit-text-stroke: 1px #000;
-  paint-order: stroke fill;
+  -webkit-text-stroke: 0;
   text-shadow: none;
 }
 
