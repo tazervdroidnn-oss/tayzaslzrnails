@@ -1,7 +1,7 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import heroTayzaAsset from "@/assets/hero-tayza.jpg.asset.json";
-import galleryNailsAsset from "@/assets/gallery-brown-gold.jpeg.asset.json";
+import heroTayza from "@/assets/hero.jpg";
+import galleryNails from "@/assets/gallery-nails.jpg";
 import galleryLashesCloseupAsset from "@/assets/gallery-lashes-closeup.jpg.asset.json";
 const galleryLashesCloseup = galleryLashesCloseupAsset.url;
 import galleryLashesBrownAsset from "@/assets/gallery-lashes-brown.jpg.asset.json";
@@ -10,8 +10,6 @@ import galleryMegaFoxYesAsset from "@/assets/gallery-mega-fox-yes.jpg.asset.json
 import galleryMega6DAsset from "@/assets/gallery-mega-6d.jpg.asset.json";
 import galleryBrasileiroAsset from "@/assets/gallery-brasileiro.jpg.asset.json";
 
-const heroTayza = heroTayzaAsset.url;
-const galleryNails = galleryNailsAsset.url;
 const galleryLashesBrown = galleryLashesBrownAsset.url;
 const galleryBrazilianBrownTayza = galleryBrazilianBrownTayzaAsset.url;
 const galleryMegaFoxYes = galleryMegaFoxYesAsset.url;
