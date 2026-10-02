@@ -5,6 +5,7 @@ import galleryNailsAsset from "@/assets/gallery-brown-gold.jpeg.asset.json";
 import galleryLashesCloseupAsset from "@/assets/gallery-lashes-closeup.jpg.asset.json";
 const galleryLashesCloseup = galleryLashesCloseupAsset.url;
 import galleryLashesBrownAsset from "@/assets/gallery-lashes-brown.jpg.asset.json";
+import "@/styles/hero-gentle-motion.css";
 import galleryBrazilianBrownTayzaAsset from "@/assets/gallery-brazilian-brown-tayza.jpg.asset.json";
 import galleryMegaFoxYesAsset from "@/assets/gallery-mega-fox-yes.jpg.asset.json";
 import galleryMega6DAsset from "@/assets/gallery-mega-6d.jpg.asset.json";
@@ -149,7 +150,7 @@ function Index() {
               <img
                 src={heroTayza}
                 alt="Unhas em gel nude com nail art dourada, trabalho do studio"
-                className="aspect-[4/5] w-full object-cover"
+                className="hero-gentle-motion aspect-[4/5] w-full object-cover"
                 width={1024}
                 height={1024}
               />
