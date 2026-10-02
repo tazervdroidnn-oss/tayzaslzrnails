@@ -162,7 +162,7 @@ function Index() {
             <div className="absolute -right-2 bottom-8 z-20 flex items-center gap-3 rounded-2xl border border-gold/30 bg-surface px-4 py-3 shadow-deep backdrop-blur-2xl sm:-right-6">
               <span className="grid size-9 place-items-center rounded-full bg-gold-gradient text-primary-foreground">✦</span>
               <div>
-                <p className="text-sm font-semibold text-foreground">Horário livre hoje</p>
+                
                 <p className="text-xs text-muted-foreground">14:30 · 16:00</p>
               </div>
             </div>
