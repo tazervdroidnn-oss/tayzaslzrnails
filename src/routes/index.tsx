@@ -8,7 +8,7 @@ const alongamentoImages = ["/alongamento1.jpeg", "/alongamento2.jpeg"];
 const galleryLashesCloseup = "/volume%20fio%20a%20fio.jpg";
 const galleryLashesBrown = "/volume%205d.jpg";
 const galleryBrazilianBrownTayza = "/volume%20brasileiro%20marrom.jpg";
-const galleryMegaFoxYes = "/volume_brasileiro_marrom_1.jpeg";
+const galleryMegaFoxYes = "/mega%20fox%20yes.jpg";
 const galleryMega6D = "/mega%206d.jpg";
 const galleryBrasileiro = "/volume%20brasileiro.jpg";
 
