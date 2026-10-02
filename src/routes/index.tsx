@@ -48,6 +48,15 @@ const INSTAGRAM_URL = "https://instagram.com/tayzaslzr_nails";
 function Index() {
 
   const [flashServices, setFlashServices] = useState(false);
+  const [heroImageIndex, setHeroImageIndex] = useState(0);
+  const heroImages = [heroTayza, galleryNails];
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setHeroImageIndex((current) => (current + 1) % heroImages.length);
+    }, 4000);
+    return () => window.clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -147,13 +156,18 @@ function Index() {
 
           <div className="relative">
             <div className="relative z-10 overflow-hidden rounded-[2.5rem] border border-gold/30 shadow-deep">
-              <img
-                src={heroTayza}
-                alt="Unhas em gel nude com nail art dourada, trabalho do studio"
-                className="hero-gentle-motion aspect-[4/5] w-full object-cover"
-                width={1024}
-                height={1024}
-              />
+              {heroImages.map((image, index) => (
+                <img
+                  key={image}
+                  src={image}
+                  alt={index === 0 ? "Unhas em gel nude com nail art dourada, trabalho do studio" : "Trabalho de unhas do studio"}
+                  aria-hidden={index !== heroImageIndex}
+                  className={`hero-gentle-motion absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out motion-reduce:transition-none ${index === heroImageIndex ? "opacity-100" : "opacity-0"}`}
+                  width={1024}
+                  height={1024}
+                />
+              ))}
+              <div className="aspect-[4/5] w-full" aria-hidden="true" />
             </div>
             <div className="absolute -left-4 top-10 z-20 w-52 rounded-2xl border border-gold/30 bg-surface p-4 shadow-deep backdrop-blur-2xl sm:-left-8">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold">Agora no studio</p>
