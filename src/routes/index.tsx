@@ -257,18 +257,13 @@ function Index() {
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
               {[
-                { id: "unhas-1", label: "Adicionar trabalho" },
-                { id: "unhas-2", label: "Adicionar trabalho" },
-                { id: "unhas-3", label: "Adicionar trabalho" },
+                { id: "unhas-1", image: "/banho%20de%20gel.jpg", alt: "Trabalho de unhas — banho de gel" },
+                { id: "unhas-2", image: "/gel%20na%20tips.jpg", alt: "Trabalho de unhas — gel na tips" },
+                { id: "unhas-3", image: "/postiça%20realista.jpg", alt: "Trabalho de unhas — postiça realista" },
               ].map((item) => (
                 <article key={item.id} className="group overflow-hidden rounded-2xl border border-gold/35 bg-surface shadow-deep transition duration-300 hover:-translate-y-1 hover:border-gold/70 hover:shadow-gold">
-                  <div className="relative aspect-[4/5] overflow-hidden bg-background/40">
-                    <div className="absolute inset-0 grid place-items-center p-6 text-center">
-                      <div>
-                        <span className="mx-auto grid size-14 place-items-center rounded-full border border-gold/40 bg-gold-gradient/10 text-3xl text-gold">✦</span>
-                        <p className="mt-4 font-display text-lg font-semibold italic text-gold-gradient">{item.label}</p>
-                      </div>
-                    </div>
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <img src={item.image} alt={item.alt} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
                   </div>
                 </article>
               ))}
