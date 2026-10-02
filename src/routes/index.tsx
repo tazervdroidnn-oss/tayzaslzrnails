@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import heroTayzaAsset from "@/assets/hero-tayza.jpg.asset.json";
 import galleryNailsAsset from "@/assets/gallery-brown-gold.jpeg.asset.json";
@@ -45,6 +45,37 @@ export const Route = createFileRoute("/")({
 const WHATSAPP_URL = "https://wa.me/5599991110535";
 const INSTAGRAM_URL = "https://instagram.com/tayzaslzr_nails";
 
+function LashIcon({ className, style }: { className?: string; style?: CSSProperties }) {
+  return (
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" className={className} style={style}>
+      <path d="M10 25 Q32 39 54 25" />
+      <path d="M15 29.5 L10.5 37.5" />
+      <path d="M23 33.5 L20 42" />
+      <path d="M32 35 L32 44" />
+      <path d="M41 33.5 L44 42" />
+      <path d="M49 29.5 L53.5 37.5" />
+    </svg>
+  );
+}
+
+function NailIcon({ className, style }: { className?: string; style?: CSSProperties }) {
+  return (
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+      <path d="M32 5 C43 17 46 33 41 47 a11 11 0 0 1 -18 0 C18 33 21 17 32 5 Z" />
+      <path d="M22.5 41 Q32 49 41.5 41" />
+      <path d="M27 20 Q31 26 29 33" />
+    </svg>
+  );
+}
+
+function SparkleIcon({ className, style }: { className?: string; style?: CSSProperties }) {
+  return (
+    <svg viewBox="0 0 64 64" fill="currentColor" className={className} style={style}>
+      <path d="M32 6 L36.5 27.5 L58 32 L36.5 36.5 L32 58 L27.5 36.5 L6 32 L27.5 27.5 Z" />
+    </svg>
+  );
+}
+
 function Index() {
 
   const [flashServices, setFlashServices] = useState(false);
@@ -80,6 +111,21 @@ function Index() {
         <div className="glow-ambient animate-float -left-40 -top-40 size-[34rem] bg-primary/25" />
         <div className="glow-ambient animate-float -right-40 top-1/3 size-[36rem] bg-accent/60" />
         <div className="glow-ambient bottom-0 left-1/4 size-[30rem] bg-primary/15" />
+      </div>
+
+      {/* Doodles minimalistas de fundo */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden text-gold">
+        <LashIcon className="absolute left-[4%] top-[3%] size-20 opacity-[0.12] -rotate-12 animate-float" style={{ animationDuration: "9s" }} />
+        <NailIcon className="absolute right-[6%] top-[8%] size-16 opacity-[0.12] rotate-12 animate-float" style={{ animationDuration: "11s" }} />
+        <SparkleIcon className="absolute left-[11%] top-[14%] size-6 opacity-[0.16]" />
+        <LashIcon className="absolute right-[3%] top-[27%] size-16 opacity-[0.12] rotate-6 animate-float" style={{ animationDuration: "12s" }} />
+        <NailIcon className="absolute left-[5%] top-[37%] size-14 opacity-[0.12] -rotate-12 animate-float" style={{ animationDuration: "10s" }} />
+        <SparkleIcon className="absolute right-[10%] top-[44%] size-5 opacity-[0.16]" />
+        <LashIcon className="absolute left-[7%] top-[57%] size-20 opacity-[0.12] -rotate-6 animate-float" style={{ animationDuration: "13s" }} />
+        <NailIcon className="absolute right-[4%] top-[67%] size-16 opacity-[0.12] rotate-12 animate-float" style={{ animationDuration: "9.5s" }} />
+        <SparkleIcon className="absolute left-[9%] top-[75%] size-6 opacity-[0.16]" />
+        <LashIcon className="absolute right-[10%] top-[87%] size-14 opacity-[0.12] rotate-12 animate-float" style={{ animationDuration: "11.5s" }} />
+        <SparkleIcon className="absolute left-[5%] top-[94%] size-5 opacity-[0.16]" />
       </div>
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
