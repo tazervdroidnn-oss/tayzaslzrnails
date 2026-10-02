@@ -76,6 +76,16 @@ function SparkleIcon({ className, style }: { className?: string; style?: CSSProp
   );
 }
 
+function PolishIcon({ className, style }: { className?: string; style?: CSSProperties }) {
+  return (
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+      <path d="M26 6 h12 v9 h-12 Z" />
+      <path d="M28 15 h8 l3 8 v27 a5 5 0 0 1 -5 5 h-4 a5 5 0 0 1 -5 -5 v-27 Z" />
+      <path d="M27 38 c3 -3 7 -3 10 0 v11 a3 3 0 0 1 -3 3 h-4 a3 3 0 0 1 -3 -3 Z" />
+    </svg>
+  );
+}
+
 function Index() {
 
   const [flashServices, setFlashServices] = useState(false);
