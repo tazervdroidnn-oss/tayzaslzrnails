@@ -206,10 +206,7 @@ function Index() {
             <p className="tayza-eyebrow">UNHAS QUE REALÇAM<br />SUA BELEZA</p>
             <h1 className="tayza-headline">Cuidado, beleza e<br /><span>autoestima</span></h1>
             <p className="tayza-intro">Unhas bem feitas não são apenas um detalhe,<br className="hidden sm:block" /> são parte da sua confiança.</p>
-            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="tayza-outline-button tayza-hero-cta">
-              <span aria-hidden="true">◉</span> Agende seu horário
-            </a>
-          </div>
+</div>
           <div className="tayza-hero-visual" aria-label="Alongamento em gel molde F1">
             {heroImages.map((image, index) => (
               <img
