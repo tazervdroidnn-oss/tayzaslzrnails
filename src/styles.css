@@ -273,3 +273,34 @@ body::before {
 @media(prefers-reduced-motion:reduce) {
   .tayza-hero-visual .tayza-f1-slide { transition: none; }
 }
+
+/* Moldura dourada iluminada para o destaque principal Molde F1 */
+.tayza-hero-visual {
+  border: 1.5px solid rgba(238, 199, 91, .92);
+  border-radius: 28px;
+  box-shadow:
+    0 0 0 1px rgba(255, 230, 157, .28),
+    0 0 13px rgba(230, 184, 65, .38),
+    0 0 32px rgba(219, 164, 48, .22),
+    inset 0 0 16px rgba(246, 211, 120, .08);
+  isolation: isolate;
+}
+.tayza-hero-visual::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 4;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(125deg,
+    rgba(255, 244, 190, .95),
+    rgba(191, 139, 35, .65) 28%,
+    rgba(255, 224, 125, .95) 52%,
+    rgba(157, 103, 25, .7) 76%,
+    rgba(255, 239, 173, .95)) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: .85;
+}
