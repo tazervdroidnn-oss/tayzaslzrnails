@@ -93,6 +93,11 @@ function Index() {
     const headerOffset = 88;
     const top = element.getBoundingClientRect().top + window.scrollY - headerOffset;
 
+    element.classList.remove("section-focus");
+    void element.offsetWidth;
+    element.classList.add("section-focus");
+    window.setTimeout(() => element.classList.remove("section-focus"), 1400);
+
     window.scrollTo({
       top: Math.max(0, top),
       behavior: "smooth",
