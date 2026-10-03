@@ -241,20 +241,41 @@ body::before {
 }
 @media(prefers-reduced-motion:reduce){.tayza-outline-button{transition:none;}}
 
-/* Alternância suave das duas fotos originais do molde F1 */
-.tayza-hero-visual { display:grid; }
-.tayza-f1-slide { grid-area:1 / 1; width:100%; height:100%; max-height:470px; object-fit:contain; object-position:center bottom; opacity:0; animation:tayzaF1Fade 8s ease-in-out infinite; }
-.tayza-f1-first { animation-delay:0s; }
-.tayza-f1-second { animation-delay:4s; }
+/* Fade em uma única moldura: as fotos se sobrepõem, nunca ficam lado a lado. */
+.tayza-hero-visual {
+  position: relative;
+  display: block;
+  align-self: stretch;
+  width: 100%;
+  min-height: 400px;
+  height: 100%;
+  overflow: hidden;
+}
+.tayza-hero-visual .tayza-f1-slide {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: contain;
+  object-position: center bottom;
+  opacity: 0;
+  animation: tayzaF1Fade 8s ease-in-out infinite;
+  filter: drop-shadow(0 22px 35px rgba(0,0,0,.24));
+}
+.tayza-hero-visual .tayza-f1-first { animation-delay: 0s; }
+.tayza-hero-visual .tayza-f1-second { animation-delay: 4s; }
 @keyframes tayzaF1Fade {
-  0%, 5% { opacity:0; }
-  12%, 43% { opacity:1; }
-  50%, 100% { opacity:0; }
+  0%, 5% { opacity: 0; }
+  12%, 43% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 @media(max-width:700px) {
- .tayza-f1-slide { max-height:360px; }
+  .tayza-hero-visual { min-height: 300px; height: 300px; max-height: none; margin-top: -5px; }
+  .tayza-hero-visual .tayza-f1-slide { max-height: none; }
 }
 @media(prefers-reduced-motion:reduce) {
- .tayza-f1-slide { animation:none; opacity:0; }
- .tayza-f1-first { opacity:1; }
+  .tayza-hero-visual .tayza-f1-slide { animation: none; opacity: 0; }
+  .tayza-hero-visual .tayza-f1-first { opacity: 1; }
 }
