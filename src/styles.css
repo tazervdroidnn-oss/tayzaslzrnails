@@ -224,8 +224,39 @@ body::before {
 .tayza-hero { position:relative; min-height:430px; padding:20px 4% 0; }
 .tayza-hero-copy { position:relative; z-index:2; padding:20px 0 45px; }
 .tayza-eyebrow { color:#f3d477; font-family:"Cormorant Garamond",Georgia,serif; font-size:15px; letter-spacing:5px; line-height:1.45; }
-.tayza-headline { margin-top:16px; color:#fff8f6; font-family:"Cormorant Garamond",Georgia,serif; font-size:clamp(42px,5vw,66px); font-weight:500; line-height:.98; letter-spacing:-1.5px; }
-.tayza-headline span { display:inline-block; margin-top:4px; color:#f2c95c; font-family:cursive; font-size:clamp(48px,6vw,76px); font-style:italic; font-weight:400; letter-spacing:-3px; text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:9px; }
+.tayza-headline {
+  margin-top:16px;
+  color:#fffaf7;
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-size:clamp(44px,5.2vw,68px);
+  font-weight:500;
+  line-height:.96;
+  letter-spacing:-1.8px;
+  text-shadow:0 2px 18px rgba(0,0,0,.16);
+}
+.tayza-headline span {
+  display:inline-block;
+  margin-top:5px;
+  color:#f3cf67;
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-size:clamp(52px,6.2vw,80px);
+  font-style:italic;
+  font-weight:600;
+  letter-spacing:-2.5px;
+  text-decoration:none;
+  position:relative;
+  text-shadow:0 2px 16px rgba(229,187,70,.18);
+}
+.tayza-headline span::after {
+  content:"";
+  position:absolute;
+  left:2px;
+  right:4px;
+  bottom:-5px;
+  height:1px;
+  background:linear-gradient(90deg,transparent 0%,#d8b24f 18%,#f8e29a 50%,#d8b24f 82%,transparent 100%);
+  opacity:.85;
+}
 .tayza-intro { margin-top:24px; color:#fff0ec; font-family:"Cormorant Garamond",Georgia,serif; font-size:19px; line-height:1.45; }
 .tayza-hero-cta { margin-top:27px; padding:12px 27px; font-size:19px; }
 .tayza-hero-visual { position:relative; align-self:stretch; min-height:400px; display:flex; align-items:flex-end; justify-content:center; }
