@@ -173,8 +173,8 @@ function Index() {
               <span aria-hidden="true">◉</span> Agende seu horário
             </a>
           </div>
-          <div className="tayza-hero-visual" aria-label="Trabalhos de unhas Tayza Nails">
-            <img src={heroTayza} alt="Alongamento de unhas feito no studio Tayza Nails" />
+          <div className="tayza-hero-visual" aria-label="Alongamento em gel molde F1">
+            <img src="/alongamento1.jpeg" alt="Alongamento em gel molde F1 — imagem original do studio Tayza Nails" />
           </div>
         </section>
 
