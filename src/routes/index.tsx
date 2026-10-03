@@ -144,112 +144,54 @@ function Index() {
       </div>
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
-        {/* Nav */}
-        <nav className="flex items-center justify-between py-7">
-          <a href="/" className="flex items-center gap-2.5">
-            <span className="grid size-10 place-items-center rounded-full bg-gold-gradient font-display text-xl font-semibold text-primary-foreground shadow-gold">
-              ✦
-            </span>
-            <span className="relative inline-block border-b-2 border-gold/80 pb-1 font-[cursive] text-2xl font-semibold italic tracking-wide text-gold-gradient drop-shadow-[0_2px_14px_rgba(212,175,55,0.6)] sm:text-3xl">tayzaslzr_nails<span aria-hidden="true" className="absolute -right-2 -top-7 z-20 block text-2xl not-italic leading-none drop-shadow-[0_2px_9px_rgba(212,175,55,0.65)]">💅</span><span aria-hidden="true" className="absolute -bottom-[5px] left-1/2 h-px w-3/4 -translate-x-1/2 bg-gold-gradient shadow-gold" /></span>
+        {/* Navegação inspirada na identidade Tayza Nails */}
+        <nav className="tayza-nav flex items-center justify-between gap-5 py-6">
+          <a href="/" className="tayza-brand" aria-label="Tayza Nails início">
+            <span className="tayza-crown" aria-hidden="true">♛</span>
+            <span className="tayza-script">Tayza Nails</span>
+            <span className="tayza-subbrand">NAIL DESIGNER</span>
           </a>
-          <div className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
-            <a href="#servicos" className="transition hover:text-gold">Serviços</a>
-            <a href="#resultados" className="transition hover:text-gold">Resultados</a>
-            <a href="#manutencao" className="transition hover:text-gold">Manutenção</a>
+          <div className="hidden items-center gap-8 text-sm md:flex">
+            <a href="/" className="tayza-nav-active">Início</a>
+            <a href="#sobre">Sobre</a>
+            <a href="#servicos">Serviços</a>
+            <a href="#resultados">Resultados</a>
+            <a href="#agendar">Contato</a>
           </div>
-          <a
-            href="#agendar"
-            className="rounded-full border border-gold/40 bg-surface px-5 py-2 text-sm font-semibold text-gold backdrop-blur-xl transition hover:border-gold hover:shadow-gold"
-          >
-            Agendar
+          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="tayza-outline-button">
+            <span aria-hidden="true">◉</span> Agende seu horário
           </a>
         </nav>
 
         {/* Hero */}
-        <section className="grid items-center gap-14 py-14 lg:grid-cols-[1.05fr_.95fr] lg:py-20">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-surface px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold backdrop-blur-xl">
-              UNHAS · CÍLIOS · SOMBRACELHAS · MANUTENÇÃO
-            </span>
-            <h1 className="mt-7 font-display text-6xl leading-[0.88] tracking-[-0.035em] sm:text-7xl lg:text-[6.5rem]">
-              <span className="relative inline-block text-gold-gradient font-semibold italic drop-shadow-[0_4px_22px_rgba(0,0,0,0.32)]">
-                A arte de
-                <br />
-                <span className="not-italic">cuidar de você</span>
-                <span aria-hidden="true" className="absolute -bottom-3 left-1/2 h-1 w-28 -translate-x-1/2 rounded-full bg-gold-gradient shadow-gold" />
-              </span>
-            </h1>
-            <p className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">
-              Alongamento, volume russo e manutenção no ritmo certo — um ritual de
-              beleza feito com técnica, delicadeza e acabamento impecável.
-            </p>
-            <div className="mt-9 flex flex-wrap gap-4">
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full bg-gold-gradient px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-gold transition hover:-translate-y-0.5"
-              >
-                Agendar horário
-              </a>
-              <a
-                href="#servicos"
-                className="rounded-full border border-gold/40 bg-surface px-7 py-3.5 text-sm font-semibold text-gold backdrop-blur-xl transition hover:border-gold"
-              >
-                Ver serviços
-              </a>
-            </div>
-            <div className="mt-12 flex divide-x divide-gold/25">
-              <div className="pr-7">
-                <p className="font-display text-4xl text-gold">1.2k</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">Clientes felizes</p>
-              </div>
-              <div className="px-7">
-                <p className="font-display text-4xl text-gold">4,9</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">Avaliação</p>
-              </div>
-              <div className="pl-7">
-                <p className="font-display text-4xl text-gold">3+</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">Anos de arte</p>
-              </div>
-            </div>
+        <section id="sobre" className="tayza-hero grid items-center gap-8 lg:grid-cols-2">
+          <div className="tayza-hero-copy">
+            <p className="tayza-eyebrow">UNHAS QUE REALÇAM<br />SUA BELEZA</p>
+            <h1 className="tayza-headline">Cuidado, beleza e<br /><span>autoestima</span></h1>
+            <p className="tayza-intro">Unhas bem feitas não são apenas um detalhe,<br className="hidden sm:block" /> são parte da sua confiança.</p>
+            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="tayza-outline-button tayza-hero-cta">
+              <span aria-hidden="true">◉</span> Agende seu horário
+            </a>
           </div>
+          <div className="tayza-hero-visual" aria-label="Trabalhos de unhas Tayza Nails">
+            <img src={heroTayza} alt="Alongamento de unhas feito no studio Tayza Nails" />
+          </div>
+        </section>
 
-          <div className="relative">
-            <div className="relative z-10 overflow-hidden rounded-[2.5rem] border border-gold/30 shadow-deep">
-              <div className="relative aspect-[4/5] w-full">
-                {heroImages.map((image, index) => (
-                  <img
-                    key={image}
-                    src={image}
-                    alt={index === 0 ? "Unhas em gel nude com nail art dourada, trabalho do studio" : "Trabalho de unhas do studio"}
-                    aria-hidden={index !== heroImageIndex}
-                    className="absolute inset-0 h-full w-full object-cover"
-                    style={{
-                      opacity: index === heroImageIndex ? 1 : 0,
-                      transition: "opacity 1400ms ease-in-out",
-                    }}
-                    width={1024}
-                    height={1024}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="absolute -left-4 top-10 z-20 w-52 rounded-2xl border border-gold/30 bg-surface p-4 shadow-deep backdrop-blur-2xl sm:-left-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold">Agora no studio</p>
-              <p className="mt-2 font-display text-2xl font-bold leading-tight text-gold-gradient">Alongamento em gel molde f1</p>
-              <p className="mt-1 text-sm text-muted-foreground">R$ 100 · 2h</p>
-            </div>
-          </div>
+        <section className="tayza-values" aria-label="Diferenciais do studio">
+          <div><span>♢</span><p>Qualidade<br />em cada detalhe</p></div>
+          <div><span>♡</span><p>Atendimento<br />personalizado</p></div>
+          <div><span>♧</span><p>Higiene e<br />segurança</p></div>
+          <div><span>☆</span><p>Beleza que<br />valoriza você</p></div>
         </section>
 
         {/* Serviços */}
         <section id="servicos" data-flash={flashServices ? "on" : undefined} className="scroll-mt-8 py-16">
           <div className="mb-12 flex items-end justify-between gap-4">
             <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">
-              <span className="text-gold-gradient">O que o studio faz</span>
+              <span className="text-gold-gradient">Tudo para suas unhas</span>
             </h2>
-            <span className="hidden text-sm text-muted-foreground sm:block">4 serviços</span>
+            <span className="hidden text-sm text-muted-foreground sm:block">
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-3xl border border-gold/25 bg-surface p-7 backdrop-blur-2xl transition hover:border-gold/50 hover:shadow-gold">
