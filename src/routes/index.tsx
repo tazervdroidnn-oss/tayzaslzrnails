@@ -91,18 +91,35 @@ function Index() {
     if (!element) return;
 
     const headerOffset = 88;
-    const top = element.getBoundingClientRect().top + window.scrollY - headerOffset;
+    const start = window.scrollY;
+    const target = Math.max(
+      0,
+      element.getBoundingClientRect().top + window.scrollY - headerOffset,
+    );
+    const distance = target - start;
+    const duration = 850;
+    const startTime = performance.now();
 
     element.classList.remove("section-focus");
     void element.offsetWidth;
     element.classList.add("section-focus");
     window.setTimeout(() => element.classList.remove("section-focus"), 1400);
 
-    window.scrollTo({
-      top: Math.max(0, top),
-      behavior: "smooth",
-    });
+    const easeInOut = (progress: number) =>
+      progress < 0.5
+        ? 2 * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
 
+    const animateScroll = (currentTime: number) => {
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+      window.scrollTo(0, start + distance * easeInOut(progress));
+
+      if (progress < 1) {
+        window.requestAnimationFrame(animateScroll);
+      }
+    };
+
+    window.requestAnimationFrame(animateScroll);
     window.history.replaceState(null, "", "#" + id);
   };
 
