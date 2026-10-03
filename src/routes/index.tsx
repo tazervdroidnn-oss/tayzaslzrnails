@@ -179,7 +179,19 @@ function Index() {
                 key={image}
                 src={image}
                 alt={index === 0 ? "Alongamento em gel molde F1 — trabalho do studio Tayza Nails" : "Segundo trabalho de alongamento em gel molde F1 — studio Tayza Nails"}
-                className={`tayza-f1-slide ${heroImageIndex === index ? "is-active" : ""}`}
+                className="tayza-f1-slide"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  objectPosition: "center bottom",
+                  opacity: heroImageIndex === index ? 1 : 0,
+                  transition: "opacity 2000ms ease-in-out",
+                  zIndex: heroImageIndex === index ? 2 : 1,
+                  pointerEvents: "none",
+                }}
                 aria-hidden={heroImageIndex !== index}
               />
             ))}
