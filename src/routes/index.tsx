@@ -174,8 +174,15 @@ function Index() {
             </a>
           </div>
           <div className="tayza-hero-visual" aria-label="Alongamento em gel molde F1">
-            <img src="/alongamento1.jpeg" alt="Alongamento em gel molde F1 — trabalho do studio Tayza Nails" className="tayza-f1-slide tayza-f1-first" />
-            <img src="/alongamento2.jpeg" alt="Segundo trabalho de alongamento em gel molde F1 — studio Tayza Nails" className="tayza-f1-slide tayza-f1-second" />
+            {heroImages.map((image, index) => (
+              <img
+                key={image}
+                src={image}
+                alt={index === 0 ? "Alongamento em gel molde F1 — trabalho do studio Tayza Nails" : "Segundo trabalho de alongamento em gel molde F1 — studio Tayza Nails"}
+                className={`tayza-f1-slide ${heroImageIndex === index ? "is-active" : ""}`}
+                aria-hidden={heroImageIndex !== index}
+              />
+            ))}
           </div>
         </section>
 
