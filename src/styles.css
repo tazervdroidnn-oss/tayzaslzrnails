@@ -81,6 +81,21 @@
   --shadow-deep: 0 24px 60px -24px oklch(0.1 0.06 298 / 80%);
 }
 
+/* Rolagem suave + destaque discreto da seção de destino */
+html { scroll-behavior: smooth; }
+.section-focus {
+  animation: section-arrival 1.4s ease-out both;
+}
+@keyframes section-arrival {
+  0% { opacity: .72; transform: translateY(10px); }
+  45% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .section-focus { animation: none; }
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
