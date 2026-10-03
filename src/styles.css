@@ -177,24 +177,17 @@
 }
 
 
-/* Delicados desenhos brancos e dourados no fundo, mantendo os cards roxos */
+/* Fundo premium ameixa com ondas fluidas e filetes dourados.
+   As imagens e os cards da galeria permanecem inalterados. */
 body {
   position: relative;
   isolation: isolate;
+  background: radial-gradient(ellipse at 18% 8%, rgba(157,30,111,.46), transparent 42%), linear-gradient(132deg,#26051f 0%,#4b073c 43%,#26051f 100%);
 }
-
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.3;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='190' height='220' viewBox='0 0 190 220'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.25'%3E%3Cg stroke='%23ffffff' opacity='0.9'%3E%3Cpath d='M25 30 C18 21 5 29 12 39 L25 51 L38 39 C45 29 32 21 25 30Z'/%3E%3Cpath d='M127 24 Q143 8 158 24 M130 28 Q143 16 155 28 M134 31 Q143 24 151 31 M138 34 Q143 30 147 34'/%3E%3Cpath d='M23 184 Q29 174 35 184 L38 199 Q29 204 20 199Z M23 184 L35 184'/%3E%3C/g%3E%3Cg stroke='%23d8b65c'%3E%3Cpath d='M79 112 C72 104 61 111 68 120 L79 130 L90 120 C97 111 86 104 79 112Z'/%3E%3Cpath d='M142 151 Q130 139 132 128 Q145 127 150 140 Q155 127 168 128 Q170 139 158 151 L150 158Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  background-size: 190px 220px;
-  background-repeat: repeat;
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.88;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23ffe7a0'/%3E%3Cstop offset='.48' stop-color='%23c99a42'/%3E%3Cstop offset='1' stop-color='%23fff0b6'/%3E%3C/linearGradient%3E%3ClinearGradient id='p' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23b62c86' stop-opacity='.25'/%3E%3Cstop offset='1' stop-color='%230f0314' stop-opacity='.55'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0 0H1440V900H0Z' fill='url(%23p)'/%3E%3Cpath d='M-100 60 C160 90 160 390 470 510 S930 480 1120 650 S1320 790 1510 860' fill='none' stroke='%23b52c83' stroke-width='95' opacity='.12'/%3E%3Cpath d='M-70 5 C110 110 130 410 440 520 S920 465 1110 640 S1320 780 1510 850' fill='none' stroke='url(%23g)' stroke-width='5' opacity='.9'/%3E%3Cpath d='M-90 120 C110 225 170 490 455 590 S900 520 1090 690 S1320 835 1510 900' fill='none' stroke='%23d34b9d' stroke-width='24' opacity='.12'/%3E%3Cpath d='M-120 180 C80 300 180 560 470 650 S900 575 1080 735 S1320 870 1510 930' fill='none' stroke='url(%23g)' stroke-width='2.4' opacity='.72'/%3E%3Cpath d='M-90 -80 C80 30 180 280 400 370 S860 330 1060 470 S1310 610 1510 690' fill='none' stroke='%23e4b65d' stroke-width='1.5' opacity='.32'/%3E%3C/svg%3E");
+  background-size:100% 100%; background-repeat:no-repeat;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  body::before { opacity: 0.2; }
-}
+@media(max-width:640px){body::before{opacity:.56;background-size:auto 100%;background-position:38% center;}}
+@media(prefers-reduced-motion:reduce){body::before{opacity:.56;}}
