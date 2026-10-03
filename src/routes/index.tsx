@@ -89,7 +89,7 @@ function Index() {
   useEffect(() => {
     const interval = window.setInterval(() => {
       setHeroImageIndex((current) => (current + 1) % heroImages.length);
-    }, 4000);
+    }, 5000);
     return () => window.clearInterval(interval);
   }, []);
 
