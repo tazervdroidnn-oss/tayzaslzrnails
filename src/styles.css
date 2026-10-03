@@ -261,11 +261,11 @@ body::before {
   object-fit: contain;
   object-position: center bottom;
   opacity: 0;
-  transition: opacity 1.2s ease-in-out;
+  transition: opacity 1.8s ease-in-out;
   filter: drop-shadow(0 22px 35px rgba(0,0,0,.24));
   pointer-events: none;
 }
-.tayza-hero-visual .tayza-f1-slide.is-active { opacity: 1; }
+.tayza-hero-visual .tayza-f1-slide.is-active { opacity: 1; z-index: 1; }
 @media(max-width:700px) {
   .tayza-hero-visual { min-height: 300px; height: 300px; max-height: none; margin-top: -5px; }
   .tayza-hero-visual .tayza-f1-slide { max-height: none; }
