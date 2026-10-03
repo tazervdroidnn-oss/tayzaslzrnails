@@ -86,6 +86,21 @@ function Index() {
   const [heroImageIndex, setHeroImageIndex] = useState(0);
   const heroImages = alongamentoImages;
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    const headerOffset = 88;
+    const top = element.getBoundingClientRect().top + window.scrollY - headerOffset;
+
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: "smooth",
+    });
+
+    window.history.replaceState(null, "", "#" + id);
+  };
+
   useEffect(() => {
     const interval = window.setInterval(() => {
       setHeroImageIndex((current) => (current + 1) % heroImages.length);
@@ -153,10 +168,10 @@ function Index() {
           </a>
           <div className="hidden items-center gap-8 text-sm md:flex">
             <a href="/" className="tayza-nav-active">Início</a>
-            <a href="#sobre">Sobre</a>
-            <a href="#servicos">Serviços</a>
-            <a href="#resultados">Resultados</a>
-            <a href="#agendar">Contato</a>
+            <a href="#sobre" onClick={(event) => { event.preventDefault(); scrollToSection("sobre"); }}>Sobre</a>
+            <a href="#servicos" onClick={(event) => { event.preventDefault(); scrollToSection("servicos"); }}>Serviços</a>
+            <a href="#resultados" onClick={(event) => { event.preventDefault(); scrollToSection("resultados"); }}>Resultados</a>
+            <a href="#agendar" onClick={(event) => { event.preventDefault(); scrollToSection("agendar"); }}>Contato</a>
           </div>
           <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="tayza-outline-button">
             <span aria-hidden="true">◉</span> Agende seu horário
