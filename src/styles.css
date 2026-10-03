@@ -191,3 +191,52 @@ body::before {
 }
 @media(max-width:640px){body::before{opacity:.56;background-size:auto 100%;background-position:38% center;}}
 @media(prefers-reduced-motion:reduce){body::before{opacity:.56;}}
+
+/* Composição editorial da referência Tayza Nails */
+.relative.min-h-screen.overflow-hidden.bg-background { background: transparent; }
+.relative.min-h-screen.overflow-hidden.bg-background > div[aria-hidden="true"] { display:none; }
+.tayza-nav { min-height: 112px; position:relative; z-index:5; color:#fff7f2; }
+.tayza-brand { position:relative; display:flex; min-width:210px; flex-direction:column; align-items:center; color:#f5d36e; text-decoration:none; line-height:1; }
+.tayza-crown { font-size:30px; line-height:.8; transform:scaleX(1.12); }
+.tayza-script { font-family:"Cormorant Garamond",Georgia,serif; font-size:38px; font-style:italic; letter-spacing:-1.7px; white-space:nowrap; }
+.tayza-subbrand { margin-top:5px; font-family:Manrope,sans-serif; font-size:9px; letter-spacing:4px; }
+.tayza-nav a:not(.tayza-brand):not(.tayza-outline-button) { color:#fff6f0; transition:color .2s; }
+.tayza-nav a:hover { color:#f5d36e; }
+.tayza-nav .tayza-nav-active { color:#f5d36e!important; border-bottom:2px solid #d7ad42; padding:0 8px 16px; }
+.tayza-outline-button { display:inline-flex; align-items:center; justify-content:center; gap:10px; border:1.5px solid #e7c452; border-radius:999px; padding:12px 23px; color:#ffe18a; font-family:"Cormorant Garamond",Georgia,serif; font-size:17px; white-space:nowrap; transition:background .2s,transform .2s; }
+.tayza-outline-button:hover { background:rgba(221,174,64,.1); transform:translateY(-1px); }
+.tayza-outline-button span { font-size:21px; }
+.tayza-hero { position:relative; min-height:430px; padding:20px 4% 0; }
+.tayza-hero-copy { position:relative; z-index:2; padding:20px 0 45px; }
+.tayza-eyebrow { color:#f3d477; font-family:"Cormorant Garamond",Georgia,serif; font-size:15px; letter-spacing:5px; line-height:1.45; }
+.tayza-headline { margin-top:16px; color:#fff8f6; font-family:"Cormorant Garamond",Georgia,serif; font-size:clamp(42px,5vw,66px); font-weight:500; line-height:.98; letter-spacing:-1.5px; }
+.tayza-headline span { display:inline-block; margin-top:4px; color:#f2c95c; font-family:cursive; font-size:clamp(48px,6vw,76px); font-style:italic; font-weight:400; letter-spacing:-3px; text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:9px; }
+.tayza-intro { margin-top:24px; color:#fff0ec; font-family:"Cormorant Garamond",Georgia,serif; font-size:19px; line-height:1.45; }
+.tayza-hero-cta { margin-top:27px; padding:12px 27px; font-size:19px; }
+.tayza-hero-visual { position:relative; align-self:stretch; min-height:400px; display:flex; align-items:flex-end; justify-content:center; }
+.tayza-hero-visual img { width:100%; height:100%; max-height:470px; object-fit:contain; object-position:center bottom; filter:drop-shadow(0 22px 35px rgba(0,0,0,.24)); }
+.tayza-values { position:relative; z-index:2; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); max-width:900px; margin:0 auto; padding:20px 0 55px; }
+.tayza-values > div { display:flex; flex-direction:column; align-items:center; text-align:center; color:#fff6f1; font-family:"Cormorant Garamond",Georgia,serif; font-size:17px; line-height:1.2; }
+.tayza-values > div + div { border-left:1px solid rgba(226,190,93,.22); }
+.tayza-values span { display:grid; place-items:center; width:60px; height:60px; margin-bottom:10px; border:1px solid #d9b547; border-radius:50%; color:#f1cf64; font-family:Georgia,serif; font-size:31px; }
+#servicos { padding-top:20px; }
+#servicos h2 { font-family:"Cormorant Garamond",Georgia,serif; font-weight:500; }
+@media(max-width:700px) {
+ .tayza-nav { min-height:86px; padding-top:18px; padding-bottom:18px; }
+ .tayza-brand { min-width:0; align-items:flex-start; }
+ .tayza-script { font-size:29px; }
+ .tayza-subbrand { font-size:7px; letter-spacing:2.5px; }
+ .tayza-outline-button { padding:10px 13px; font-size:14px; gap:6px; }
+ .tayza-nav > div { display:none; }
+ .tayza-hero { grid-template-columns:1fr; gap:0; padding:10px 3% 0; }
+ .tayza-hero-copy { padding:20px 0 0; }
+ .tayza-eyebrow { font-size:12px; letter-spacing:3.5px; }
+ .tayza-headline { font-size:clamp(42px,12vw,60px); }
+ .tayza-headline span { font-size:clamp(47px,13vw,68px); }
+ .tayza-intro { font-size:17px; }
+ .tayza-hero-visual { min-height:250px; max-height:360px; margin-top:-5px; }
+ .tayza-hero-visual img { max-height:360px; }
+ .tayza-values { grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:22px; padding:24px 0 35px; }
+ .tayza-values > div:nth-child(3) { border-left:0; }
+}
+@media(prefers-reduced-motion:reduce){.tayza-outline-button{transition:none;}}
