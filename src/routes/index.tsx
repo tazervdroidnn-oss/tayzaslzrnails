@@ -191,7 +191,6 @@ function Index() {
             <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">
               <span className="text-gold-gradient">Tudo para suas unhas</span>
             </h2>
-            <span className="hidden text-sm text-muted-foreground sm:block">
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-3xl border border-gold/25 bg-surface p-7 backdrop-blur-2xl transition hover:border-gold/50 hover:shadow-gold">
