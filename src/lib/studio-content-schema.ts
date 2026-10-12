@@ -3,7 +3,7 @@ import { z } from "zod";
 const line = (max: number) => z.string().trim().min(1).max(max);
 const image = z.string().trim().max(500).refine(
   (value) =>
-    (/^\/(?!\/)[a-zA-Z0-9%._~!$&'()+,;=@/-]+$/.test(value) ||
+    (/^\/(?!\/)[a-zA-Z0-9%._~![a-zA-Z0-9%._~!$&'()+,;=@/-]+'()+,;=@\/-]+$/.test(value) ||
       /^https:\/\/[a-zA-Z0-9.-]+(?:\/[^\s<>"']*)?$/.test(value)),
   "Use um endereço HTTPS ou um caminho de imagem do site."
 );
