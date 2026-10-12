@@ -1,4 +1,6 @@
 import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
+import { Buffer } from "node:buffer";
+import process from "node:process";
 import { studioContentSchema, type StudioContent } from "./studio-content-schema";
 
 const REPOSITORY = "tazervdroidnn-oss/tayzaslzrnails";
@@ -98,7 +100,7 @@ async function github(method: "GET" | "PUT", path: string, body?: Record<string,
     }
     throw new AdminError(502, "Não foi possível acessar o GitHub (" + response.status + ").");
   }
-  return response.json() as Promise<{ sha?: string; content?: string; content_sha?: string; content?: string; download_url?: string; }>;
+  return response.json() as Promise<{ sha?: string; content?: string; content_sha?: string; download_url?: string; }>;
 }
 
 async function readContent(): Promise<{ data: StudioContent; revision: string }> {
@@ -178,7 +180,7 @@ export async function adminPost(request: Request) {
       if (body.revision !== latest.revision) {
         throw new AdminError(409, "Alguém atualizou o site. Recarregue os dados antes de salvar.");
       }
-      const result = await github("PUT", CONTENT_PATH, {
+      await github("PUT", CONTENT_PATH, {
         message: "Atualizar conteúdo pelo painel Tayza Nails",
         content: Buffer.from(JSON.stringify(validated.data, null, 2) + "\n").toString("base64"),
         sha: latest.revision,
