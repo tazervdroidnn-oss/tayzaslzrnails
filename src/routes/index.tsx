@@ -2,15 +2,7 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import heroTayza from "@/assets/hero.jpg";
 import galleryNails from "@/assets/gallery-nails.jpg";
-
-const alongamentoImages = ["/alongamento1.jpeg", "/alongamento2.jpeg"];
-
-const galleryLashesCloseup = "/volume%20fio%20a%20fio.jpg";
-const galleryLashesBrown = "/volume%205d.jpg";
-const galleryBrazilianBrownTayza = "/volume%20brasileiro%20marrom.jpg";
-const galleryMegaFoxYes = "/mega%20fox%20yes.jpg";
-const galleryMega6D = "/mega%206d.jpg";
-const galleryBrasileiro = "/volume%20brasileiro.jpg";
+import studioContent from "@/data/studio-content.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,8 +28,8 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const WHATSAPP_URL = "https://wa.me/5599991643916";
-const INSTAGRAM_URL = "https://instagram.com/tayzaslzr_nails";
+const WHATSAPP_URL = "https://wa.me/" + studioContent.contact.whatsapp;
+const INSTAGRAM_URL = "https://instagram.com/" + studioContent.contact.instagram;
 
 function LashIcon({ className, style }: { className?: string; style?: CSSProperties }) {
   return (
@@ -84,7 +76,12 @@ function Index() {
 
   const [flashServices, setFlashServices] = useState(false);
   const [heroImageIndex, setHeroImageIndex] = useState(0);
-  const heroImages = alongamentoImages;
+  const heroImages = studioContent.hero.images;
+  const paymentMethods = [
+    { enabled: studioContent.payments.card, label: "Cartão", icon: "💳" },
+    { enabled: studioContent.payments.pix, label: "Pix", icon: "📱" },
+    { enabled: studioContent.payments.cash, label: "Dinheiro em espécie", icon: "💵" },
+  ].filter((item) => item.enabled);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -185,7 +182,7 @@ function Index() {
         <nav className="tayza-nav flex items-center justify-between gap-5 py-6">
           <a href="/" className="tayza-brand" aria-label="Tayza Nails início">
             <span className="tayza-crown" aria-hidden="true">♛</span>
-            <span className="tayza-script">Tayza Nails</span>
+            <span className="tayza-script">{studioContent.brand}</span>
             <span className="tayza-subbrand">NAIL DESIGNER</span>
           </a>
           <div className="hidden items-center gap-8 text-sm md:flex">
@@ -203,9 +200,9 @@ function Index() {
         {/* Hero */}
         <section id="sobre" className="tayza-hero grid items-center gap-8 lg:grid-cols-2">
           <div className="tayza-hero-copy">
-            <p className="tayza-eyebrow">UNHAS QUE REALÇAM<br />SUA BELEZA</p>
-            <h1 className="tayza-headline">Cuidado, beleza e<br /><span>autoestima</span></h1>
-            <p className="tayza-intro">Unhas bem feitas não são apenas um detalhe,<br className="hidden sm:block" /> são parte da sua confiança.</p>
+            <p className="tayza-eyebrow whitespace-pre-line">{studioContent.hero.eyebrow}</p>
+            <h1 className="tayza-headline">{studioContent.hero.title}<br /><span>{studioContent.hero.emphasis}</span></h1>
+            <p className="tayza-intro whitespace-pre-line">{studioContent.hero.intro}</p>
 </div>
           <div className="tayza-hero-visual" aria-label="Alongamento em gel molde F1">
             {heroImages.map((image, index) => (
@@ -250,42 +247,14 @@ function Index() {
             </h2>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-3xl border border-gold/25 bg-surface p-7 backdrop-blur-2xl transition hover:border-gold/50 hover:shadow-gold">
-              <span className="grid size-12 place-items-center rounded-2xl bg-gold-gradient text-xl text-primary-foreground shadow-gold">✧</span>
-              <h3 className="mt-5 font-display text-3xl text-foreground">Unhas</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Alongamento em gel, esmaltação em gel e nail art personalizada, com
-                brilho de espelho e cutícula impecável.
-              </p>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-gold">A PARTIR DE R$ 50</p>
-            </div>
-            <div className="rounded-3xl border border-gold/25 bg-surface p-7 backdrop-blur-2xl transition hover:border-gold/50 hover:shadow-gold">
-              <span className="grid size-12 place-items-center rounded-2xl bg-gold-gradient text-xl text-primary-foreground shadow-gold">❀</span>
-              <h3 className="mt-5 font-display text-3xl text-foreground">Cílios</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Alongamento fio a fio e volume russo sob medida, com curvatura e
-                espessura pensadas para o seu olhar.
-              </p>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-gold">A PARTIR DE R$ 75</p>
-            </div>
-            <div className="rounded-3xl border border-gold/25 bg-surface p-7 backdrop-blur-2xl transition hover:border-gold/50 hover:shadow-gold">
-              <span className="grid size-12 place-items-center rounded-2xl bg-gold-gradient text-xl text-primary-foreground shadow-gold">✦</span>
-              <h3 className="mt-5 font-display text-3xl text-foreground">Manutenção</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Preenchimento, repreenchimento e hidratação no intervalo ideal —
-                para o seu resultado durar muito mais.
-              </p>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-gold">A PARTIR DE R$ 55</p>
-            </div>
-            <div className="rounded-3xl border border-gold/25 bg-surface p-7 backdrop-blur-2xl transition hover:border-gold/50 hover:shadow-gold">
-              <span className="grid size-12 place-items-center rounded-2xl bg-gold-gradient text-xl text-primary-foreground shadow-gold">❁</span>
-              <h3 className="mt-5 font-display text-3xl text-foreground">Sombrancelha com henna</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Design de sombrancelha com henna, alinhando formato, preenchimento
-                e simetria para um olhar marcado e natural.
-              </p>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-gold">A PARTIR DE R$ 45</p>
-            </div>
+            {studioContent.services.map((service) => (
+              <div key={service.id} className="rounded-3xl border border-gold/25 bg-surface p-7 backdrop-blur-2xl transition hover:border-gold/50 hover:shadow-gold">
+                <span className="grid size-12 place-items-center rounded-2xl bg-gold-gradient text-xl text-primary-foreground shadow-gold">{service.icon}</span>
+                <h3 className="mt-5 font-display text-3xl text-foreground">{service.name}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{service.description}</p>
+                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-gold">A PARTIR DE {service.startingPrice}</p>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -295,18 +264,11 @@ function Index() {
             <h2 className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">
               <span className="text-gold-gradient">Resultados reais</span>
             </h2>
-            <span className="hidden text-sm text-muted-foreground sm:block">@tayzaslzr_nails</span>
+            <span className="hidden text-sm text-muted-foreground sm:block">@{studioContent.contact.instagram}</span>
           </div>
 
           <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
-            {[
-              { name: "Volume Fio a Fio Efeito Molhado", price: "R$ 145,00", image: galleryLashesCloseup, alt: "Referência visual de extensão de cílios fio a fio efeito molhado" },
-              { name: "Volume Mega 6D", price: "R$ 155,00", image: galleryMega6D, alt: "Cílios volume mega 6D, close-up do olhar, trabalho do studio" },
-              { name: "Volume Mega Fox Yes", price: "R$ 165,00", image: galleryMegaFoxYes, alt: "Cílios volume mega fox yes, close-up do olhar, trabalho do studio" },
-              { name: "Volume Brasileiro", price: "R$ 90,00", image: galleryBrasileiro, alt: "Cílios volume brasileiro, close-up do rosto, trabalho do studio" },
-              { name: "Volume Brasileiro Marrom", price: "R$ 85,00", image: galleryBrazilianBrownTayza, alt: "Cílios volume brasileiro marrom, close-up do olhar, trabalho do studio" },
-              { name: "Volume 5D", price: "R$ 125,00", image: galleryLashesBrown, alt: "Cílios volume 5D com sobrancelhas desenhadas, close-up do rosto, trabalho do studio" },
-            ].map((style) => (
+            {studioContent.lashes.map((style) => (
               <article key={style.name} className="group overflow-hidden rounded-2xl border border-gold/35 bg-surface shadow-deep transition duration-300 hover:-translate-y-1 hover:border-gold/70 hover:shadow-gold">
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <img src={style.image} alt={style.alt} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
@@ -327,11 +289,7 @@ function Index() {
             </div>
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-              {[
-                { id: "unhas-1", name: "Banho de Gel", price: "R$ 55,00", image: "/banho%20de%20gel.jpg", alt: "Trabalho de unhas — banho de gel" },
-                { id: "unhas-2", name: "Gel na Tips", price: "R$ 100,00", image: "/gel%20na%20tips.jpg", alt: "Trabalho de unhas — gel na tips" },
-                { id: "unhas-3", name: "Postiça Realista", price: "R$ 55,00", image: "/postiça%20realista.jpg", alt: "Trabalho de unhas — postiça realista" },
-              ].map((item) => (
+              {studioContent.nails.map((item) => (
                 <article key={item.id} className="group overflow-hidden rounded-2xl border border-gold/35 bg-surface shadow-deep transition duration-300 hover:-translate-y-1 hover:border-gold/70 hover:shadow-gold">
                   <div className="relative aspect-[4/5] overflow-hidden">
                     <img src={item.image} alt={item.alt} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
@@ -418,7 +376,7 @@ function Index() {
                 rel="noreferrer"
                 className="rounded-full border border-gold/40 px-9 py-4 text-sm font-semibold text-gold transition hover:border-gold hover:shadow-gold"
               >
-                @tayzaslzr_nails
+                @{studioContent.contact.instagram}
               </a>
             </div>
           </div>
@@ -431,20 +389,14 @@ function Index() {
             <h2 className="mt-5 font-display text-4xl font-semibold sm:text-5xl">
               <span className="text-gold-gradient">Formas de pagamento</span>
             </h2>
-            <p className="mt-3 text-muted-foreground">Aceitamos cartão, Pix e dinheiro em espécie.</p>
+            <p className="mt-3 text-muted-foreground">Aceitamos {paymentMethods.map((item) => item.label).join(", ")}.</p>
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl border border-gold/20 bg-background/40 p-5">
-                <p className="text-2xl">💳</p>
-                <p className="mt-2 font-semibold text-foreground">Cartão</p>
-              </div>
-              <div className="rounded-2xl border border-gold/20 bg-background/40 p-5">
-                <p className="text-2xl">📱</p>
-                <p className="mt-2 font-semibold text-foreground">Pix</p>
-              </div>
-              <div className="rounded-2xl border border-gold/20 bg-background/40 p-5">
-                <p className="text-2xl">💵</p>
-                <p className="mt-2 font-semibold text-foreground">Dinheiro em espécie</p>
-              </div>
+              {paymentMethods.map((method) => (
+                <div key={method.label} className="rounded-2xl border border-gold/20 bg-background/40 p-5">
+                  <p className="text-2xl">{method.icon}</p>
+                  <p className="mt-2 font-semibold text-foreground">{method.label}</p>
+                </div>
+              ))}
             </div>
             <p className="mt-8 border-t border-gold/20 pt-6 font-display text-2xl italic text-gold-gradient sm:text-3xl">
               “Tudo é possível com Deus.”
@@ -454,7 +406,7 @@ function Index() {
 
         {/* Footer */}
         <footer className="flex flex-col items-center justify-between gap-3 border-t border-gold/20 py-8 text-sm text-muted-foreground sm:flex-row">
-          <span className="font-display text-xl font-semibold italic text-gold-gradient">tayzaslzr_nails ✨</span>
+          <span className="font-display text-xl font-semibold italic text-gold-gradient">{studioContent.brand} ✨</span>
           <span>Unhas · Cílios · Manutenção</span>
         </footer>
       </div>
