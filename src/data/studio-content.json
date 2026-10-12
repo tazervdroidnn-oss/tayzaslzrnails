@@ -1,0 +1,119 @@
+{
+  "brand": "Tayza Nails",
+  "hero": {
+    "eyebrow": "UNHAS QUE REALÇAM\nSUA BELEZA",
+    "title": "Cuidado, beleza e",
+    "emphasis": "autoestima",
+    "intro": "Unhas bem feitas não são apenas um detalhe,\nsão parte da sua confiança.",
+    "images": [
+      "/alongamento1.jpeg",
+      "/alongamento2.jpeg"
+    ]
+  },
+  "contact": {
+    "whatsapp": "5599991643916",
+    "instagram": "tayzaslzr_nails"
+  },
+  "services": [
+    {
+      "id": "unhas",
+      "icon": "✧",
+      "name": "Unhas",
+      "description": "Alongamento em gel, esmaltação em gel e nail art personalizada, com brilho de espelho e cutícula impecável.",
+      "startingPrice": "R$ 50"
+    },
+    {
+      "id": "cilios",
+      "icon": "❀",
+      "name": "Cílios",
+      "description": "Alongamento fio a fio e volume russo sob medida, com curvatura e espessura pensadas para o seu olhar.",
+      "startingPrice": "R$ 75"
+    },
+    {
+      "id": "manutencao",
+      "icon": "✦",
+      "name": "Manutenção",
+      "description": "Preenchimento, repreenchimento e hidratação no intervalo ideal — para o seu resultado durar muito mais.",
+      "startingPrice": "R$ 55"
+    },
+    {
+      "id": "sobrancelha",
+      "icon": "❁",
+      "name": "Sobrancelha com henna",
+      "description": "Design de sobrancelha com henna, alinhando formato, preenchimento e simetria para um olhar marcado e natural.",
+      "startingPrice": "R$ 45"
+    }
+  ],
+  "lashes": [
+    {
+      "id": "fio-a-fio",
+      "name": "Volume Fio a Fio Efeito Molhado",
+      "price": "R$ 145,00",
+      "image": "/volume%20fio%20a%20fio.jpg",
+      "alt": "Extensão de cílios fio a fio efeito molhado"
+    },
+    {
+      "id": "mega6d",
+      "name": "Volume Mega 6D",
+      "price": "R$ 155,00",
+      "image": "/mega%206d.jpg",
+      "alt": "Cílios volume mega 6D"
+    },
+    {
+      "id": "mega-fox",
+      "name": "Volume Mega Fox Yes",
+      "price": "R$ 165,00",
+      "image": "/mega%20fox%20yes.jpg",
+      "alt": "Cílios volume mega fox yes"
+    },
+    {
+      "id": "brasileiro",
+      "name": "Volume Brasileiro",
+      "price": "R$ 90,00",
+      "image": "/volume%20brasileiro.jpg",
+      "alt": "Cílios volume brasileiro"
+    },
+    {
+      "id": "brasileiro-marrom",
+      "name": "Volume Brasileiro Marrom",
+      "price": "R$ 85,00",
+      "image": "/volume%20brasileiro%20marrom.jpg",
+      "alt": "Cílios volume brasileiro marrom"
+    },
+    {
+      "id": "5d",
+      "name": "Volume 5D",
+      "price": "R$ 125,00",
+      "image": "/volume%205d.jpg",
+      "alt": "Cílios volume 5D"
+    }
+  ],
+  "nails": [
+    {
+      "id": "unhas-1",
+      "name": "Banho de Gel",
+      "price": "R$ 55,00",
+      "image": "/banho%20de%20gel.jpg",
+      "alt": "Trabalho de unhas — banho de gel"
+    },
+    {
+      "id": "unhas-2",
+      "name": "Gel na Tips",
+      "price": "R$ 100,00",
+      "image": "/gel%20na%20tips.jpg",
+      "alt": "Trabalho de unhas — gel na tips"
+    },
+    {
+      "id": "unhas-3",
+      "name": "Postiça Realista",
+      "price": "R$ 55,00",
+      "image": "/postiça%20realista.jpg",
+      "alt": "Trabalho de unhas — postiça realista"
+    }
+  ],
+  "payments": {
+    "card": true,
+    "pix": true,
+    "cash": true
+  }
+}
