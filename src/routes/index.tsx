@@ -167,6 +167,39 @@ function TayzaHome() {
         const listenerCleanups: Array<() => void> = [];
 
         const context = gsap.context(() => {
+          // Tayza logotype: individual letter entrance, rose-gold sweep and drawn underline.
+          const logo = scope.querySelector<HTMLElement>(".tn-logo--animated");
+          if (logo) {
+            const letters = logo.querySelectorAll<HTMLElement>(".tn-logo-letter");
+            const subtitle = logo.querySelector<HTMLElement>(".tn-logo-subtitle");
+            const underline = logo.querySelector<SVGPathElement>(".tn-logo-drawn-line path");
+            const shine = logo.querySelector<HTMLElement>(".tn-logo-shine");
+
+            const logoTimeline = gsap.timeline({ delay: 0.12 });
+            logoTimeline.fromTo(letters,
+              { yPercent: 118, autoAlpha: 0 },
+              { yPercent: 0, autoAlpha: 1, duration: 0.67, stagger: 0.075, ease: "power3.out",
+                clearProps: "transform,opacity,visibility" }
+            );
+            if (subtitle) {
+              logoTimeline.fromTo(subtitle,
+                { y: 7, autoAlpha: 0, letterSpacing: ".43em" },
+                { y: 0, autoAlpha: 1, letterSpacing: ".32em", duration: 0.65, ease: "power2.out",
+                  clearProps: "transform,opacity,visibility,letterSpacing" }, "-=0.28");
+            }
+            if (underline) {
+              logoTimeline.fromTo(underline,
+                { strokeDasharray: 100, strokeDashoffset: 100 },
+                { strokeDashoffset: 0, duration: 0.66, ease: "power2.inOut",
+                  clearProps: "strokeDashoffset,strokeDasharray" }, "-=0.24");
+            }
+            if (shine) {
+              logoTimeline.fromTo(shine,
+                { backgroundPosition: "135% 50%", autoAlpha: 0 },
+                { backgroundPosition: "-90% 50%", autoAlpha: 1, duration: 1.15,
+                  ease: "power2.inOut", clearProps: "backgroundPosition,opacity,visibility" }, "-=0.17");
+            }
+          }
           gsap.fromTo(".tn-poster-glint", { backgroundPosition: "100% 0%" }, {
             backgroundPosition: "0% 0%", ease: "none",
             scrollTrigger: { trigger: ".tn-studio-poster", start: "top 85%", end: "center 30%", scrub: true },
@@ -461,9 +494,20 @@ function TayzaHome() {
       <a href="#conteudo" className="tn-skip">Pular para o conteúdo</a>
       <header className={"tn-header " + (scrolled ? "tn-header--solid" : "")}>
         <div className="tn-container tn-header-inner">
-          <a className="tn-logo" href="#inicio" aria-label="Tayza Nails — início" onClick={(event) => { event.preventDefault(); goTo("inicio"); }}>
-            <strong>TAYZA<span>.</span></strong>
-            <small>NAILS STUDIO</small>
+          <a className="tn-logo tn-logo--animated" href="#inicio" aria-label="Tayza Nails Studio — início" onClick={(event) => { event.preventDefault(); goTo("inicio"); }}>
+            <strong className="tn-logo-word">
+              <span className="tn-logo-letter-row" aria-hidden="true">
+                {Array.from("TAYZA").map((letter, index) => (
+                  <span className="tn-logo-letter-mask" key={index}><span className="tn-logo-letter">{letter}</span></span>
+                ))}
+                <span className="tn-logo-letter-mask"><span className="tn-logo-letter tn-logo-letter--dot">.</span></span>
+              </span>
+              <span className="tn-logo-shine" aria-hidden="true">TAYZA<span>.</span></span>
+            </strong>
+            <small className="tn-logo-subtitle">NAILS STUDIO</small>
+            <svg className="tn-logo-drawn-line" viewBox="0 0 148 6" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M 2 3 L 146 3" pathLength="100" fill="none" stroke="#dcb79c" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
           </a>
           <nav ref={desktopNavRef} className="tn-nav-desktop" aria-label="Navegação principal">
             {navigation.map((item) => (
