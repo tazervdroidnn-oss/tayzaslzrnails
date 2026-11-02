@@ -826,3 +826,35 @@ html { scroll-padding-top: 78px; }
   .tn-nail-track { scroll-behavior: auto; }
   .tn-nail-card, .tn-slider-progress span { transition: none; }
 }
+
+.tn-nails-banner {
+  display: block;
+  width: 100%;
+  margin: 0 auto clamp(2rem, 5vw, 4rem);
+  overflow: hidden;
+  border: 1px solid #aa804c;
+  border-radius: 16px;
+  background: #300e20;
+  cursor: pointer;
+}
+.tn-nails-banner img { display: block; width: 100%; height: auto; }
+.tn-nails-banner span { display: none; }
+.tn-nails-banner:focus-visible { outline: 3px solid #f8c780; outline-offset: 5px; }
+.tn-service-card, .tn-lash-card, .tn-nail-card {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgb(48 14 32 / 12%);
+}
+.tn-service-info strong { font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) {
+  .tn-nails-banner span {
+    display: flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    background: #f3cc92;
+    color: #351427;
+    font-weight: 650;
+  }
+}

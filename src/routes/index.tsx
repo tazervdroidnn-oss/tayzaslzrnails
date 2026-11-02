@@ -419,6 +419,10 @@ function TayzaHome() {
 
         <section className="tn-section tn-section--dark tn-nails" id="unhas">
           <div className="tn-container">
+            <button className="tn-nails-banner" type="button" onClick={() => openBooking()} aria-label="Agendar um horário no Tayza Nails">
+              <img src="/tayza-unhas.png" alt="Tayza Nails — unhas, cílios e sobrancelhas. Beleza e cuidado em cada detalhe." loading="lazy" />
+              <span>Agende seu horário <ArrowUpRight size={18} /></span>
+            </button>
             <div className="tn-carousel-heading" data-reveal>
               <div>
                 <p className="tn-eyebrow tn-eyebrow--light">ARTE NA PONTA DOS DEDOS</p>
