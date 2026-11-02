@@ -665,3 +665,164 @@ html { scroll-padding-top: 78px; }
   .tn-service-cta,
   .tn-service-cta svg { transition:none !important; }
 }
+
+
+/* Tayza Nails · GSAP luxury editorial motion */
+/* No-JS fallback stays fully legible: GSAP hides elements only at animation start. */
+.tn-page [data-reveal] {
+  opacity: 1;
+  transform: none;
+  transition: border-color .28s ease, box-shadow .28s ease, background-color .28s ease;
+}
+
+.tn-title-mask {
+  display: block;
+  overflow: hidden;
+  color: inherit;
+  padding-block: .075em;
+  margin-block: -.075em;
+}
+.tn-hero h1 .tn-title-mask,
+.tn-section h2 .tn-title-mask,
+.tn-experience h2 .tn-title-mask,
+.tn-payments h2 .tn-title-mask {
+  color: inherit;
+}
+.tn-hero h1 .tn-hero-title-line,
+.tn-section h2 .tn-heading-line,
+.tn-experience h2 .tn-heading-line,
+.tn-payments h2 .tn-heading-line {
+  display: block;
+  color: inherit;
+  will-change: auto;
+}
+.tn-hero h1 .tn-hero-title-line { color: #fefcf9; }
+.tn-hero h1 em.tn-hero-title-line {
+  color: #d3b19a;
+  font-style: normal;
+}
+.tn-section--cream h2 .tn-heading-line.tn-accent {
+  color: #9a7058;
+}
+.tn-section--dark h2 .tn-heading-line.tn-accent,
+.tn-experience h2 .tn-heading-line.tn-accent,
+.tn-payments h2 .tn-heading-line.tn-accent {
+  color: #d9b69b;
+}
+
+/* Reflective highlight follows the edges instead of covering real work photography. */
+.tn-service-photo::before,
+.tn-lash-photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(107deg, transparent 31%, rgba(255,244,224,.10) 47%, transparent 61%);
+  transform: translateX(-125%);
+  transition: transform 1.05s cubic-bezier(.18,.76,.25,1);
+}
+.tn-service-card:hover .tn-service-photo::before,
+.tn-lash-card:hover .tn-lash-photo::before {
+  transform: translateX(125%);
+}
+.tn-service-card:hover .tn-service-photo img.tn-photo-subject,
+.tn-lash-card:hover .tn-lash-photo img.tn-photo-subject {
+  transform: scale(1.006);
+}
+
+/* Gallery: native momentum and touch gestures, CSS scroll snap, GSAP reveals. */
+.tn-nail-track {
+  touch-action: pan-x pan-y;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-stop: normal;
+}
+.tn-nail-track.is-dragging { scroll-behavior: auto; }
+.tn-nail-card {
+  transition: border-color .4s ease, box-shadow .4s ease;
+}
+.tn-nail-card.is-current {
+  border-color: rgba(231,197,172,.68);
+  box-shadow: 0 0 0 1px rgba(231,197,172,.12);
+}
+.tn-nail-track:focus-visible {
+  outline: 2px solid #d9b69b;
+  outline-offset: 5px;
+}
+.tn-slider-progress span {
+  transition: width .52s cubic-bezier(.16,.72,.28,1);
+}
+
+/* Restrained satin glint on major calls to action. */
+.tn-button, .tn-header-book {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.tn-button::before,
+.tn-header-book::before {
+  content: "";
+  position: absolute;
+  inset: -35% -30%;
+  transform: translateX(-140%) skewX(-20deg);
+  background: linear-gradient(90deg, transparent 31%, rgba(255,255,255,.26) 50%, transparent 69%);
+  pointer-events: none;
+  transition: transform .85s cubic-bezier(.2,.75,.25,1);
+}
+.tn-button:hover::before,
+.tn-header-book:hover::before {
+  transform: translateX(140%) skewX(-20deg);
+}
+
+/* Figma-style Smart Animate: controlled, staggered navigation and appointment content. */
+.tn-mobile-menu nav a {
+  animation: tn-menu-item-reveal .53s cubic-bezier(.2,.8,.2,1) both;
+}
+.tn-booking-modal > .tn-eyebrow,
+.tn-booking-modal > h2,
+.tn-booking-modal > .tn-modal-intro,
+.tn-booking-modal form > label,
+.tn-booking-modal form > .tn-button {
+  animation: tn-modal-item-reveal .55s cubic-bezier(.18,.78,.22,1) both;
+}
+.tn-booking-modal > .tn-eyebrow { animation-delay: .07s; }
+.tn-booking-modal > h2 { animation-delay: .13s; }
+.tn-booking-modal > .tn-modal-intro { animation-delay: .18s; }
+.tn-booking-modal form > label:nth-child(1) { animation-delay: .24s; }
+.tn-booking-modal form > label:nth-child(2) { animation-delay: .29s; }
+.tn-booking-modal form > label:nth-child(3) { animation-delay: .34s; }
+.tn-booking-modal form > label:nth-child(4) { animation-delay: .39s; }
+.tn-booking-modal form > .tn-button { animation-delay: .44s; }
+@keyframes tn-menu-item-reveal {
+  from { opacity: 0; transform: translateX(18px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes tn-modal-item-reveal {
+  from { opacity: 0; transform: translateY(13px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 540px) {
+  .tn-hero h1 { font-size: clamp(38px, 11.4vw, 63px); }
+  .tn-section h2 .tn-title-mask,
+  .tn-experience h2 .tn-title-mask,
+  .tn-payments h2 .tn-title-mask { padding-block: .095em; margin-block: -.095em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tn-mobile-menu nav a,
+  .tn-booking-modal > .tn-eyebrow,
+  .tn-booking-modal > h2,
+  .tn-booking-modal > .tn-modal-intro,
+  .tn-booking-modal form > label,
+  .tn-booking-modal form > .tn-button {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  .tn-service-photo::before,
+  .tn-lash-photo::before,
+  .tn-button::before,
+  .tn-header-book::before { display: none; }
+  .tn-nail-track { scroll-behavior: auto; }
+  .tn-nail-card, .tn-slider-progress span { transition: none; }
+}
