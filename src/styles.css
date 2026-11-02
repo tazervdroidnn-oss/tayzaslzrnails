@@ -1640,3 +1640,58 @@ html { scroll-padding-top: 78px; }
   .tn-hours-book { transition: none; }
   .tn-hours-book:hover { transform: none; }
 }
+
+
+/* Contagem destacada na entrada do painel de horários */
+.tn-hours-time [data-time-count] {
+  font-variant-numeric: tabular-nums;
+  min-width: 2ch;
+  display: inline-block;
+  text-align: center;
+}
+.tn-hours-panel .tn-hours-time {
+  transition: color .4s ease, text-shadow .4s ease;
+}
+.tn-hours-panel.is-counting .tn-hours-time {
+  color: #fff6e7;
+  text-shadow: 0 0 23px rgba(239, 190, 139, .45), 0 0 45px rgba(230, 165, 110, .16);
+}
+.tn-hours-panel.is-counting {
+  border-color: #e9c19b;
+  box-shadow: 0 22px 64px rgba(11, 5, 11, .25), 0 0 0 1px rgba(240, 194, 150, .18), inset 0 1px 0 rgba(255, 238, 213, .15);
+}
+.tn-hours-count-progress {
+  position: relative;
+  height: 2px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 2px;
+  margin-bottom: 0;
+  background: rgba(234, 197, 172, .16);
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.tn-hours-count-progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ad795c, #ffebc9 56%, #cb956e);
+  transform: scaleX(0);
+  transform-origin: left center;
+  box-shadow: 0 0 12px rgba(255, 221, 179, .47);
+}
+.tn-hours-panel.is-counting .tn-hours-count-progress {
+  opacity: 1;
+}
+.tn-hours-panel.is-counted .tn-hours-count-progress {
+  opacity: 0;
+}
+.tn-hours-panel.is-counting .tn-hours-time-label svg {
+  color: #f5cdab;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tn-hours-panel .tn-hours-time,
+  .tn-hours-count-progress { transition: none !important; }
+  .tn-hours-count-progress { display: none; }
+}
