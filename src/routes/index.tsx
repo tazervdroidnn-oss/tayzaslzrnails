@@ -263,38 +263,71 @@ function TayzaHome() {
             );
           });
 
-          // Horários: os dígitos contam de 00 até os valores reais apenas na entrada.
-          // Os valores finais permanecem no HTML quando JS estiver desativado.
+          // Contagem real dos horários: começa quando o painel (não só a seção)
+          // entra na área visível. A marcação HTML mantém os valores finais
+          // disponíveis a leitores de tela e usuários sem JavaScript.
           const schedule = scope.querySelector<HTMLElement>(".tn-hours");
-          if (schedule) {
-            const counters = schedule.querySelectorAll<HTMLElement>("[data-time-count]");
-            counters.forEach((element, index) => {
-              const destination = Number(element.dataset.timeCount);
-              const counter = { value: 0 };
-              gsap.to(counter, {
-                value: destination,
-                duration: destination === 0 ? 0.1 : 1.65,
-                delay: index * 0.11,
-                ease: "power2.out",
-                scrollTrigger: { trigger: schedule, start: "top 78%", once: true },
-                onStart: () => { element.textContent = "00"; },
-                onUpdate: () => { element.textContent = String(Math.round(counter.value)).padStart(2, "0"); },
-                onComplete: () => { element.textContent = String(destination).padStart(2, "0"); },
-              });
+          const hoursPanel = schedule?.querySelector<HTMLElement>(".tn-hours-panel");
+          if (schedule && hoursPanel) {
+            const counters = Array.from(hoursPanel.querySelectorAll<HTMLElement>("[data-time-count]"));
+            const progress = hoursPanel.querySelector<HTMLElement>(".tn-hours-count-progress span");
+            let animated = false;
+
+            ScrollTrigger.create({
+              trigger: hoursPanel,
+              start: "top 82%",
+              once: true,
+              onEnter: () => {
+                if (animated) return;
+                animated = true;
+                hoursPanel.classList.add("is-counting");
+                counters.forEach((element) => { element.textContent = "00"; });
+
+                gsap.fromTo(hoursPanel,
+                  { y: 22, opacity: 0.65 },
+                  { y: 0, opacity: 1, duration: 0.45, ease: "power2.out", clearProps: "transform,opacity" }
+                );
+
+                const counting = gsap.timeline({
+                  onComplete: () => {
+                    counters.forEach((element) => {
+                      element.textContent = String(Number(element.dataset.timeCount)).padStart(2, "0");
+                    });
+                    hoursPanel.classList.remove("is-counting");
+                    hoursPanel.classList.add("is-counted");
+                  },
+                });
+                counters.forEach((element, index) => {
+                  const target = Number(element.dataset.timeCount);
+                  if (!target) return; // "00" continua correto e legível.
+                  const value = { current: 0 };
+                  counting.to(value, {
+                    current: target,
+                    duration: 2.2,
+                    ease: "power1.inOut",
+                    onUpdate: () => {
+                      element.textContent = String(Math.round(value.current)).padStart(2, "0");
+                    },
+                  }, index >= 2 ? 0.27 : 0.12);
+                });
+                if (progress) {
+                  counting.fromTo(progress,
+                    { scaleX: 0 },
+                    { scaleX: 1, duration: 2.45, ease: "none" },
+                    0
+                  );
+                }
+              },
             });
-            const border = schedule.querySelector<HTMLElement>(".tn-hours-panel");
-            if (border) {
-              gsap.fromTo(border, { y: 32, autoAlpha: 0, scale: 0.985 }, {
-                y: 0, autoAlpha: 1, scale: 1, duration: 0.85, ease: "power3.out",
-                scrollTrigger: { trigger: schedule, start: "top 84%", once: true },
+
+            gsap.fromTo(schedule.querySelectorAll(".tn-hours-week span"),
+              { y: 12, autoAlpha: 0 },
+              {
+                y: 0, autoAlpha: 1, stagger: 0.07, duration: 0.5, ease: "power2.out",
+                scrollTrigger: { trigger: schedule, start: "top 92%", once: true },
                 clearProps: "opacity,visibility,transform",
-              });
-            }
-            gsap.fromTo(schedule.querySelectorAll(".tn-hours-week span"), { y: 8, autoAlpha: 0 }, {
-              y: 0, autoAlpha: 1, stagger: 0.075, duration: 0.45, ease: "power2.out",
-              scrollTrigger: { trigger: schedule, start: "top 85%", once: true },
-              clearProps: "opacity,visibility,transform",
-            });
+              }
+            );
           }
 
           // Image mask reveal uses clip-path, so no picture framing or object-fit changes.
@@ -747,6 +780,7 @@ function TayzaHome() {
                   <span className="tn-hours-time-caption">FIM DO ATENDIMENTO</span>
                 </div>
               </div>
+              <div className="tn-hours-count-progress" aria-hidden="true"><span /></div>
               <div className="tn-hours-panel-footer">
                 <p>Escolha o serviço e consulte os horários disponíveis pelo WhatsApp.</p>
                 <button className="tn-hours-book" type="button" onClick={() => openBooking()}>
