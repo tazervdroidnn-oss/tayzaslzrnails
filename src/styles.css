@@ -1365,3 +1365,278 @@ html { scroll-padding-top: 78px; }
   .tn-price-dock,.tn-price-sheet { animation: tn-price-rise .24s ease-out; }
   @keyframes tn-price-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 }
+
+
+/* Tayza Nails — horários premium e contagem animada */
+.tn-hours {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(74px, 8vw, 116px) 0;
+  background:
+    radial-gradient(ellipse 40% 75% at 92% 14%, rgba(152,91,113,.17), transparent 85%),
+    linear-gradient(130deg, #1b0c17 0%, #2e1022 51%, #1b0c18 100%);
+  color: #fff7f1;
+  scroll-margin-top: 84px;
+}
+.tn-hours::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c29a75 50%, transparent);
+  opacity: .7;
+}
+.tn-hours::after {
+  content: "";
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  border: 1px solid rgba(237,202,172,.055);
+  border-radius: 50%;
+  top: -270px;
+  right: -160px;
+  pointer-events: none;
+}
+.tn-hours-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0,.86fr) minmax(0,1.14fr);
+  align-items: center;
+  gap: clamp(30px,6.2vw,100px);
+}
+.tn-hours-intro { min-width: 0; }
+.tn-hours-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #e5bd98;
+  letter-spacing: .20em;
+}
+.tn-hours h2 {
+  margin: 25px 0 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(34px, 4.45vw, 62px);
+  line-height: 1.05;
+  letter-spacing: -.06em;
+  font-weight: 900;
+  max-width: 640px;
+}
+.tn-hours h2 .tn-heading-line {
+  display: block;
+  color: #fff9f3;
+}
+.tn-hours h2 .tn-heading-line.tn-accent {
+  color: #e5bb95;
+}
+.tn-hours-description {
+  font-size: clamp(12px, 1.2vw, 14px);
+  line-height: 1.85;
+  color: #d6c4c8;
+  max-width: 420px;
+  margin: 24px 0 0;
+}
+.tn-hours-week {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 29px;
+}
+.tn-hours-week span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 45px;
+  min-height: 39px;
+  padding: 8px 10px;
+  border: 1px solid rgba(237,193,161,.28);
+  background: rgba(252,225,197,.045);
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .07em;
+  color: #ebc8b0;
+}
+.tn-hours-panel {
+  min-width: 0;
+  border: 1px solid rgba(229,182,144,.42);
+  border-radius: 18px;
+  padding: clamp(23px, 3vw, 38px);
+  background:
+    linear-gradient(156deg, rgba(114,68,84,.22), rgba(35,19,31,.53) 62%),
+    #35172b;
+  box-shadow: 0 20px 65px rgba(11,5,11,.22), inset 0 1px 0 rgba(255,242,214,.08);
+}
+.tn-hours-panel-top,
+.tn-hours-panel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.tn-hours-panel-top {
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(241,209,188,.18);
+}
+.tn-hours-panel-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #efd7bd;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .13em;
+}
+.tn-hours-live-dot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #ddb48e;
+  box-shadow: 0 0 0 4px rgba(221,180,142,.1);
+}
+.tn-hours-panel-index {
+  color: rgba(245,210,187,.53);
+  font-size: 10px;
+  letter-spacing: .12em;
+}
+.tn-hours-time-grid {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+  align-items: stretch;
+  gap: clamp(10px, 2vw, 20px);
+  padding: clamp(27px,3vw,40px) 0;
+}
+.tn-hours-time-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 13px;
+}
+.tn-hours-time-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #dbbb9d;
+}
+.tn-hours-time-label span,
+.tn-hours-time-caption {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .105em;
+}
+.tn-hours-time {
+  display: block;
+  font-family: "Montserrat",sans-serif;
+  color: #fff5ec;
+  font-size: clamp(28px, 3.8vw, 58px);
+  font-weight: 900;
+  line-height: 1.06;
+  letter-spacing: -.085em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.tn-hours-time > span { display: inline-flex; align-items: baseline; }
+.tn-hours-time [data-time-count] {
+  display: inline-block;
+  min-width: 2ch;
+  text-align: center;
+}
+.tn-hours-h {
+  color: #ddad85;
+  font-size: .68em;
+  font-weight: 700;
+  letter-spacing: -.055em;
+  padding-inline: .06em;
+}
+.tn-hours-time-caption { color: #c9b2b8; line-height: 1.5; }
+.tn-hours-time-divider {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  color: #e5bc9c;
+}
+.tn-hours-time-divider::before,
+.tn-hours-time-divider::after {
+  content: "";
+  display: block;
+  height: 23px;
+  width: 1px;
+  background: rgba(224,186,156,.32);
+}
+.tn-hours-time-divider span { font-size: 9px; font-weight: 800; letter-spacing: .12em; }
+.tn-hours-panel-footer {
+  padding-top: 22px;
+  border-top: 1px solid rgba(241,209,188,.18);
+}
+.tn-hours-panel-footer p {
+  margin: 0;
+  color: #d5c2c4;
+  font-size: 11px;
+  line-height: 1.55;
+  max-width: 220px;
+}
+.tn-hours-book {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  min-height: 46px;
+  flex: none;
+  padding: 11px 15px;
+  background: #edcba7;
+  border: 1px solid #edcba7;
+  border-radius: 24px;
+  color: #351828;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  transition: background .25s ease, color .25s ease, transform .25s ease;
+}
+.tn-hours-book:hover,
+.tn-hours-book:focus-visible {
+  background: #fff0d9;
+  border-color: #fff0d9;
+  transform: translateY(-2px);
+}
+.tn-hours-book:focus-visible {
+  outline: 2px solid #fff7f1;
+  outline-offset: 3px;
+}
+@media (max-width: 1100px) {
+  .tn-hours-inner { gap: 30px; grid-template-columns: minmax(0,.85fr) minmax(0,1.15fr); }
+  .tn-hours-time { font-size: clamp(30px,3.45vw,43px); }
+  .tn-hours-time-grid { gap: 12px; }
+  .tn-hours-panel-footer { flex-wrap: wrap; }
+  .tn-hours-panel-footer p { max-width: none; }
+}
+@media (max-width: 800px) {
+  .tn-hours { padding: 72px 0 80px; scroll-margin-top: 72px; }
+  .tn-hours-inner { grid-template-columns: minmax(0,1fr); gap: 30px; }
+  .tn-hours h2 { font-size: clamp(36px,8vw,55px); }
+  .tn-hours-description { margin-top: 17px; }
+  .tn-hours-week { margin-top: 20px; }
+  .tn-hours-panel { max-width: 680px; width: 100%; }
+  .tn-hours-time { font-size: clamp(34px, 6vw, 59px); }
+}
+@media (max-width: 450px) {
+  .tn-hours { padding: 60px 0 66px; }
+  .tn-hours h2 { font-size: clamp(30px, 9vw, 43px); }
+  .tn-hours-panel { padding: 20px 14px; border-radius: 14px; }
+  .tn-hours-panel-kicker { font-size: 9px; letter-spacing: .09em; }
+  .tn-hours-time-grid { gap: 8px; padding: 27px 0; }
+  .tn-hours-time-label { gap: 5px; }
+  .tn-hours-time-label span { font-size: 8px; letter-spacing: .02em; }
+  .tn-hours-time-label svg { width: 16px; height: 16px; }
+  .tn-hours-time { font-size: clamp(27px, 8.5vw, 38px); }
+  .tn-hours-time-caption { font-size: 7px; letter-spacing: .035em; }
+  .tn-hours-time-divider::before,.tn-hours-time-divider::after { height: 20px; }
+  .tn-hours-book { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tn-hours-book { transition: none; }
+  .tn-hours-book:hover { transform: none; }
+}
