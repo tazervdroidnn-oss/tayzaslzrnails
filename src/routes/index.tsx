@@ -247,7 +247,6 @@ function TayzaHome() {
             [".tn-lash-grid", ".tn-lash-card"],
             [".tn-payment-grid", ".tn-payment-card"],
             [".tn-nail-track", ".tn-nail-card"],
-            [".tn-proof-gallery", ".tn-proof-item"],
           ].forEach(([containerSelector, cardSelector]) => {
             const container = scope.querySelector<HTMLElement>(containerSelector);
             if (!container) return;
@@ -757,33 +756,6 @@ function TayzaHome() {
               <div><Sparkles size={25} strokeWidth={1.4} /><span>ACABAMENTO<br />CUIDADOSO</span></div>
               <div><ShieldCheck size={25} strokeWidth={1.4} /><span>ATENDIMENTO<br />DEDICADO</span></div>
               <div><Clock3 size={25} strokeWidth={1.4} /><span>SEU TEMPO<br />IMPORTA</span></div>
-            </div>
-          </div>
-        </section>
-
-        <section className="tn-proof" id="resultados" aria-labelledby="tn-proof-title">
-          <div className="tn-container">
-            <div className="tn-proof-heading" data-reveal>
-              <div>
-                <p className="tn-eyebrow">RESULTADOS QUE VOCÊ PODE VER</p>
-                <h2 id="tn-proof-title" data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">BELEZA EM</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">CADA DETALHE.</span></span></h2>
-              </div>
-              <p>Conheça algumas das fotos do nosso portfólio. Para ver mais trabalhos e novidades, visite o Instagram do estúdio.</p>
-            </div>
-            <div className="tn-proof-gallery">
-              {studioContent.nails.slice(0, 3).map((item, index) => (
-                <a className="tn-proof-item" href={instagramUrl} target="_blank" rel="noreferrer" key={item.id} aria-label={"Ver mais resultados como " + item.name + " no Instagram"}>
-                  <div className="tn-proof-photo">
-                    <img src={item.image} alt={item.alt} loading="lazy" decoding="async" />
-                    <span>0{index + 1}</span>
-                  </div>
-                  <div className="tn-proof-info"><strong>{item.name}</strong><ArrowUpRight size={18} aria-hidden="true" /></div>
-                </a>
-              ))}
-            </div>
-            <div className="tn-proof-bottom">
-              <span>Portfólio de unhas · Fotos disponíveis no estúdio</span>
-              <a href={instagramUrl} target="_blank" rel="noreferrer"><Instagram size={17} aria-hidden="true" /> Ver mais no Instagram <ArrowUpRight size={17} aria-hidden="true" /></a>
             </div>
           </div>
         </section>
