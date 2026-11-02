@@ -364,25 +364,12 @@ function TayzaHome() {
       </header>
 
       <main id="conteudo">
-        <section className="tn-hero" aria-labelledby="tn-hero-title">
-          <div className="tn-hero-image" style={{ backgroundImage: "url(" + heroPortrait + ")" }} aria-hidden="true" />
-          <div className="tn-hero-shade" aria-hidden="true" />
-          <div className="tn-container tn-hero-inner">
-            <div className="tn-hero-content">
-              <p className="tn-eyebrow tn-eyebrow--light"><span className="tn-line" /> A ESSÊNCIA DA SUA BELEZA</p>
-              <h1 id="tn-hero-title">
-                <span className="tn-title-mask"><span className="tn-hero-title-line">BELEZA EM</span></span>
-                <span className="tn-title-mask"><em className="tn-hero-title-line">CADA</em></span>
-                <span className="tn-title-mask"><span className="tn-hero-title-line">DETALHE.</span></span>
-              </h1>
-              <div className="tn-small-rule" />
-              <p className="tn-hero-description">Unhas impecáveis, um olhar marcante e o cuidado que você merece. Cada detalhe pensado para valorizar quem você é.</p>
-              <button className="tn-button tn-button--beige" type="button" onClick={() => openBooking()}>AGENDE SUA EXPERIÊNCIA <ArrowUpRight size={17} /></button>
-              <p className="tn-hero-caption">UNHAS <span>·</span> CÍLIOS <span>·</span> BELEZA</p>
-            </div>
-          </div>
-          <div className="tn-hero-stamp" aria-hidden="true"><span>TN</span><small>BELEZA & AUTOESTIMA</small></div>
-          <button type="button" className="tn-scroll-hint" onClick={() => goTo("servicos")}>DESLIZE PARA EXPLORAR <span>↓</span></button>
+        <section className="tn-cover" aria-labelledby="tn-cover-title">
+          <h1 id="tn-cover-title" className="sr-only">Tayza Nails — unhas, cílios e sobrancelhas</h1>
+            <button className="tn-nails-banner" type="button" onClick={() => openBooking()} aria-label="Agendar um horário no Tayza Nails">
+              <img src="/tayza-unhas.png" alt="Tayza Nails — unhas, cílios e sobrancelhas. Beleza e cuidado em cada detalhe." loading="lazy" />
+              <span>Agende seu horário <ArrowUpRight size={18} /></span>
+            </button>
         </section>
 
         <section className="tn-section tn-section--cream tn-services" id="servicos">
@@ -419,10 +406,6 @@ function TayzaHome() {
 
         <section className="tn-section tn-section--dark tn-nails" id="unhas">
           <div className="tn-container">
-            <button className="tn-nails-banner" type="button" onClick={() => openBooking()} aria-label="Agendar um horário no Tayza Nails">
-              <img src="/tayza-unhas.png" alt="Tayza Nails — unhas, cílios e sobrancelhas. Beleza e cuidado em cada detalhe." loading="lazy" />
-              <span>Agende seu horário <ArrowUpRight size={18} /></span>
-            </button>
             <div className="tn-carousel-heading" data-reveal>
               <div>
                 <p className="tn-eyebrow tn-eyebrow--light">ARTE NA PONTA DOS DEDOS</p>

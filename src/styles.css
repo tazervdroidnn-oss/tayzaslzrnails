@@ -858,3 +858,7 @@ html { scroll-padding-top: 78px; }
     font-weight: 650;
   }
 }
+
+.tn-cover { background: #210c18; }
+.tn-page > .tn-header { position: sticky; top: 0; background: #210c18; }
+.tn-cover .tn-nails-banner { display: block; margin: 0; padding: 0; border: 0; border-radius: 0; }
