@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ArrowRight, ArrowUpRight, Banknote, CalendarDays, ChevronLeft, ChevronRight,
-  Paintbrush, Clock3, CreditCard, Instagram, Menu, QrCode, ShieldCheck, Sparkles, Sunrise, Sunset, X,
+  Paintbrush, Clock3, CreditCard, Instagram, MapPin, Menu, QrCode, ShieldCheck, Sparkles, Sunrise, Sunset, X,
 } from "lucide-react";
 import heroPortrait from "@/assets/hero.jpg";
 import galleryNails from "@/assets/gallery-nails.jpg";
@@ -17,6 +17,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Tayza Nails | Beleza em cada detalhe" },
       { property: "og:description", content: "Um espaço dedicado à sua beleza. Veja unhas, cílios, serviços e agende seu horário." },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://tayzanails.vercel.app/tayza-unhas.png" },
+      { name: "theme-color", content: "#230d1a" },
     ],
   }),
   component: TayzaHome,
@@ -79,6 +81,7 @@ function TayzaHome() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [bookingName, setBookingName] = useState("");
   const [bookingDate, setBookingDate] = useState("");
+  const [minBookingDate, setMinBookingDate] = useState("");
   const [bookingNote, setBookingNote] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("inicio");
@@ -93,6 +96,17 @@ function TayzaHome() {
   const sliderDrag = useRef({ active: false, x: 0, scroll: 0, moved: false });
   const whatsappDrag = useRef({ active: false, x: 0, y: 0, left: 0, top: 0, moved: false });
   const suppressWhatsAppClick = useRef(false);
+
+  // Local date avoids locale-dependent en-CA formatting and hydration mismatches.
+  useEffect(() => {
+    const today = new Date();
+    const iso = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
+    setMinBookingDate(iso);
+  }, []);
+  const bookingDateInvalid = Boolean(bookingDate && (
+    (minBookingDate && bookingDate < minBookingDate) ||
+    new Date(bookingDate + "T12:00:00").getDay() === 0
+  ));
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -233,6 +247,7 @@ function TayzaHome() {
             [".tn-lash-grid", ".tn-lash-card"],
             [".tn-payment-grid", ".tn-payment-card"],
             [".tn-nail-track", ".tn-nail-card"],
+            [".tn-proof-gallery", ".tn-proof-item"],
           ].forEach(([containerSelector, cardSelector]) => {
             const container = scope.querySelector<HTMLElement>(containerSelector);
             if (!container) return;
@@ -488,6 +503,7 @@ function TayzaHome() {
   }
 
   function sendBooking() {
+    if (bookingDateInvalid) return;
     const parts = [
       "Olá, Tayza! Gostaria de consultar um horário.",
       bookingName.trim() ? "Meu nome: " + bookingName.trim() : "",
@@ -611,7 +627,7 @@ function TayzaHome() {
         <section className="tn-cover" aria-labelledby="tn-cover-title">
           <h1 id="tn-cover-title" className="sr-only">Tayza Nails — unhas, cílios e sobrancelhas</h1>
             <button className="tn-nails-banner" type="button" onClick={() => openBooking()} aria-label="Agendar um horário no Tayza Nails">
-              <img src="/tayza-unhas.png" alt="Tayza Nails — unhas, cílios e sobrancelhas. Beleza e cuidado em cada detalhe." loading="lazy" />
+              <img src="/tayza-unhas.png" alt="Tayza Nails — unhas, cílios e sobrancelhas. Beleza e cuidado em cada detalhe." loading="eager" fetchPriority="high" decoding="async" />
               <span>Agende seu horário <ArrowUpRight size={18} /></span>
             </button>
           <div className="tn-mobile-cover">
@@ -731,15 +747,43 @@ function TayzaHome() {
             </button>
           </div>
           <div className="tn-experience-copy" data-reveal>
-            <p className="tn-eyebrow tn-eyebrow--light">PORQUE VOCÊ MERECE O MELHOR</p>
-            <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">SEU MOMENTO</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">DE BRILHAR.</span></span></h2>
+            <p className="tn-eyebrow tn-eyebrow--light">CONHEÇA O TAYZA NAILS STUDIO</p>
+            <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">BELEZA FEITA</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">COM CUIDADO.</span></span></h2>
             <div className="tn-small-rule" />
-            <p>Mais do que um procedimento, uma experiência de autocuidado. Aqui, cada detalhe é pensado com carinho, técnica e atenção para você sair se sentindo ainda mais bonita.</p>
+            <p>O Tayza Nails Studio é um espaço dedicado a valorizar sua beleza em cada detalhe. Conheça nossas opções de unhas, cílios e sobrancelhas, escolha o estilo que combina com você e converse diretamente com a Tayza para planejar seu atendimento.</p>
+            <a className="tn-about-instagram" href={instagramUrl} target="_blank" rel="noreferrer"><Instagram size={16} aria-hidden="true" /> Conheça os trabalhos no Instagram <ArrowUpRight size={15} aria-hidden="true" /></a>
             <button type="button" className="tn-button tn-button--beige" onClick={() => openBooking()}>RESERVE SEU MOMENTO <ArrowUpRight size={18} /></button>
             <div className="tn-perks">
               <div><Sparkles size={25} strokeWidth={1.4} /><span>ACABAMENTO<br />CUIDADOSO</span></div>
               <div><ShieldCheck size={25} strokeWidth={1.4} /><span>ATENDIMENTO<br />DEDICADO</span></div>
               <div><Clock3 size={25} strokeWidth={1.4} /><span>SEU TEMPO<br />IMPORTA</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="tn-proof" id="resultados" aria-labelledby="tn-proof-title">
+          <div className="tn-container">
+            <div className="tn-proof-heading" data-reveal>
+              <div>
+                <p className="tn-eyebrow">RESULTADOS QUE VOCÊ PODE VER</p>
+                <h2 id="tn-proof-title" data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">BELEZA EM</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">CADA DETALHE.</span></span></h2>
+              </div>
+              <p>Conheça algumas das fotos do nosso portfólio. Para ver mais trabalhos e novidades, visite o Instagram do estúdio.</p>
+            </div>
+            <div className="tn-proof-gallery">
+              {studioContent.nails.slice(0, 3).map((item, index) => (
+                <a className="tn-proof-item" href={instagramUrl} target="_blank" rel="noreferrer" key={item.id} aria-label={"Ver mais resultados como " + item.name + " no Instagram"}>
+                  <div className="tn-proof-photo">
+                    <img src={item.image} alt={item.alt} loading="lazy" decoding="async" />
+                    <span>0{index + 1}</span>
+                  </div>
+                  <div className="tn-proof-info"><strong>{item.name}</strong><ArrowUpRight size={18} aria-hidden="true" /></div>
+                </a>
+              ))}
+            </div>
+            <div className="tn-proof-bottom">
+              <span>Portfólio de unhas · Fotos disponíveis no estúdio</span>
+              <a href={instagramUrl} target="_blank" rel="noreferrer"><Instagram size={17} aria-hidden="true" /> Ver mais no Instagram <ArrowUpRight size={17} aria-hidden="true" /></a>
             </div>
           </div>
         </section>
@@ -790,6 +834,43 @@ function TayzaHome() {
           </div>
         </section>
 
+        <section className="tn-info" id="informacoes" aria-labelledby="tn-info-title">
+          <div className="tn-container tn-info-grid">
+            <div className="tn-info-where" data-reveal>
+              <div className="tn-info-icon"><MapPin size={26} strokeWidth={1.45} aria-hidden="true" /></div>
+              <p className="tn-eyebrow">COMO CHEGAR</p>
+              <h2 id="tn-info-title">SEU PRÓXIMO MOMENTO DE CUIDADO COMEÇA AQUI.</h2>
+              <p>Quer saber o endereço e como chegar ao atendimento? Fale diretamente com a Tayza e receba as orientações de localização.</p>
+              <a href={whatsAppBase + "?text=" + encodeURIComponent("Olá, Tayza! Pode me enviar o endereço e a localização do atendimento?")} target="_blank" rel="noreferrer" className="tn-info-location">
+                Solicitar localização <ArrowUpRight size={18} aria-hidden="true" />
+              </a>
+              <small>Atendimento de segunda a sábado · 08h00 às 17h30</small>
+            </div>
+            <div className="tn-info-faq">
+              <p className="tn-eyebrow">TIRE SUAS DÚVIDAS</p>
+              <h2>ANTES DE AGENDAR</h2>
+              <div className="tn-faq-items">
+                <details>
+                  <summary>Como faço para agendar? <span aria-hidden="true">+</span></summary>
+                  <p>Escolha os serviços no site e envie sua solicitação pelo WhatsApp. A Tayza confirma os horários disponíveis diretamente com você.</p>
+                </details>
+                <details>
+                  <summary>Posso combinar mais de um serviço? <span aria-hidden="true">+</span></summary>
+                  <p>Sim. Selecione os serviços desejados para enviar todos juntos na conversa de agendamento.</p>
+                </details>
+                <details>
+                  <summary>Quais são os dias de atendimento? <span aria-hidden="true">+</span></summary>
+                  <p>De segunda a sábado, das 08h00 às 17h30. Os horários específicos dependem de confirmação.</p>
+                </details>
+                <details>
+                  <summary>Quais formas de pagamento são aceitas? <span aria-hidden="true">+</span></summary>
+                  <p>Pix, cartão e dinheiro. Consulte as condições de pagamento ao agendar.</p>
+                </details>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="tn-section tn-section--cream tn-book" id="agendar">
           <div className="tn-container tn-book-layout">
             <div data-reveal>
@@ -829,7 +910,7 @@ function TayzaHome() {
       <footer className="tn-footer">
         <div className="tn-container tn-footer-inner">
           <div><a className="tn-logo tn-logo--footer" href="#inicio" onClick={(event) => { event.preventDefault(); goTo("inicio"); }}><strong>TAYZA<span>.</span></strong><small>NAILS STUDIO</small></a><p>Beleza que inspira confiança.</p></div>
-          <div className="tn-footer-links"><a href="#servicos" onClick={(event) => { event.preventDefault(); goTo("servicos"); }}>Serviços</a><a href="#unhas" onClick={(event) => { event.preventDefault(); goTo("unhas"); }}>Unhas</a><a href="#cilios" onClick={(event) => { event.preventDefault(); goTo("cilios"); }}>Cílios</a><a href="#horarios" onClick={(event) => { event.preventDefault(); goTo("horarios"); }}>Horários</a><button type="button" onClick={() => openBooking()}>Agendar</button></div>
+          <div className="tn-footer-links"><a href="#servicos" onClick={(event) => { event.preventDefault(); goTo("servicos"); }}>Serviços</a><a href="#unhas" onClick={(event) => { event.preventDefault(); goTo("unhas"); }}>Unhas</a><a href="#cilios" onClick={(event) => { event.preventDefault(); goTo("cilios"); }}>Cílios</a><a href="#horarios" onClick={(event) => { event.preventDefault(); goTo("horarios"); }}>Horários</a><a href="#informacoes" onClick={(event) => { event.preventDefault(); goTo("informacoes"); }}>Informações</a><button type="button" onClick={() => openBooking()}>Agendar</button></div>
           <a href={instagramUrl} className="tn-social" target="_blank" rel="noreferrer" aria-label={"Instagram @" + studioContent.contact.instagram}><Instagram size={20} /><span>@{studioContent.contact.instagram}</span></a>
         </div>
         <div className="tn-container tn-footer-bottom"><span>© {new Date().getFullYear()} {studioContent.brand}. Todos os direitos reservados.</span><span>Feito com cuidado, em cada detalhe.</span></div>
@@ -882,9 +963,11 @@ function TayzaHome() {
                   </button>
                 ))}
               </fieldset>
-              <label>Data de preferência <input type="date" min={new Date().toLocaleDateString("en-CA")} value={bookingDate} onChange={(event) => setBookingDate(event.target.value)} /></label>
+              <label>Data de preferência <input type="date" min={minBookingDate || undefined} value={bookingDate} aria-invalid={bookingDateInvalid} aria-describedby="tn-date-hint" onChange={(event) => setBookingDate(event.target.value)} />
+                <small id="tn-date-hint" className={bookingDateInvalid ? "tn-form-date-error" : "tn-form-date-hint"}>{bookingDateInvalid ? "Escolha uma data futura de segunda a sábado." : "Atendemos de segunda a sábado. Sua data será confirmada pelo WhatsApp."}</small>
+              </label>
               <label>Observações (opcional) <textarea rows={2} maxLength={220} placeholder="Conte o que você procura..." value={bookingNote} onChange={(event) => setBookingNote(event.target.value)} /></label>
-              <button type="submit" className="tn-button tn-button--dark">CONTINUAR NO WHATSAPP <ArrowUpRight size={18} /></button>
+              <button type="submit" className="tn-button tn-button--dark" disabled={bookingDateInvalid}>CONTINUAR NO WHATSAPP <ArrowUpRight size={18} /></button>
               <p className="tn-modal-disclaimer">O envio da mensagem não garante a reserva. A confirmação é feita pelo atendimento.</p>
             </form>
           </div>
