@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ArrowRight, ArrowUpRight, Banknote, CalendarDays, ChevronLeft, ChevronRight,
-  Clock3, CreditCard, Instagram, Menu, QrCode, ShieldCheck, Sparkles, X,
+  Paintbrush, Clock3, CreditCard, Instagram, Menu, QrCode, ShieldCheck, Sparkles, X,
 } from "lucide-react";
 import heroPortrait from "@/assets/hero.jpg";
 import galleryNails from "@/assets/gallery-nails.jpg";
@@ -24,6 +24,11 @@ export const Route = createFileRoute("/")({
 
 const whatsAppBase = "https://wa.me/" + studioContent.contact.whatsapp;
 const instagramUrl = "https://instagram.com/" + studioContent.contact.instagram;
+const priceByService = new Map<string, string>([
+  ...studioContent.services.map(({ name, startingPrice }) => [name, startingPrice] as const),
+  ...[...studioContent.nails, ...studioContent.lashes].map(({ name, price }) => [name, price] as const),
+]);
+const formatPrice = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const bookingOptions = [
   ...studioContent.services.map((service) => service.name),
   ...studioContent.nails.map((item) => item.name),
@@ -343,6 +348,13 @@ function TayzaHome() {
     return () => window.removeEventListener("resize", keepInView);
   }, [floatPosition !== null]);
 
+  const [priceSummaryOpen, setPriceSummaryOpen] = useState(false);
+  const priceRows = selectedServices.map(name => ({ name, price: priceByService.get(name)?.trim() || "" }));
+  const amounts = priceRows.map(({ price }) => /^R\$\s*[\d.]+(?:,\d{2})?$/.test(price)
+    ? Number(price.replace(/[^\d,]/g, "").replace(",", ".")) : null);
+  const totalLabel = amounts.some(value => value === null) ? "Sob consulta"
+    : formatPrice.format(amounts.reduce<number>((sum, value) => sum + (value ?? 0), 0));
+
   function toggleService(name: string) {
     setSelectedServices((items) => items.includes(name) ? items.filter((item) => item !== name) : [...items, name]);
   }
@@ -570,7 +582,7 @@ function TayzaHome() {
                       <p>{service.description}</p>
                       <strong>A partir de {service.startingPrice}</strong>
                     </div>
-                    <button type="button" className="tn-service-cta" aria-pressed={selectedServices.includes(service.name)} onClick={() => toggleService(service.name)} aria-label={"Incluir " + service.name + " na seleção"}>
+                    <button type="button" className="tn-service-cta" aria-pressed={selectedServices.includes(service.name)} onClick={() => { setPriceSummaryOpen(!selectedServices.includes(service.name) || selectedServices.length > 1); toggleService(service.name); }} aria-label={"Incluir " + service.name + " na seleção"}>
                       <span>{selectedServices.includes(service.name) ? "✓ Selecionado" : "+ Incluir serviço"}</span>
                     </button>
                   </div>
@@ -711,6 +723,24 @@ function TayzaHome() {
         <div className="tn-container tn-footer-bottom"><span>© {new Date().getFullYear()} {studioContent.brand}. Todos os direitos reservados.</span><span>Feito com cuidado, em cada detalhe.</span></div>
       </footer>
 
+      {selectedServices.length > 0 && !bookingOpen && !menuOpen && (
+        <aside className="tn-price-dock" aria-label="Resumo de preços">
+          {priceSummaryOpen && (
+            <div className="tn-price-sheet" id="tn-price-sheet">
+              <strong>Seu atendimento</strong>
+              <table aria-label="Valores dos serviços selecionados"><tbody>
+                {priceRows.map(({ name, price }) => <tr key={name}><th scope="row">{name}</th><td>{price || "Sob consulta"}</td></tr>)}
+              </tbody></table>
+              <p>Valores iniciais. Confirme o orçamento pelo WhatsApp.</p>
+              <button type="button" onClick={() => openBooking()}>Agendar seleção <ArrowUpRight size={16} /></button>
+            </div>
+          )}
+          <button className="tn-price-toggle" type="button" aria-expanded={priceSummaryOpen} onClick={() => setPriceSummaryOpen(value => !value)}>
+            <Paintbrush size={18} aria-hidden="true" /> <span aria-live="polite">{totalLabel === "Sob consulta" ? totalLabel : "A partir de " + totalLabel}</span>
+            <span aria-hidden="true">{priceSummaryOpen ? "−" : "+"}</span>
+          </button>
+        </aside>
+      )}
       <button type="button" className="tn-whatsapp-float" aria-label="Abrir WhatsApp. Arraste para reposicionar o botão." title="WhatsApp — arraste para mover" style={floatPosition ? { left: floatPosition.x, top: floatPosition.y, right: "auto", bottom: "auto" } : undefined} onPointerDown={onWhatsappDown} onPointerMove={onWhatsappMove} onPointerUp={onWhatsappUp} onPointerCancel={onWhatsappUp} onClick={() => { if (suppressWhatsAppClick.current) { suppressWhatsAppClick.current = false; return; } window.open(whatsAppBase + "?text=" + encodeURIComponent("Olá, Tayza! Gostaria de saber mais sobre os serviços e horários."), "_blank", "noopener,noreferrer"); }}><WhatsAppLogo /></button>
 
       {menuOpen && (
