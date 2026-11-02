@@ -1069,3 +1069,18 @@ html { scroll-padding-top: 78px; }
   .tn-mobile-cover p { margin: 8px 16px 16px; font-size: 1rem; }
   .tn-mobile-cover button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 46px; padding: 10px 26px; border-radius: 24px; background: #f2cc94; color: #351427; font-weight: 650; }
 }
+
+.tn-section--cream {
+  color: #fff5ee;
+  background: linear-gradient(95deg, #23091591, #23091544), url("/fundo-estudio.png") center / cover no-repeat, #360e23;
+}
+.tn-section--cream .tn-eyebrow,
+.tn-section--cream h2 .tn-heading-line.tn-accent { color: #f1c68e; }
+.tn-section--cream .tn-section-lead,
+.tn-book-layout > div:first-child > p:not(.tn-eyebrow) { color: #f4e4dd; }
+.tn-section--cream :is(.tn-service-card, .tn-lash-card, .tn-book-action) { color: #302329; }
+@media (max-width: 800px) {
+  .tn-section--cream {
+    background: linear-gradient(to bottom, #300c2055, #360e23 min(55vw, 380px)), url("/fundo-estudio.png") center top / 100% auto no-repeat, #360e23;
+  }
+}
