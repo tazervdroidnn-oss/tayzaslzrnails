@@ -276,12 +276,20 @@ function TayzaHome() {
               {studioContent.services.map((service, index) => (
                 <article className="tn-service-card" key={service.id} data-reveal style={{ transitionDelay: (index % 2) * 110 + "ms" }}>
                   <div className="tn-service-photo">
-                    <img src={serviceImages[index] || galleryNails} alt={"Imagem ilustrativa de " + service.name} loading="lazy" />
+                    <img className="tn-photo-backdrop" src={serviceImages[index] || galleryNails} alt="" aria-hidden="true" loading="lazy" />
+                    <img className="tn-photo-subject" src={serviceImages[index] || galleryNails} alt={"Foto do serviço de " + service.name + " do Tayza Nails"} loading="lazy" />
                     <span className="tn-service-number">0{index + 1}</span>
+                    <span className="tn-service-photo-label">TAYZA NAILS <span>—</span> BELEZA EM DETALHES</span>
                   </div>
                   <div className="tn-service-body">
-                    <div><h3>{service.name}</h3><p>{service.description}</p><strong>A partir de {service.startingPrice}</strong></div>
-                    <button type="button" className="tn-circle-link" onClick={() => openBooking(service.name)} aria-label={"Consultar horário para " + service.name}><ArrowUpRight size={22} /></button>
+                    <div className="tn-service-info">
+                      <h3>{service.name}</h3>
+                      <p>{service.description}</p>
+                      <strong>A partir de {service.startingPrice}</strong>
+                    </div>
+                    <button type="button" className="tn-service-cta" onClick={() => openBooking(service.name)} aria-label={"Agendar " + service.name}>
+                      <span>Agendar horário</span><ArrowUpRight size={18} />
+                    </button>
                   </div>
                 </article>
               ))}
@@ -305,7 +313,11 @@ function TayzaHome() {
             <div className="tn-nail-track" ref={sliderRef} onScroll={updateSlide} onPointerDown={nailPointerDown} onPointerMove={nailPointerMove} onPointerUp={nailPointerUp} onPointerCancel={nailPointerUp} onPointerLeave={nailPointerUp} aria-label="Galeria de unhas, deslize horizontalmente">
               {nailGallery.map((item, index) => (
                 <article className="tn-nail-card" key={item.id}>
-                  <div className="tn-nail-image"><img src={item.image} alt={item.alt} loading={index < 2 ? "eager" : "lazy"} draggable={false} /><span className="tn-photo-index">0{index + 1} / 0{nailGallery.length}</span></div>
+                  <div className="tn-nail-image">
+                    <img className="tn-photo-backdrop" src={item.image} alt="" aria-hidden="true" loading="lazy" draggable={false} />
+                    <img className="tn-photo-subject" src={item.image} alt={item.alt} loading={index < 2 ? "eager" : "lazy"} draggable={false} />
+                    <span className="tn-photo-index">0{index + 1} / 0{nailGallery.length}</span>
+                  </div>
                   <div className="tn-nail-details">
                     <div><h3>{item.name}</h3>{item.price ? <p>{item.price}</p> : <p>Conheça nosso trabalho</p>}</div>
                     <button type="button" onClick={() => { if (!sliderDrag.current.moved) openBooking(item.name); }} aria-label={"Agendar " + item.name}><ArrowUpRight size={20} /></button>
@@ -333,7 +345,11 @@ function TayzaHome() {
             <div className="tn-lash-grid">
               {studioContent.lashes.map((style, index) => (
                 <article className="tn-lash-card" key={style.id} data-reveal style={{ transitionDelay: (index % 2) * 85 + "ms" }}>
-                  <div className="tn-lash-photo"><img src={style.image} alt={style.alt} loading="lazy" /><span className="tn-lash-chip">CÍLIOS</span></div>
+                  <div className="tn-lash-photo">
+                    <img className="tn-photo-backdrop" src={style.image} alt="" aria-hidden="true" loading="lazy" />
+                    <img className="tn-photo-subject" src={style.image} alt={style.alt} loading="lazy" />
+                    <span className="tn-lash-chip">CÍLIOS</span>
+                  </div>
                   <div className="tn-lash-info">
                     <div><h3>{style.name}</h3><p>{style.price}</p></div>
                     <button type="button" aria-label={"Agendar " + style.name} onClick={() => openBooking(style.name)}><ArrowUpRight size={21} /></button>
