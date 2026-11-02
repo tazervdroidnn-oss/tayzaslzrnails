@@ -278,7 +278,6 @@ function TayzaHome() {
                   <div className="tn-service-photo">
                     <img className="tn-photo-subject" src={serviceImages[index] || galleryNails} alt={"Foto do serviço de " + service.name + " do Tayza Nails"} loading="lazy" />
                     <span className="tn-service-number">0{index + 1}</span>
-                    <span className="tn-service-photo-label">TAYZA NAILS <span>—</span> BELEZA EM DETALHES</span>
                   </div>
                   <div className="tn-service-body">
                     <div className="tn-service-info">
