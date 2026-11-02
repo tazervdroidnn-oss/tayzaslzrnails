@@ -729,7 +729,7 @@ function TayzaHome() {
             <div className="tn-price-sheet" id="tn-price-sheet">
               <strong>Seu atendimento</strong>
               <table aria-label="Valores dos serviços selecionados"><tbody>
-                {priceRows.map(({ name, price }) => <tr key={name}><th scope="row">{name}</th><td>{price || "Sob consulta"}</td></tr>)}
+                {priceRows.map(({ name, price }) => <tr key={name}><th scope="row">{name}</th><td>{price && /^R\$/.test(price) ? `A partir de ${price}` : price || "Sob consulta"}</td></tr>)}
               </tbody></table>
               <p>Valores iniciais. Confirme o orçamento pelo WhatsApp.</p>
               <button type="button" onClick={() => openBooking()}>Agendar seleção <ArrowUpRight size={16} /></button>
