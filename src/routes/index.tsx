@@ -274,14 +274,16 @@ function TayzaHome() {
     const slider = sliderRef.current;
     if (!slider) return;
     const card = slider.querySelector<HTMLElement>(".tn-nail-card");
-    slider.scrollBy({ left: direction * (card?.offsetWidth || slider.clientWidth / 2) + direction * 16, behavior: "smooth" });
+    const gap = parseFloat(window.getComputedStyle(slider).columnGap || "0") || 0;
+    slider.scrollBy({ left: direction * ((card?.offsetWidth || slider.clientWidth / 2) + gap), behavior: "smooth" });
   }
 
   function updateSlide() {
     const slider = sliderRef.current;
     if (!slider) return;
     const first = slider.querySelector<HTMLElement>(".tn-nail-card");
-    const step = (first?.offsetWidth || 1) + 16;
+    const gap = parseFloat(window.getComputedStyle(slider).columnGap || "0") || 0;
+    const step = (first?.offsetWidth || 1) + gap;
     setActiveNail(Math.min(nailGallery.length - 1, Math.max(0, Math.round(slider.scrollLeft / step))));
   }
 
