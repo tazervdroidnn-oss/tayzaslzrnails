@@ -1059,3 +1059,13 @@ html { scroll-padding-top: 78px; }
 @media (max-width: 540px) {
   .tn-nail-image { aspect-ratio: 3 / 4; }
 }
+
+.tn-mobile-cover { display: none; }
+@media (max-width: 640px) {
+  .tn-cover .tn-nails-banner { display: none; }
+  .tn-mobile-cover { display: grid; justify-items: center; padding-bottom: 24px; background: #220c19; color: #fff3e4; text-align: center; }
+  .tn-cover-detail { width: 100%; height: clamp(150px, 46vw, 245px); background: linear-gradient(to bottom, transparent 78%, #220c19), url("/tayza-unhas.png") right 37% / 285% auto no-repeat; }
+  .tn-cover-brand { width: min(94%, 410px); aspect-ratio: 760 / 390; background: url("/tayza-unhas.png") 30.5% 0 / 241.84% auto no-repeat; mask-image: linear-gradient(to right, transparent, black 7% 93%, transparent), linear-gradient(to bottom, transparent, black 6% 94%, transparent); mask-composite: intersect; }
+  .tn-mobile-cover p { margin: 8px 16px 16px; font-size: 1rem; }
+  .tn-mobile-cover button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 46px; padding: 10px 26px; border-radius: 24px; background: #f2cc94; color: #351427; font-weight: 650; }
+}

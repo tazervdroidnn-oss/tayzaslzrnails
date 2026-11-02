@@ -492,6 +492,12 @@ function TayzaHome() {
               <img src="/tayza-unhas.png" alt="Tayza Nails — unhas, cílios e sobrancelhas. Beleza e cuidado em cada detalhe." loading="lazy" />
               <span>Agende seu horário <ArrowUpRight size={18} /></span>
             </button>
+          <div className="tn-mobile-cover">
+            <div className="tn-cover-detail" role="img" aria-label="Unhas em rosa e vinho com acabamento dourado" />
+            <div className="tn-cover-brand" role="img" aria-label="Tayza Nails — unhas, cílios e sobrancelhas" />
+            <p>Beleza e cuidado em cada detalhe</p>
+            <button type="button" onClick={() => openBooking()}>Agende seu horário <ArrowUpRight size={18} /></button>
+          </div>
         </section>
 
         <section className="tn-section tn-section--cream tn-services" id="servicos">
