@@ -383,11 +383,15 @@ function TayzaHome() {
             </div>
             <div className="tn-service-grid">
               {studioContent.services.map((service, index) => (
-                <article className="tn-service-card" data-service={service.id} key={service.id} data-reveal style={{ transitionDelay: (index % 2) * 110 + "ms" }}>
+                <article className={["manutencao", "sobrancelha"].includes(service.id) ? "tn-service-card tn-service-option" : "tn-service-card"} data-service={service.id} key={service.id} data-reveal style={{ transitionDelay: (index % 2) * 110 + "ms" }}>
+                  {service.id === "manutencao" || service.id === "sobrancelha" ? (
+                    <div className="tn-option-label">{service.id === "manutencao" ? "Cuidado contínuo" : "Design do olhar"}</div>
+                  ) : (
                   <div className="tn-service-photo">
                     <img className="tn-photo-subject" src={serviceImages[index] || galleryNails} alt={"Foto do serviço de " + service.name + " do Tayza Nails"} loading="lazy" />
                     <span className="tn-service-number">0{index + 1}</span>
                   </div>
+                  )}
                   <div className="tn-service-body">
                     <div className="tn-service-info">
                       <h3>{service.name}</h3>

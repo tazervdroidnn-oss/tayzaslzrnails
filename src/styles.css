@@ -862,3 +862,30 @@ html { scroll-padding-top: 78px; }
 .tn-cover { background: #210c18; }
 .tn-page > .tn-header { position: sticky; top: 0; background: #210c18; }
 .tn-cover .tn-nails-banner { display: block; margin: 0; padding: 0; border: 0; border-radius: 0; }
+
+.tn-service-card.tn-service-option {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid #d8bdbc;
+  background: #fff7f6;
+}
+.tn-service-option[data-service="sobrancelha"] { background: #fbf5eb; border-color: #d7c3a6; }
+.tn-option-label {
+  background: #562c44;
+  color: #fff6ef;
+  padding: 14px clamp(20px, 3vw, 32px);
+  font-size: .75rem;
+  font-weight: 650;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+[data-service="sobrancelha"] .tn-option-label { background: #594330; }
+.tn-service-option .tn-service-body { flex: 1; min-height: 0; background: transparent; padding: clamp(20px, 3vw, 32px); gap: 20px; }
+.tn-service-option .tn-service-info h3 { font-size: clamp(1.25rem, 2vw, 1.65rem); color: #33252b; }
+.tn-service-option .tn-service-info p { display: block; overflow: visible; margin: 12px 0 18px; font-size: 1rem; line-height: 1.6; color: #51444a; }
+.tn-service-option .tn-service-info strong { font-size: .9rem; color: #492c34; }
+.tn-service-option .tn-service-cta { min-height: 44px; font-size: .8rem; }
+@media (max-width: 640px) {
+  .tn-service-card.tn-service-option { grid-column: 1 / -1; width: 100%; max-width: none; }
+}
