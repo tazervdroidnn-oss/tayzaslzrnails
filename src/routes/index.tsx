@@ -744,7 +744,7 @@ function TayzaHome() {
                   <time className="tn-hours-time" dateTime="17:30" aria-label="17 horas e 30 minutos">
                     <span aria-hidden="true"><span data-time-count="17">17</span><span className="tn-hours-h">h</span><span data-time-count="30">30</span></span>
                   </time>
-                  <span className="tn-hours-time-caption">ÚLTIMO HORÁRIO DO DIA</span>
+                  <span className="tn-hours-time-caption">FIM DO ATENDIMENTO</span>
                 </div>
               </div>
               <div className="tn-hours-panel-footer">
