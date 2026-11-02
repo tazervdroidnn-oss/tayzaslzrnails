@@ -1301,3 +1301,52 @@ html { scroll-padding-top: 78px; }
     animation: none !important;
   }
 }
+
+
+/* Uniformizar enquadramento de unhas e cílios na vitrine inicial
+   Mesmo tamanho de foto, mesma divisão dos cards e foco no trabalho. */
+.tn-service-card:is([data-service="unhas"], [data-service="cilios"]) .tn-service-photo {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+  background: #6a5552;
+}
+.tn-service-card:is([data-service="unhas"], [data-service="cilios"])
+  .tn-service-photo img.tn-photo-subject {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  padding: 0;
+  transform: none;
+}
+/* A imagem quadrada de cílios é enquadrada no olhar, sem esticar. */
+.tn-service-card[data-service="cilios"] .tn-service-photo img.tn-photo-subject {
+  object-position: 52% 43%;
+}
+@media (min-width: 920px) {
+  .tn-service-card:is([data-service="unhas"], [data-service="cilios"]) {
+    grid-template-columns: 40% minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .tn-service-card:is([data-service="unhas"], [data-service="cilios"]) .tn-service-photo {
+    height: 100%;
+    min-height: 260px;
+    aspect-ratio: auto;
+  }
+  .tn-service-card:is([data-service="unhas"], [data-service="cilios"]) .tn-service-body {
+    min-height: 260px;
+  }
+}
+@media (max-width: 919px) {
+  .tn-service-card:is([data-service="unhas"], [data-service="cilios"]) {
+    display: flex;
+    flex-direction: column;
+  }
+  .tn-service-card:is([data-service="unhas"], [data-service="cilios"]) .tn-service-photo {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 3 / 4;
+  }
+}
