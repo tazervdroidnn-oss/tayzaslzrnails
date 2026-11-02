@@ -173,7 +173,6 @@ function TayzaHome() {
             const letters = logo.querySelectorAll<HTMLElement>(".tn-logo-letter");
             const subtitle = logo.querySelector<HTMLElement>(".tn-logo-subtitle");
             const underline = logo.querySelector<SVGPathElement>(".tn-logo-drawn-line path");
-            const shine = logo.querySelector<HTMLElement>(".tn-logo-shine");
 
             const logoTimeline = gsap.timeline({ delay: 0.12 });
             logoTimeline.fromTo(letters,
@@ -192,12 +191,6 @@ function TayzaHome() {
                 { strokeDasharray: 100, strokeDashoffset: 100 },
                 { strokeDashoffset: 0, duration: 0.66, ease: "power2.inOut",
                   clearProps: "strokeDashoffset,strokeDasharray" }, "-=0.24");
-            }
-            if (shine) {
-              logoTimeline.fromTo(shine,
-                { backgroundPosition: "135% 50%", autoAlpha: 0 },
-                { backgroundPosition: "-90% 50%", autoAlpha: 1, duration: 1.15,
-                  ease: "power2.inOut", clearProps: "backgroundPosition,opacity,visibility" }, "-=0.17");
             }
           }
           gsap.fromTo(".tn-poster-glint", { backgroundPosition: "100% 0%" }, {
@@ -506,9 +499,12 @@ function TayzaHome() {
                 ))}
                 <span className="tn-logo-letter-mask"><span className="tn-logo-letter tn-logo-letter--dot">.</span></span>
               </span>
-              <span className="tn-logo-shine" aria-hidden="true">TAYZA<span>.</span></span>
+              <span className="tn-logo-shine" aria-hidden="true">TAYZA.</span>
             </strong>
-            <small className="tn-logo-subtitle">NAILS STUDIO</small>
+            <span className="tn-logo-subtitle-layer">
+              <small className="tn-logo-subtitle">NAILS STUDIO</small>
+              <small className="tn-logo-subtitle-shine" aria-hidden="true">NAILS STUDIO</small>
+            </span>
             <svg className="tn-logo-drawn-line" viewBox="0 0 148 6" preserveAspectRatio="none" aria-hidden="true">
               <path d="M 2 3 L 146 3" pathLength="100" fill="none" stroke="#dcb79c" strokeWidth="1.6" strokeLinecap="round" />
             </svg>
