@@ -906,3 +906,124 @@ html { scroll-padding-top: 78px; }
   object-fit: cover;
   object-position: 30% center;
 }
+
+
+/* Tayza Nails — navigation premium 2026 */
+.tn-nav-desktop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(1px, .55vw, 9px);
+  margin-left: auto;
+  padding: 2px 5px 12px;
+  isolation: isolate;
+}
+.tn-nav-desktop a.tn-nav-link {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  min-height: 43px;
+  padding: 10px clamp(11px, 1.2vw, 16px);
+  border-radius: 7px;
+  color: rgba(255, 244, 239, .74);
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .105em;
+  white-space: nowrap;
+  transition: transform .2s ease, color .28s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.tn-nav-desktop a.tn-nav-link::after { display: none; }
+.tn-nav-desktop a.tn-nav-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(231, 184, 154, .15);
+  border-radius: 7px;
+  background: linear-gradient(135deg, rgba(226, 174, 139, .16), rgba(203, 139, 111, .045));
+  opacity: 0;
+  transform: scale(.91);
+  transition: opacity .32s ease, transform .36s cubic-bezier(.2, .8, .2, 1), border-color .26s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+.tn-nav-desktop a.tn-nav-link:hover,
+.tn-nav-desktop a.tn-nav-link:focus-visible,
+.tn-nav-desktop a.tn-nav-link.is-active {
+  color: #f6d7be;
+}
+.tn-nav-desktop a.tn-nav-link:hover::before,
+.tn-nav-desktop a.tn-nav-link:focus-visible::before,
+.tn-nav-desktop a.tn-nav-link.is-active::before {
+  opacity: 1;
+  transform: scale(1);
+}
+.tn-nav-desktop a.tn-nav-link.is-active::before {
+  border-color: rgba(232, 189, 156, .23);
+}
+.tn-nav-desktop a.tn-nav-link:active {
+  transform: scale(.95) translateY(1px);
+}
+.tn-nav-desktop a.tn-nav-link:focus-visible {
+  outline: 2px solid #d8aa88;
+  outline-offset: 2px;
+}
+.tn-nav-indicator {
+  position: absolute;
+  left: 0;
+  bottom: 3px;
+  height: 2px;
+  min-width: 0;
+  background: linear-gradient(90deg, #ab8067 0%, #f4d3b7 52%, #be8b6d 100%);
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(233, 183, 151, .42);
+  pointer-events: none;
+  transition: left .48s cubic-bezier(.2, .86, .22, 1), width .48s cubic-bezier(.2, .86, .22, 1), opacity .2s ease;
+}
+.tn-mobile-menu nav a {
+  position: relative;
+  padding: 20px 12px 20px 15px;
+  border-left: 2px solid transparent;
+  transition: background .28s ease, color .28s ease, border-color .28s ease, padding-left .3s ease;
+}
+.tn-mobile-menu nav a:hover,
+.tn-mobile-menu nav a:focus-visible,
+.tn-mobile-menu nav a.is-active {
+  color: #f2ceae;
+  border-left-color: #d3a385;
+  background: linear-gradient(90deg, rgba(216, 163, 131, .13), rgba(216, 163, 131, 0));
+  padding-left: 21px;
+}
+.tn-mobile-menu nav a.is-active small {
+  color: #f2ceae;
+}
+.tn-mobile-menu nav a svg {
+  transition: transform .25s ease, color .25s ease;
+}
+.tn-mobile-menu nav a:hover svg,
+.tn-mobile-menu nav a.is-active svg {
+  transform: translate(3px, -3px);
+  color: #f2ceae;
+}
+.tn-mobile-menu nav a:active {
+  transform: scale(.985);
+}
+@media (max-width: 1050px) {
+  .tn-nav-desktop { gap: 1px; }
+  .tn-nav-desktop a.tn-nav-link { font-size: 9px; letter-spacing: .08em; padding-inline: 10px; }
+}
+@media (max-width: 800px) {
+  .tn-nav-desktop { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tn-nav-desktop a.tn-nav-link,
+  .tn-nav-desktop a.tn-nav-link::before,
+  .tn-nav-indicator,
+  .tn-mobile-menu nav a,
+  .tn-mobile-menu nav a svg {
+    transition: none !important;
+  }
+}
