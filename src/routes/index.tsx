@@ -185,6 +185,11 @@ function TayzaHome() {
         const listenerCleanups: Array<() => void> = [];
 
         const context = gsap.context(() => {
+          gsap.fromTo(".tn-care-letter", { backgroundPosition: "100% 50%" }, {
+            backgroundPosition: "0% 50%", duration: 0.7, stagger: 0.065, ease: "sine.inOut",
+            scrollTrigger: { trigger: ".tn-care-title", start: "top 78%", toggleActions: "restart none none reset" },
+            delay: 0.45,
+          });
           // Tayza logotype: individual letter entrance, rose-gold sweep and drawn underline.
           const logo = scope.querySelector<HTMLElement>(".tn-logo--animated");
           if (logo) {
@@ -642,7 +647,17 @@ function TayzaHome() {
             <div className="tn-section-top" data-reveal>
               <div>
                 <p className="tn-eyebrow">MUITO ALÉM DA BELEZA</p>
-                <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">UM CUIDADO</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">EXCLUSIVO.</span></span></h2>
+                <h2 data-motion-title className="tn-care-title" aria-label="Um cuidado exclusivo.">
+                  {["UM CUIDADO", "EXCLUSIVO."].map((line, index) => (
+                    <span key={line} className="tn-title-mask" aria-hidden="true">
+                      <span className={index ? "tn-heading-line tn-accent" : "tn-heading-line"}>
+                        {Array.from(line, (letter, pos) => letter === " " ? " " : (
+                          <span className="tn-care-letter" key={pos}>{letter}</span>
+                        ))}
+                      </span>
+                    </span>
+                  ))}
+                </h2>
               </div>
               <p className="tn-section-lead">Monte seu atendimento. Escolha unhas, cílios ou sobrancelhas e combine os cuidados que deseja na mesma solicitação.</p>
             </div>

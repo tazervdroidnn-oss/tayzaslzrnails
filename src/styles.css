@@ -2045,3 +2045,19 @@ html { scroll-padding-top: 78px; }
   .tn-proof-photo img, .tn-proof-info svg,
   .tn-faq-items details p, .tn-info-location { transition: none; animation: none; }
 }
+
+.tn-care-title .tn-heading-line .tn-care-letter {
+  display: inline;
+  color: inherit;
+}
+@supports (background-clip: text) {
+  @media (prefers-reduced-motion: no-preference) {
+    .tn-care-title .tn-heading-line { --letter-base: #fff5ee; }
+    .tn-care-title .tn-heading-line.tn-accent { --letter-base: #f1c68e; }
+    .tn-care-title .tn-heading-line .tn-care-letter {
+      background: linear-gradient(105deg, var(--letter-base) 34%, #f2b661 44%, #fffef4 50%, #f2b661 56%, var(--letter-base) 66%) 100% 50% / 350% 100% no-repeat;
+      background-clip: text;
+      color: transparent;
+    }
+  }
+}
