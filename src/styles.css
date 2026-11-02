@@ -890,9 +890,13 @@ html { scroll-padding-top: 78px; }
   .tn-service-card.tn-service-option { grid-column: 1 / -1; width: 100%; max-width: none; }
 }
 
-.tn-poster-frame { display: grid; place-items: center; padding: clamp(16px, 3vw, 48px); background: radial-gradient(ellipse at center, #502439, #211019); }
-.tn-studio-poster { display: block; position: relative; width: min(100%, 32rem); overflow: hidden; padding: 0; border: 1px solid #946b49; border-radius: 12px; box-shadow: 0 16px 38px #13091166; cursor: pointer; }
+.tn-experience { min-height: 0; }
+@media (min-width: 801px) {
+  .tn-experience { grid-template-columns: min(48%, 36rem) minmax(0, 1fr); }
+}
+.tn-poster-frame { min-width: 0; align-self: center; }
+.tn-studio-poster { display: block; position: relative; width: 100%; overflow: hidden; padding: 0; border: 0; background: transparent; cursor: pointer; }
 .tn-studio-poster img { display: block; width: 100%; height: auto; }
-.tn-studio-poster:focus-visible { outline: 3px solid #ffe4a6; outline-offset: 4px; }
+.tn-studio-poster:focus-visible { outline: 3px solid #ffe4a6; outline-offset: -3px; }
 .tn-poster-glint { position: absolute; inset: 0; pointer-events: none; mask: url("/tayza-letter-mask.png") center / 100% 100% no-repeat; background: linear-gradient(105deg, transparent 46%, #fff5c8 50%, transparent 54%) 100% 0 / 300% 100% no-repeat; }
 @media (prefers-reduced-motion: reduce) { .tn-poster-glint { display: none; } }
