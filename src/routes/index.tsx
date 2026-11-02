@@ -28,7 +28,7 @@ const bookingOptions = [
   ...studioContent.services.map((service) => service.name),
   ...studioContent.nails.map((item) => item.name),
   ...studioContent.lashes.map((item) => item.name),
-  "Quero conversar sobre um serviço",
+
 ];
 const nailGallery = [
   ...studioContent.nails,
@@ -72,7 +72,7 @@ function WhatsAppLogo({ size = 25 }: { size?: number }) {
 function TayzaHome() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
-  const [bookingService, setBookingService] = useState("");
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [bookingName, setBookingName] = useState("");
   const [bookingDate, setBookingDate] = useState("");
   const [bookingNote, setBookingNote] = useState("");
@@ -350,8 +350,12 @@ function TayzaHome() {
     return () => window.removeEventListener("resize", keepInView);
   }, [floatPosition !== null]);
 
+  function toggleService(name: string) {
+    setSelectedServices((items) => items.includes(name) ? items.filter((item) => item !== name) : [...items, name]);
+  }
+
   function openBooking(service = "") {
-    setBookingService(service);
+    if (service) setSelectedServices((items) => items.includes(service) ? items : [...items, service]);
     setMenuOpen(false);
     setBookingOpen(true);
   }
@@ -416,7 +420,7 @@ function TayzaHome() {
     const parts = [
       "Olá, Tayza! Gostaria de consultar um horário.",
       bookingName.trim() ? "Meu nome: " + bookingName.trim() : "",
-      bookingService ? "Procedimento: " + bookingService : "Gostaria de saber os serviços disponíveis.",
+      selectedServices.length ? "Serviços escolhidos: " + selectedServices.join(", ") : "Gostaria de saber os serviços disponíveis.",
       bookingDate ? "Data de preferência: " + bookingDate.split("-").reverse().join("/") : "",
       bookingNote.trim() ? "Observação: " + bookingNote.trim() : "",
       "Pode me informar a disponibilidade?",
@@ -551,7 +555,7 @@ function TayzaHome() {
                 <p className="tn-eyebrow">MUITO ALÉM DA BELEZA</p>
                 <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">UM CUIDADO</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">EXCLUSIVO.</span></span></h2>
               </div>
-              <p className="tn-section-lead">Do clássico ao sofisticado, descubra serviços que valorizam a sua beleza natural e fazem você se sentir ainda mais confiante.</p>
+              <p className="tn-section-lead">Monte seu atendimento. Escolha unhas, cílios ou sobrancelhas e combine os cuidados que deseja na mesma solicitação.</p>
             </div>
             <div className="tn-service-grid">
               {studioContent.services.map((service, index) => (
@@ -570,12 +574,16 @@ function TayzaHome() {
                       <p>{service.description}</p>
                       <strong>A partir de {service.startingPrice}</strong>
                     </div>
-                    <button type="button" className="tn-service-cta" onClick={() => openBooking(service.name)} aria-label={"Agendar " + service.name}>
-                      <span>Agendar horário</span><ArrowUpRight size={18} />
+                    <button type="button" className="tn-service-cta" aria-pressed={selectedServices.includes(service.name)} onClick={() => toggleService(service.name)} aria-label={"Incluir " + service.name + " na seleção"}>
+                      <span>{selectedServices.includes(service.name) ? "✓ Selecionado" : "+ Incluir serviço"}</span>
                     </button>
                   </div>
                 </article>
               ))}
+            </div>
+            <div className="tn-selection-bar">
+              <div><strong>Seu atendimento</strong><p aria-live="polite">{selectedServices.join(" · ") || "Selecione os serviços acima ou consulte um horário."}</p></div>
+              <button className="tn-button tn-button--beige" type="button" onClick={() => openBooking()}>Agendar horário <ArrowUpRight size={18} /></button>
             </div>
           </div>
         </section>
@@ -671,9 +679,9 @@ function TayzaHome() {
             </div>
             <div className="tn-book-action" data-reveal>
               <span><CalendarDays size={29} strokeWidth={1.4} /></span>
-              <p>Seu próximo momento de beleza começa aqui.</p>
+              <p>Escolha o dia para o seu cuidado.</p>
               <button type="button" className="tn-button tn-button--dark" onClick={() => openBooking()}>AGENDAR MEU HORÁRIO <ArrowRight size={19} /></button>
-              <small>Os horários são confirmados diretamente pelo atendimento.</small>
+              <small>Sua seleção segue pelo WhatsApp. A equipe confirma a disponibilidade com você.</small>
             </div>
           </div>
         </section>
@@ -728,7 +736,14 @@ function TayzaHome() {
             <p className="tn-modal-intro">Preencha suas preferências. Vamos abrir uma conversa no WhatsApp para confirmar a disponibilidade.</p>
             <form onSubmit={(event) => { event.preventDefault(); sendBooking(); }}>
               <label>Seu nome <input type="text" placeholder="Como podemos chamar você?" maxLength={80} value={bookingName} onChange={(event) => setBookingName(event.target.value)} /></label>
-              <label>Procedimento <select value={bookingService} onChange={(event) => setBookingService(event.target.value)}><option value="">Selecione o serviço desejado</option>{bookingOptions.map((option, index) => <option key={option + index} value={option}>{option}</option>)}</select></label>
+              <fieldset className="tn-choices">
+                <legend>Quais serviços você quer combinar?</legend>
+                {Array.from(new Set([...bookingOptions, ...selectedServices])).map((name) => (
+                  <button key={name} type="button" aria-pressed={selectedServices.includes(name)} onClick={() => toggleService(name)}>
+                    {selectedServices.includes(name) ? "✓ " : "+ "}{name}
+                  </button>
+                ))}
+              </fieldset>
               <label>Data de preferência <input type="date" min={new Date().toLocaleDateString("en-CA")} value={bookingDate} onChange={(event) => setBookingDate(event.target.value)} /></label>
               <label>Observações (opcional) <textarea rows={2} maxLength={220} placeholder="Conte o que você procura..." value={bookingNote} onChange={(event) => setBookingNote(event.target.value)} /></label>
               <button type="submit" className="tn-button tn-button--dark">CONTINUAR NO WHATSAPP <ArrowUpRight size={18} /></button>
