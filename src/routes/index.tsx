@@ -100,6 +100,10 @@ function TayzaHome() {
         const listenerCleanups: Array<() => void> = [];
 
         const context = gsap.context(() => {
+          gsap.fromTo(".tn-poster-glint", { backgroundPosition: "100% 0%" }, {
+            backgroundPosition: "0% 0%", ease: "none",
+            scrollTrigger: { trigger: ".tn-studio-poster", start: "top 85%", end: "center 30%", scrub: true },
+          });
           const heroLines = scope.querySelectorAll<HTMLElement>(".tn-hero-title-line");
           gsap.fromTo(heroLines,
             { yPercent: 112, autoAlpha: 0 },
@@ -163,7 +167,7 @@ function TayzaHome() {
 
           // Image mask reveal uses clip-path, so no picture framing or object-fit changes.
           scope.querySelectorAll<HTMLElement>(
-            ".tn-service-photo .tn-photo-subject, .tn-lash-photo .tn-photo-subject, .tn-experience-photo img"
+            ".tn-service-photo .tn-photo-subject, .tn-lash-photo .tn-photo-subject"
           ).forEach((element) => {
             gsap.fromTo(element,
               { clipPath: "inset(0 0 100% 0)" },
@@ -470,7 +474,12 @@ function TayzaHome() {
         </section>
 
         <section className="tn-experience" id="sobre">
-          <div className="tn-experience-photo" data-reveal><img src={galleryNails} alt="Detalhe de unhas elegantes com acabamento artístico" loading="lazy" /></div>
+          <div className="tn-poster-frame">
+            <button className="tn-studio-poster" type="button" onClick={() => openBooking()} aria-label="Agendar um horário com Tayza Nails">
+              <img src="/tayza-studio.png" width="1086" height="1448" alt="Tayza Nails: alongamento e esmaltação em gel e design personalizado." loading="lazy" />
+              <span className="tn-poster-glint" aria-hidden="true" />
+            </button>
+          </div>
           <div className="tn-experience-copy" data-reveal>
             <p className="tn-eyebrow tn-eyebrow--light">PORQUE VOCÊ MERECE O MELHOR</p>
             <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">SEU MOMENTO</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">DE BRILHAR.</span></span></h2>
