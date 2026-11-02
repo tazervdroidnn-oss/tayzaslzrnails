@@ -83,22 +83,138 @@ function TayzaHome() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Motion system: progressive enhancements only; content remains visible if JS/GSAP fails.
   useEffect(() => {
-    const nodes = document.querySelectorAll<HTMLElement>("[data-reveal]");
-    if (!("IntersectionObserver" in window)) {
-      nodes.forEach((node) => node.classList.add("is-visible"));
-      return;
-    }
-    const observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const scope = document.querySelector<HTMLElement>(".tn-page");
+    if (!scope) return;
+
+    let disposed = false;
+    let disposeAnimations = () => {};
+
+    Promise.all([import("gsap"), import("gsap/ScrollTrigger")])
+      .then(([{ gsap }, { ScrollTrigger }]) => {
+        if (disposed) return;
+        gsap.registerPlugin(ScrollTrigger);
+        const listenerCleanups: Array<() => void> = [];
+
+        const context = gsap.context(() => {
+          const heroLines = scope.querySelectorAll<HTMLElement>(".tn-hero-title-line");
+          gsap.fromTo(heroLines,
+            { yPercent: 112, autoAlpha: 0 },
+            { yPercent: 0, autoAlpha: 1, duration: 1.04, stagger: 0.14, ease: "power3.out", delay: 0.08, clearProps: "transform,opacity,visibility" }
+          );
+          const heroDetails = scope.querySelectorAll<HTMLElement>(
+            ".tn-hero .tn-eyebrow, .tn-hero .tn-small-rule, .tn-hero-description, .tn-hero .tn-button, .tn-hero-caption"
+          );
+          gsap.fromTo(heroDetails,
+            { autoAlpha: 0, y: 17 },
+            { autoAlpha: 1, y: 0, duration: 0.65, stagger: 0.10, delay: 0.25, ease: "power2.out", clearProps: "transform,opacity,visibility" }
+          );
+
+          // Titles reveal line by line within real clipping masks. No split plugin or layout shift.
+          scope.querySelectorAll<HTMLElement>("[data-motion-title]").forEach((heading) => {
+            const lines = heading.querySelectorAll<HTMLElement>(".tn-heading-line");
+            gsap.fromTo(lines,
+              { yPercent: 108, autoAlpha: 0 },
+              {
+                yPercent: 0, autoAlpha: 1, duration: 0.84, stagger: 0.11, ease: "power3.out",
+                scrollTrigger: { trigger: heading, start: "top 87%", once: true },
+                clearProps: "transform,opacity,visibility",
+              }
+            );
+          });
+
+          // Editorial stagger: readable cards without long waits or scroll-jacking.
+          [
+            [".tn-service-grid", ".tn-service-card"],
+            [".tn-lash-grid", ".tn-lash-card"],
+            [".tn-payment-grid", ".tn-payment-card"],
+            [".tn-nail-track", ".tn-nail-card"],
+          ].forEach(([containerSelector, cardSelector]) => {
+            const container = scope.querySelector<HTMLElement>(containerSelector);
+            if (!container) return;
+            const cards = container.querySelectorAll<HTMLElement>(cardSelector);
+            if (!cards.length) return;
+            gsap.fromTo(cards,
+              { y: 38, autoAlpha: 0 },
+              {
+                y: 0, autoAlpha: 1, duration: 0.73, stagger: 0.10, ease: "power3.out",
+                scrollTrigger: { trigger: container, start: "top 86%", once: true },
+                clearProps: "transform,opacity,visibility",
+              }
+            );
+          });
+
+          // Quiet supporting copy, payment and booking panel entrances.
+          scope.querySelectorAll<HTMLElement>(
+            ".tn-section-lead, .tn-carousel-heading p:not(.tn-eyebrow), .tn-book-layout > div:first-child > p:not(.tn-eyebrow), .tn-book-action, .tn-experience-copy > p:not(.tn-eyebrow), .tn-experience-copy .tn-perks, .tn-payments-heading > p:not(.tn-eyebrow)"
+          ).forEach((element) => {
+            gsap.fromTo(element,
+              { y: 19, autoAlpha: 0 },
+              {
+                y: 0, autoAlpha: 1, duration: 0.73, ease: "power2.out",
+                scrollTrigger: { trigger: element, start: "top 91%", once: true },
+                clearProps: "transform,opacity,visibility",
+              }
+            );
+          });
+
+          // Image mask reveal uses clip-path, so no picture framing or object-fit changes.
+          scope.querySelectorAll<HTMLElement>(
+            ".tn-service-photo .tn-photo-subject, .tn-lash-photo .tn-photo-subject, .tn-experience-photo img"
+          ).forEach((element) => {
+            gsap.fromTo(element,
+              { clipPath: "inset(0 0 100% 0)" },
+              {
+                clipPath: "inset(0 0 0% 0)", duration: 0.88, ease: "power2.inOut",
+                scrollTrigger: { trigger: element.closest("article") || element, start: "top 90%", once: true },
+                clearProps: "clipPath",
+              }
+            );
+          });
+        }, scope);
+
+        // Only fine pointers get subtle magnetic motion; touch stays native.
+        if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+          scope.querySelectorAll<HTMLElement>(
+            ".tn-hero .tn-button, .tn-experience-copy .tn-button, .tn-book-action .tn-button, .tn-header-book"
+          ).forEach((button) => {
+            const onMove = (event: MouseEvent) => {
+              const rect = button.getBoundingClientRect();
+              const dx = (event.clientX - rect.left - rect.width / 2) * 0.055;
+              const dy = (event.clientY - rect.top - rect.height / 2) * 0.085;
+              gsap.to(button, { x: dx, y: dy, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+            };
+            const onLeave = () => gsap.to(button, { x: 0, y: 0, duration: 0.5, ease: "power3.out", overwrite: "auto" });
+            button.addEventListener("mousemove", onMove);
+            button.addEventListener("mouseleave", onLeave);
+            listenerCleanups.push(() => {
+              button.removeEventListener("mousemove", onMove);
+              button.removeEventListener("mouseleave", onLeave);
+            });
+          });
         }
-      }
-    }, { threshold: 0.11, rootMargin: "0px 0px -35px 0px" });
-    nodes.forEach((node) => observer.observe(node));
-    return () => observer.disconnect();
+
+        const refresh = () => ScrollTrigger.refresh();
+        window.addEventListener("load", refresh, { once: true });
+        disposeAnimations = () => {
+          window.removeEventListener("load", refresh);
+          listenerCleanups.forEach((removeListener) => removeListener());
+          context.revert();
+        };
+        requestAnimationFrame(() => ScrollTrigger.refresh());
+      })
+      .catch((error) => {
+        // Failure of optional motion must never block the storefront or booking.
+        console.warn("Tayza Nails: animações opcionais indisponíveis", error);
+      });
+
+    return () => {
+      disposed = true;
+      disposeAnimations();
+    };
   }, []);
 
   useEffect(() => {
@@ -252,7 +368,11 @@ function TayzaHome() {
           <div className="tn-container tn-hero-inner">
             <div className="tn-hero-content">
               <p className="tn-eyebrow tn-eyebrow--light"><span className="tn-line" /> A ESSÊNCIA DA SUA BELEZA</p>
-              <h1 id="tn-hero-title">BELEZA EM <em>CADA</em> DETALHE.</h1>
+              <h1 id="tn-hero-title">
+                <span className="tn-title-mask"><span className="tn-hero-title-line">BELEZA EM</span></span>
+                <span className="tn-title-mask"><em className="tn-hero-title-line">CADA</em></span>
+                <span className="tn-title-mask"><span className="tn-hero-title-line">DETALHE.</span></span>
+              </h1>
               <div className="tn-small-rule" />
               <p className="tn-hero-description">Unhas impecáveis, um olhar marcante e o cuidado que você merece. Cada detalhe pensado para valorizar quem você é.</p>
               <button className="tn-button tn-button--beige" type="button" onClick={() => openBooking()}>AGENDE SUA EXPERIÊNCIA <ArrowUpRight size={17} /></button>
@@ -268,7 +388,7 @@ function TayzaHome() {
             <div className="tn-section-top" data-reveal>
               <div>
                 <p className="tn-eyebrow">MUITO ALÉM DA BELEZA</p>
-                <h2>UM CUIDADO <span>EXCLUSIVO.</span></h2>
+                <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">UM CUIDADO</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">EXCLUSIVO.</span></span></h2>
               </div>
               <p className="tn-section-lead">Do clássico ao sofisticado, descubra serviços que valorizam a sua beleza natural e fazem você se sentir ainda mais confiante.</p>
             </div>
@@ -300,7 +420,7 @@ function TayzaHome() {
             <div className="tn-carousel-heading" data-reveal>
               <div>
                 <p className="tn-eyebrow tn-eyebrow--light">ARTE NA PONTA DOS DEDOS</p>
-                <h2>UNHAS QUE <span>ENCANTAM.</span></h2>
+                <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">UNHAS QUE</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">ENCANTAM.</span></span></h2>
                 <p>Resultados, cores e acabamentos que falam por você. Arraste para descobrir mais.</p>
               </div>
               <div className="tn-carousel-controls">
@@ -308,9 +428,9 @@ function TayzaHome() {
                 <button type="button" onClick={() => moveCarousel(1)} aria-label="Ver próximas unhas"><ChevronRight size={22} /></button>
               </div>
             </div>
-            <div className="tn-nail-track" ref={sliderRef} onScroll={updateSlide} onPointerDown={nailPointerDown} onPointerMove={nailPointerMove} onPointerUp={nailPointerUp} onPointerCancel={nailPointerUp} onPointerLeave={nailPointerUp} aria-label="Galeria de unhas, deslize horizontalmente">
+            <div className="tn-nail-track" ref={sliderRef} tabIndex={0} onKeyDown={(event) => { if (event.key === "ArrowLeft") { event.preventDefault(); moveCarousel(-1); } if (event.key === "ArrowRight") { event.preventDefault(); moveCarousel(1); } }} onScroll={updateSlide} onPointerDown={nailPointerDown} onPointerMove={nailPointerMove} onPointerUp={nailPointerUp} onPointerCancel={nailPointerUp} onPointerLeave={nailPointerUp} aria-label="Galeria de unhas, deslize horizontalmente">
               {nailGallery.map((item, index) => (
-                <article className="tn-nail-card" key={item.id}>
+                <article className={"tn-nail-card" + (index === activeNail ? " is-current" : "")} key={item.id}>
                   <div className="tn-nail-image">
                     <img className="tn-photo-subject" src={item.image} alt={item.alt} loading={index < 2 ? "eager" : "lazy"} draggable={false} />
                     <span className="tn-photo-index">0{index + 1} / 0{nailGallery.length}</span>
@@ -322,7 +442,7 @@ function TayzaHome() {
                 </article>
               ))}
             </div>
-            <div className="tn-carousel-footer">
+            <div className="tn-carousel-footer" aria-label="Progresso da galeria">
               <div className="tn-slider-progress"><span style={{ width: ((activeNail + 2) / nailGallery.length * 100) + "%" }} /></div>
               <span>{String(Math.min(activeNail + 1, nailGallery.length)).padStart(2, "0")} <i>/</i> {String(nailGallery.length).padStart(2, "0")}</span>
               <span className="tn-swipe-tip">← ARRASTE PARA O LADO →</span>
@@ -335,7 +455,7 @@ function TayzaHome() {
             <div className="tn-section-top" data-reveal>
               <div>
                 <p className="tn-eyebrow">OLHARES QUE MARCAM</p>
-                <h2>SEU OLHAR, <span>SEU ESTILO.</span></h2>
+                <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">SEU OLHAR,</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">SEU ESTILO.</span></span></h2>
               </div>
               <p className="tn-section-lead">De um efeito delicado ao volume mais intenso, cada técnica é escolhida para realçar sua expressão com elegância.</p>
             </div>
@@ -360,7 +480,7 @@ function TayzaHome() {
           <div className="tn-experience-photo" data-reveal><img src={galleryNails} alt="Detalhe de unhas elegantes com acabamento artístico" loading="lazy" /></div>
           <div className="tn-experience-copy" data-reveal>
             <p className="tn-eyebrow tn-eyebrow--light">PORQUE VOCÊ MERECE O MELHOR</p>
-            <h2>SEU MOMENTO <span>DE BRILHAR.</span></h2>
+            <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">SEU MOMENTO</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">DE BRILHAR.</span></span></h2>
             <div className="tn-small-rule" />
             <p>Mais do que um procedimento, uma experiência de autocuidado. Aqui, cada detalhe é pensado com carinho, técnica e atenção para você sair se sentindo ainda mais bonita.</p>
             <button type="button" className="tn-button tn-button--beige" onClick={() => openBooking()}>RESERVE SEU MOMENTO <ArrowUpRight size={18} /></button>
@@ -376,7 +496,7 @@ function TayzaHome() {
           <div className="tn-container tn-book-layout">
             <div data-reveal>
               <p className="tn-eyebrow">ESSE MOMENTO É SEU</p>
-              <h2>VAMOS CUIDAR <span>DE VOCÊ?</span></h2>
+              <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">VAMOS CUIDAR</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">DE VOCÊ?</span></span></h2>
               <p>Escolha o serviço que deseja, informe sua preferência de data e envie uma mensagem pronta diretamente para o nosso WhatsApp.</p>
             </div>
             <div className="tn-book-action" data-reveal>
@@ -392,7 +512,7 @@ function TayzaHome() {
           <div className="tn-container">
             <div className="tn-payments-heading" data-reveal>
               <p className="tn-eyebrow tn-eyebrow--light">FACILIDADE PARA VOCÊ</p>
-              <h2>FORMAS DE <span>PAGAMENTO.</span></h2>
+              <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">FORMAS DE</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">PAGAMENTO.</span></span></h2>
               <p>Mais praticidade na hora de cuidar da sua beleza.</p>
             </div>
             <div className="tn-payment-grid">
@@ -423,7 +543,7 @@ function TayzaHome() {
         <div className="tn-menu-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) setMenuOpen(false); }}>
           <div className="tn-mobile-menu" role="dialog" aria-label="Menu de navegação" aria-modal="true">
             <div className="tn-mobile-menu-top"><span>TAYZA NAILS</span><button type="button" onClick={() => setMenuOpen(false)} aria-label="Fechar menu"><X size={24} /></button></div>
-            <nav>{navigation.map((item, index) => <a key={item.id} href={"#" + item.id} onClick={(event) => { event.preventDefault(); goTo(item.id); }}><small>0{index + 1}</small>{item.label}<ArrowUpRight size={19} /></a>)}</nav>
+            <nav>{navigation.map((item, index) => <a key={item.id} href={"#" + item.id} style={{ animationDelay: (0.13 + index * 0.065) + "s" }} onClick={(event) => { event.preventDefault(); goTo(item.id); }}><small>0{index + 1}</small>{item.label}<ArrowUpRight size={19} /></a>)}</nav>
             <button type="button" className="tn-button tn-button--beige" onClick={() => openBooking()}>AGENDAR HORÁRIO <ArrowUpRight size={17} /></button>
           </div>
         </div>
