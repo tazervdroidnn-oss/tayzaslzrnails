@@ -370,3 +370,77 @@ html { scroll-padding-top: 78px; }
   .tn-hero-image, .tn-hero-content, .tn-scroll-hint span, .tn-mobile-menu, .tn-booking-modal { animation:none; }
   .tn-service-photo img,.tn-nail-image img,.tn-lash-photo img { transition:none; }
 }
+
+
+/* Refinamento de enquadramento e proporções — Tayza Nails */
+/* Recuo sutil somente nos elementos secundários do topo, preservando o título. */
+.tn-hero-content {
+  padding-left: 8px;
+}
+.tn-hero-description,
+.tn-hero .tn-button,
+.tn-hero-caption,
+.tn-hero .tn-small-rule {
+  margin-left: 14px;
+}
+
+/* Fotos centralizadas: unhas aparecem por inteiro no carrossel. */
+.tn-service-photo img {
+  object-position: center 48%;
+}
+.tn-lash-photo img {
+  object-position: center 42%;
+}
+.tn-nail-image {
+  background: #514037;
+}
+.tn-nail-image img {
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Cards compactos, com mais trabalhos visíveis de uma vez no computador. */
+@media (min-width: 1024px) {
+  .tn-service-grid,
+  .tn-lash-grid {
+    max-width: 1040px;
+    margin-inline: auto;
+    gap: 18px;
+  }
+  .tn-service-photo {
+    height: clamp(205px, 19vw, 250px);
+  }
+  .tn-service-body {
+    min-height: 145px;
+    padding: 20px 23px 23px;
+  }
+  .tn-lash-photo {
+    aspect-ratio: 1.6 / 1;
+  }
+  .tn-nail-card {
+    flex-basis: calc((100% - 32px) / 3);
+  }
+  .tn-nail-image {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+/* Mantém dois cards por vez no celular e dá respiro aos textos do hero. */
+@media (max-width: 540px) {
+  .tn-hero-content {
+    padding-left: 10px;
+    padding-right: 8px;
+  }
+  .tn-hero-description,
+  .tn-hero .tn-button,
+  .tn-hero-caption,
+  .tn-hero .tn-small-rule {
+    margin-left: 10px;
+  }
+  .tn-service-photo img {
+    object-position: center 43%;
+  }
+  .tn-lash-photo img {
+    object-position: center 38%;
+  }
+}
