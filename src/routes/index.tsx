@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   ArrowRight, ArrowUpRight, Banknote, CalendarDays, ChevronLeft, ChevronRight,
-  Paintbrush, Clock3, CreditCard, Instagram, Menu, QrCode, ShieldCheck, Sparkles, X,
+  Paintbrush, Clock3, CreditCard, Instagram, Menu, QrCode, ShieldCheck, Sparkles, Sunrise, Sunset, X,
 } from "lucide-react";
 import heroPortrait from "@/assets/hero.jpg";
 import galleryNails from "@/assets/gallery-nails.jpg";
@@ -262,6 +262,40 @@ function TayzaHome() {
               }
             );
           });
+
+          // Horários: os dígitos contam de 00 até os valores reais apenas na entrada.
+          // Os valores finais permanecem no HTML quando JS estiver desativado.
+          const schedule = scope.querySelector<HTMLElement>(".tn-hours");
+          if (schedule) {
+            const counters = schedule.querySelectorAll<HTMLElement>("[data-time-count]");
+            counters.forEach((element, index) => {
+              const destination = Number(element.dataset.timeCount);
+              const counter = { value: 0 };
+              gsap.to(counter, {
+                value: destination,
+                duration: destination === 0 ? 0.1 : 1.65,
+                delay: index * 0.11,
+                ease: "power2.out",
+                scrollTrigger: { trigger: schedule, start: "top 78%", once: true },
+                onStart: () => { element.textContent = "00"; },
+                onUpdate: () => { element.textContent = String(Math.round(counter.value)).padStart(2, "0"); },
+                onComplete: () => { element.textContent = String(destination).padStart(2, "0"); },
+              });
+            });
+            const border = schedule.querySelector<HTMLElement>(".tn-hours-panel");
+            if (border) {
+              gsap.fromTo(border, { y: 32, autoAlpha: 0, scale: 0.985 }, {
+                y: 0, autoAlpha: 1, scale: 1, duration: 0.85, ease: "power3.out",
+                scrollTrigger: { trigger: schedule, start: "top 84%", once: true },
+                clearProps: "opacity,visibility,transform",
+              });
+            }
+            gsap.fromTo(schedule.querySelectorAll(".tn-hours-week span"), { y: 8, autoAlpha: 0 }, {
+              y: 0, autoAlpha: 1, stagger: 0.075, duration: 0.45, ease: "power2.out",
+              scrollTrigger: { trigger: schedule, start: "top 85%", once: true },
+              clearProps: "opacity,visibility,transform",
+            });
+          }
 
           // Image mask reveal uses clip-path, so no picture framing or object-fit changes.
           scope.querySelectorAll<HTMLElement>(
@@ -678,6 +712,51 @@ function TayzaHome() {
           </div>
         </section>
 
+        <section className="tn-hours" id="horarios" aria-labelledby="tn-hours-title">
+          <div className="tn-container tn-hours-inner">
+            <div className="tn-hours-intro">
+              <p className="tn-eyebrow tn-hours-eyebrow"><Clock3 size={17} strokeWidth={1.6} aria-hidden="true" /> SEU MOMENTO DE AUTOCUIDADO</p>
+              <h2 id="tn-hours-title" data-motion-title>
+                <span className="tn-title-mask"><span className="tn-heading-line">HORÁRIOS DE</span></span>
+                <span className="tn-title-mask"><span className="tn-heading-line tn-accent">ATENDIMENTO.</span></span>
+              </h2>
+              <p className="tn-hours-description">Reserve um momento para você. Atendemos de segunda a sábado, com cuidado e atenção em cada detalhe.</p>
+              <div className="tn-hours-week" aria-label="Atendimento de segunda a sábado">
+                {["SEG", "TER", "QUA", "QUI", "SEX", "SÁB"].map((day) => <span key={day}>{day}</span>)}
+              </div>
+            </div>
+            <div className="tn-hours-panel" aria-label="Segunda a sábado, das oito horas às dezessete horas e trinta minutos">
+              <div className="tn-hours-panel-top">
+                <span className="tn-hours-panel-kicker"><span className="tn-hours-live-dot" aria-hidden="true" /> SEGUNDA A SÁBADO</span>
+                <span className="tn-hours-panel-index">01 / 02</span>
+              </div>
+              <div className="tn-hours-time-grid">
+                <div className="tn-hours-time-card">
+                  <div className="tn-hours-time-label"><Sunrise size={21} strokeWidth={1.4} aria-hidden="true" /><span>ABERTURA</span></div>
+                  <time className="tn-hours-time" dateTime="08:00" aria-label="08 horas">
+                    <span aria-hidden="true"><span data-time-count="8">08</span><span className="tn-hours-h">h</span><span data-time-count="0">00</span></span>
+                  </time>
+                  <span className="tn-hours-time-caption">INÍCIO DO ATENDIMENTO</span>
+                </div>
+                <div className="tn-hours-time-divider" aria-hidden="true"><span>ATÉ</span></div>
+                <div className="tn-hours-time-card">
+                  <div className="tn-hours-time-label"><Sunset size={21} strokeWidth={1.4} aria-hidden="true" /><span>ENCERRAMENTO</span></div>
+                  <time className="tn-hours-time" dateTime="17:30" aria-label="17 horas e 30 minutos">
+                    <span aria-hidden="true"><span data-time-count="17">17</span><span className="tn-hours-h">h</span><span data-time-count="30">30</span></span>
+                  </time>
+                  <span className="tn-hours-time-caption">ÚLTIMO HORÁRIO DO DIA</span>
+                </div>
+              </div>
+              <div className="tn-hours-panel-footer">
+                <p>Escolha o serviço e consulte os horários disponíveis pelo WhatsApp.</p>
+                <button className="tn-hours-book" type="button" onClick={() => openBooking()}>
+                  CONSULTAR HORÁRIO <ArrowUpRight size={18} aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="tn-section tn-section--cream tn-book" id="agendar">
           <div className="tn-container tn-book-layout">
             <div data-reveal>
@@ -717,7 +796,7 @@ function TayzaHome() {
       <footer className="tn-footer">
         <div className="tn-container tn-footer-inner">
           <div><a className="tn-logo tn-logo--footer" href="#inicio" onClick={(event) => { event.preventDefault(); goTo("inicio"); }}><strong>TAYZA<span>.</span></strong><small>NAILS STUDIO</small></a><p>Beleza que inspira confiança.</p></div>
-          <div className="tn-footer-links"><a href="#servicos" onClick={(event) => { event.preventDefault(); goTo("servicos"); }}>Serviços</a><a href="#unhas" onClick={(event) => { event.preventDefault(); goTo("unhas"); }}>Unhas</a><a href="#cilios" onClick={(event) => { event.preventDefault(); goTo("cilios"); }}>Cílios</a><button type="button" onClick={() => openBooking()}>Agendar</button></div>
+          <div className="tn-footer-links"><a href="#servicos" onClick={(event) => { event.preventDefault(); goTo("servicos"); }}>Serviços</a><a href="#unhas" onClick={(event) => { event.preventDefault(); goTo("unhas"); }}>Unhas</a><a href="#cilios" onClick={(event) => { event.preventDefault(); goTo("cilios"); }}>Cílios</a><a href="#horarios" onClick={(event) => { event.preventDefault(); goTo("horarios"); }}>Horários</a><button type="button" onClick={() => openBooking()}>Agendar</button></div>
           <a href={instagramUrl} className="tn-social" target="_blank" rel="noreferrer" aria-label={"Instagram @" + studioContent.contact.instagram}><Instagram size={20} /><span>@{studioContent.contact.instagram}</span></a>
         </div>
         <div className="tn-container tn-footer-bottom"><span>© {new Date().getFullYear()} {studioContent.brand}. Todos os direitos reservados.</span><span>Feito com cuidado, em cada detalhe.</span></div>
