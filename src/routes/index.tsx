@@ -664,8 +664,8 @@ function TayzaHome() {
                       <p>{service.description}</p>
                       <strong>A partir de {service.startingPrice}</strong>
                     </div>
-                    <button type="button" className="tn-service-cta" aria-pressed={selectedServices.includes(service.name)} onClick={() => { setPriceSummaryOpen(!selectedServices.includes(service.name) || selectedServices.length > 1); toggleService(service.name); }} aria-label={"Incluir " + service.name + " na seleção"}>
-                      <span>{selectedServices.includes(service.name) ? "✓ Selecionado" : "+ Incluir serviço"}</span>
+                    <button type="button" className="tn-service-cta" aria-pressed={selectedServices.includes(service.name)} onClick={() => { setPriceSummaryOpen(!selectedServices.includes(service.name) || selectedServices.length > 1); toggleService(service.name); }} aria-label={(selectedServices.includes(service.name) ? "Remover " : "Incluir ") + service.name}>
+                      <span>{selectedServices.includes(service.name) ? "− Remover serviço" : "+ Incluir serviço"}</span>
                     </button>
                   </div>
                 </article>
@@ -920,17 +920,17 @@ function TayzaHome() {
         <aside className="tn-price-dock" aria-label="Resumo de preços">
           {priceSummaryOpen && (
             <div className="tn-price-sheet" id="tn-price-sheet">
-              <strong>Seu atendimento</strong>
-              <table aria-label="Valores dos serviços selecionados"><tbody>
-                {priceRows.map(({ name, price }) => <tr key={name}><th scope="row">{name}</th><td>{price && /^R\$/.test(price) ? `A partir de ${price}` : price || "Sob consulta"}</td></tr>)}
-              </tbody></table>
-              <p>Valores iniciais. Confirme o orçamento pelo WhatsApp.</p>
+              <strong>Sua seleção · {priceRows.length} {priceRows.length === 1 ? "serviço" : "serviços"}</strong>
+              <div className="tn-price-list"><table aria-label="Valores dos serviços selecionados"><tbody>
+                {priceRows.map(({ name, price }) => <tr key={name}><th scope="row">{name}</th><td>{price && /^R\$/.test(price) ? `A partir de ${price}` : price || "Sob consulta"}</td><td><button type="button" className="tn-remove-service" aria-label={"Remover " + name} title={"Remover " + name} onClick={() => toggleService(name)}>−</button></td></tr>)}
+              </tbody></table></div>
+              <p>Use o botão − para remover. O valor final é confirmado pelo WhatsApp.</p>
               <button type="button" onClick={() => openBooking()}>Agendar seleção <ArrowUpRight size={16} /></button>
             </div>
           )}
           <button className="tn-price-toggle" type="button" aria-expanded={priceSummaryOpen} onClick={() => setPriceSummaryOpen(value => !value)}>
             <Paintbrush size={18} aria-hidden="true" /> <span aria-live="polite">{totalLabel === "Sob consulta" ? totalLabel : "A partir de " + totalLabel}</span>
-            <span aria-hidden="true">{priceSummaryOpen ? "−" : "+"}</span>
+            <span aria-hidden="true">{priceSummaryOpen ? "▾" : "▴"}</span>
           </button>
         </aside>
       )}

@@ -1719,3 +1719,20 @@ html { scroll-padding-top: 78px; }
   .tn-experience-copy .tn-perks { width: 100%; justify-content: space-between; }
   .tn-experience-copy .tn-button { width: 100%; justify-content: center; }
 }
+
+.tn-price-dock { width: min(360px, calc(100% - 24px)); max-width: none; pointer-events: none; }
+.tn-price-dock > * { pointer-events: auto; }
+.tn-price-sheet { width: 100%; display: flex; flex-direction: column; gap: 8px; max-height: min(64svh, 460px); overflow: hidden; }
+.tn-price-list { overflow-y: auto; overscroll-behavior: contain; min-height: 0; }
+.tn-price-list table { margin: 0; }
+.tn-price-list th { overflow-wrap: anywhere; }
+.tn-price-list td { white-space: normal; }
+.tn-price-list td:last-child { width: 48px; }
+.tn-price-sheet .tn-remove-service { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; background: #f1e3da; color: #54243b; font-size: 1.25rem; }
+.tn-price-sheet > button { justify-content: center; flex-shrink: 0; }
+.tn-price-sheet > p { margin: 0; }
+.tn-service-card:hover .tn-service-photo img.tn-photo-subject,
+.tn-lash-card:hover .tn-lash-photo img.tn-photo-subject { transform: none; }
+@media(max-width:800px) {
+  .tn-booking-modal form :is(input, textarea, select) { font-size: 16px; }
+}
