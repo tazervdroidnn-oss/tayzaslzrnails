@@ -274,9 +274,8 @@ function TayzaHome() {
             </div>
             <div className="tn-service-grid">
               {studioContent.services.map((service, index) => (
-                <article className="tn-service-card" key={service.id} data-reveal style={{ transitionDelay: (index % 2) * 110 + "ms" }}>
+                <article className="tn-service-card" data-service={service.id} key={service.id} data-reveal style={{ transitionDelay: (index % 2) * 110 + "ms" }}>
                   <div className="tn-service-photo">
-                    <img className="tn-photo-backdrop" src={serviceImages[index] || galleryNails} alt="" aria-hidden="true" loading="lazy" />
                     <img className="tn-photo-subject" src={serviceImages[index] || galleryNails} alt={"Foto do serviço de " + service.name + " do Tayza Nails"} loading="lazy" />
                     <span className="tn-service-number">0{index + 1}</span>
                     <span className="tn-service-photo-label">TAYZA NAILS <span>—</span> BELEZA EM DETALHES</span>
@@ -314,7 +313,6 @@ function TayzaHome() {
               {nailGallery.map((item, index) => (
                 <article className="tn-nail-card" key={item.id}>
                   <div className="tn-nail-image">
-                    <img className="tn-photo-backdrop" src={item.image} alt="" aria-hidden="true" loading="lazy" draggable={false} />
                     <img className="tn-photo-subject" src={item.image} alt={item.alt} loading={index < 2 ? "eager" : "lazy"} draggable={false} />
                     <span className="tn-photo-index">0{index + 1} / 0{nailGallery.length}</span>
                   </div>
@@ -346,7 +344,6 @@ function TayzaHome() {
               {studioContent.lashes.map((style, index) => (
                 <article className="tn-lash-card" key={style.id} data-reveal style={{ transitionDelay: (index % 2) * 85 + "ms" }}>
                   <div className="tn-lash-photo">
-                    <img className="tn-photo-backdrop" src={style.image} alt="" aria-hidden="true" loading="lazy" />
                     <img className="tn-photo-subject" src={style.image} alt={style.alt} loading="lazy" />
                     <span className="tn-lash-chip">CÍLIOS</span>
                   </div>
