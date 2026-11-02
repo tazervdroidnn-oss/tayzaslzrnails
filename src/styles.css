@@ -1084,3 +1084,133 @@ html { scroll-padding-top: 78px; }
     background: linear-gradient(to bottom, #300c2055, #360e23 min(55vw, 380px)), url("/fundo-estudio.png") center top / 100% auto no-repeat, #360e23;
   }
 }
+
+
+/* TAYZA NAILS STUDIO — cinematic logo motion */
+.tn-logo--animated {
+  position: relative;
+  isolation: isolate;
+  flex: none;
+  color: #fff9f5;
+  text-decoration: none;
+  transform: translateZ(0);
+}
+.tn-logo--animated .tn-logo-word {
+  position: relative;
+  display: block;
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.tn-logo--animated .tn-logo-letter-row {
+  display: inline-flex;
+  align-items: baseline;
+  vertical-align: baseline;
+  gap: 0;
+}
+.tn-logo--animated .tn-logo-letter-mask {
+  display: inline-flex;
+  vertical-align: baseline;
+  overflow: hidden;
+  padding-top: .075em;
+  padding-bottom: .075em;
+  margin-top: -.075em;
+  margin-bottom: -.075em;
+}
+.tn-logo--animated .tn-logo-letter {
+  display: inline-block;
+  color: #fffbf8;
+  font-size: inherit;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -.085em;
+  transform: translateZ(0);
+}
+.tn-logo--animated .tn-logo-letter--dot {
+  color: #dbb59b;
+}
+.tn-logo--animated .tn-logo-shine {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  white-space: nowrap;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: -.085em;
+  line-height: inherit;
+  color: transparent;
+  background-image: linear-gradient(110deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(250,218,186,.18) 44%,
+    rgba(255,242,219,.92) 50%,
+    rgba(250,218,186,.2) 57%,
+    transparent 67%,
+    transparent 100%
+  );
+  background-size: 290% 100%;
+  background-position: 135% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.tn-logo--animated .tn-logo-shine span {
+  color: transparent;
+}
+.tn-logo--animated .tn-logo-subtitle {
+  display: block;
+  margin-top: 5px;
+  padding-left: 3px;
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: .32em;
+  color: #fff7f0;
+}
+.tn-logo--animated .tn-logo-drawn-line {
+  display: block;
+  width: calc(100% - 3px);
+  height: 4px;
+  margin: 5px 0 0 2px;
+  overflow: visible;
+  opacity: .85;
+  filter: drop-shadow(0 0 3px rgba(222,171,136,.28));
+}
+.tn-logo--animated .tn-logo-drawn-line path {
+  vector-effect: non-scaling-stroke;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tn-logo--animated:hover .tn-logo-shine,
+  .tn-logo--animated:focus-visible .tn-logo-shine {
+    animation: tn-logo-sweep-hover 1.15s cubic-bezier(.35,.05,.35,1) both;
+  }
+  .tn-logo--animated:hover .tn-logo-drawn-line,
+  .tn-logo--animated:focus-visible .tn-logo-drawn-line {
+    filter: drop-shadow(0 0 5px rgba(240,189,155,.62));
+  }
+}
+@keyframes tn-logo-sweep-hover {
+  from { background-position: 135% 50%; }
+  to { background-position: -90% 50%; }
+}
+@media (max-width: 540px) {
+  .tn-logo--animated .tn-logo-word { font-size: 27px; }
+  .tn-logo--animated .tn-logo-subtitle {
+    font-size: 7px;
+    letter-spacing: .28em;
+    margin-top: 4px;
+  }
+  .tn-logo--animated .tn-logo-drawn-line { margin-top: 3px; height: 3px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tn-logo--animated .tn-logo-shine { display: none; animation: none !important; }
+  .tn-logo--animated .tn-logo-letter { transform: none !important; opacity: 1 !important; }
+  .tn-logo--animated .tn-logo-drawn-line { filter: none; }
+}
