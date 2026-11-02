@@ -1695,3 +1695,27 @@ html { scroll-padding-top: 78px; }
   .tn-hours-count-progress { transition: none !important; }
   .tn-hours-count-progress { display: none; }
 }
+
+/* Studio portrait: a fine gold edge follows the poster into the editorial panel. */
+.tn-experience {
+  background: radial-gradient(ellipse at 48% 30%, #412332 0, #291722 44%, #1c1318 85%);
+}
+.tn-studio-poster::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  box-shadow: inset 0 0 0 1px #eccb9770;
+  background: linear-gradient(135deg, #ffdfa4, transparent) left top / 24% 2px no-repeat,
+              linear-gradient(315deg, #ffdfa4, transparent) right bottom / 24% 2px no-repeat;
+}
+.tn-experience-copy { width: 100%; max-width: 46rem; justify-self: center; }
+.tn-experience-copy .tn-eyebrow { color: #ecc995; }
+.tn-experience h2 .tn-heading-line.tn-accent { color: #e8be96; }
+.tn-experience-copy > p:not(.tn-eyebrow) { color: #eeded7; font-size: clamp(.94rem, 1.1vw, 1.05rem); line-height: 1.65; }
+.tn-experience-copy .tn-button { border-radius: 24px; min-height: 48px; background: linear-gradient(110deg, #f7dab0, #e5b789); color: #351824; }
+@media (min-width: 801px) {
+  .tn-studio-poster { border-radius: 0 0 clamp(24px, 4vw, 64px) 0; }
+}
+@media (max-width: 800px) {
+  .tn-experience-copy { padding: clamp(32px, 7vw, 54px) max(22px, 6vw); }
+  .tn-experience-copy .tn-perks { width: 100%; justify-content: space-between; }
+  .tn-experience-copy .tn-button { width: 100%; justify-content: center; }
+}
