@@ -900,3 +900,9 @@ html { scroll-padding-top: 78px; }
 .tn-studio-poster:focus-visible { outline: 3px solid #ffe4a6; outline-offset: -3px; }
 .tn-poster-glint { position: absolute; inset: 0; pointer-events: none; mask: url("/tayza-letter-mask.png") center / 100% 100% no-repeat; background: linear-gradient(105deg, transparent 46%, #fff5c8 50%, transparent 54%) 100% 0 / 300% 100% no-repeat; }
 @media (prefers-reduced-motion: reduce) { .tn-poster-glint { display: none; } }
+
+.tn-nail-image img.tn-photo-subject[src="/gel%20na%20tips.jpg"] {
+  aspect-ratio: 1170 / 1552;
+  object-fit: cover;
+  object-position: 30% center;
+}
