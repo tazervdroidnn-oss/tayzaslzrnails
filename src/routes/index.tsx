@@ -47,6 +47,14 @@ const serviceImages = [
   galleryMaintenance,
   heroPortrait,
 ];
+const navigation = [
+  { id: "inicio", label: "Início" },
+  { id: "servicos", label: "Serviços" },
+  { id: "unhas", label: "Unhas" },
+  { id: "cilios", label: "Cílios" },
+  { id: "sobre", label: "Sobre" },
+];
+
 const paymentOptions = [
   { label: "Cartão", detail: "Crédito e débito", icon: CreditCard, enabled: studioContent.payments.card },
   { label: "Pix", detail: "Pagamento prático", icon: QrCode, enabled: studioContent.payments.pix },
@@ -69,9 +77,15 @@ function TayzaHome() {
   const [bookingDate, setBookingDate] = useState("");
   const [bookingNote, setBookingNote] = useState("");
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("inicio");
+  const [navIndicator, setNavIndicator] = useState({ left: 0, width: 0 });
   const [activeNail, setActiveNail] = useState(0);
   const [floatPosition, setFloatPosition] = useState<{ x: number; y: number } | null>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const desktopNavRef = useRef<HTMLElement>(null);
+  const navigationTweenRef = useRef<{ kill: () => void } | null>(null);
+  const navigationRequestRef = useRef(0);
+  const navigationInProgressRef = useRef(false);
   const sliderDrag = useRef({ active: false, x: 0, scroll: 0, moved: false });
   const whatsappDrag = useRef({ active: false, x: 0, y: 0, left: 0, top: 0, moved: false });
   const suppressWhatsAppClick = useRef(false);
@@ -82,6 +96,59 @@ function TayzaHome() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Scroll spy: the highlighted menu item follows manual scrolling as well as taps.
+  useEffect(() => {
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      if (navigationInProgressRef.current) return;
+      const header = document.querySelector<HTMLElement>(".tn-header");
+      const threshold = (header?.getBoundingClientRect().height || 70) + Math.min(130, window.innerHeight * 0.16);
+      let visible = "inicio";
+      navigation.slice(1).forEach(({ id }) => {
+        const section = document.getElementById(id);
+        if (section && section.getBoundingClientRect().top <= threshold) visible = id;
+      });
+      if (window.scrollY < 24) visible = "inicio";
+      setActiveSection((current) => current === visible ? current : visible);
+    };
+    const queueMeasure = () => {
+      if (!frame) frame = window.requestAnimationFrame(measure);
+    };
+    queueMeasure();
+    window.addEventListener("scroll", queueMeasure, { passive: true });
+    window.addEventListener("resize", queueMeasure);
+    return () => {
+      window.removeEventListener("scroll", queueMeasure);
+      window.removeEventListener("resize", queueMeasure);
+      window.cancelAnimationFrame(frame);
+      navigationRequestRef.current++;
+      navigationTweenRef.current?.kill();
+    };
+  }, []);
+
+  // Position the refined rose-gold indicator under the current menu option.
+  useEffect(() => {
+    const nav = desktopNavRef.current;
+    if (!nav) return;
+    const updateIndicator = () => {
+      const link = Array.from(nav.querySelectorAll<HTMLAnchorElement>("[data-nav-id]"))
+        .find((item) => item.dataset.navId === activeSection);
+      if (!link) return;
+      const navRect = nav.getBoundingClientRect();
+      const linkRect = link.getBoundingClientRect();
+      if (linkRect.width < 1) return;
+      setNavIndicator((current) => {
+        const left = linkRect.left - navRect.left + 14;
+        const width = Math.max(12, linkRect.width - 28);
+        return current.left === left && current.width === width ? current : { left, width };
+      });
+    };
+    updateIndicator();
+    window.addEventListener("resize", updateIndicator);
+    return () => window.removeEventListener("resize", updateIndicator);
+  }, [activeSection]);
 
   // Motion system: progressive enhancements only; content remains visible if JS/GSAP fails.
   useEffect(() => {
@@ -257,8 +324,59 @@ function TayzaHome() {
   }
 
   function goTo(id: string) {
+    const section = document.getElementById(id);
+    if (!section) return;
+
     setMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
+    setActiveSection(id);
+    if (window.location.hash !== "#" + id) {
+      window.history.replaceState(window.history.state, "", "#" + id);
+    }
+
+    const header = document.querySelector<HTMLElement>(".tn-header");
+    const offset = (header?.getBoundingClientRect().height || 70) + 12;
+    const destination = id === "inicio" ? 0 : Math.max(0, section.getBoundingClientRect().top + window.scrollY - offset);
+
+    navigationRequestRef.current += 1;
+    const requestId = navigationRequestRef.current;
+    navigationTweenRef.current?.kill();
+    navigationInProgressRef.current = true;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      window.scrollTo({ top: destination, behavior: "instant" });
+      navigationInProgressRef.current = false;
+      return;
+    }
+
+    // GSAP ScrollTo: eased navigation with interruption by user gesture.
+    Promise.all([import("gsap"), import("gsap/ScrollToPlugin")])
+      .then(([{ gsap }, { ScrollToPlugin }]) => {
+        if (navigationRequestRef.current !== requestId) return;
+        gsap.registerPlugin(ScrollToPlugin);
+        const root = document.documentElement;
+        const previousScrollStyle = root.style.scrollBehavior;
+        root.style.scrollBehavior = "auto";
+        const finish = () => {
+          root.style.scrollBehavior = previousScrollStyle;
+          if (navigationRequestRef.current === requestId) {
+            navigationInProgressRef.current = false;
+            navigationTweenRef.current = null;
+          }
+        };
+        navigationTweenRef.current = gsap.to(window, {
+          scrollTo: { y: destination, autoKill: true },
+          duration: Math.min(1.08, Math.max(0.6, Math.abs(destination - window.scrollY) / 1300)),
+          ease: "power3.inOut",
+          overwrite: "auto",
+          onComplete: finish,
+          onInterrupt: finish,
+        });
+      })
+      .catch(() => {
+        if (navigationRequestRef.current !== requestId) return;
+        navigationInProgressRef.current = false;
+        window.scrollTo({ top: destination, behavior: "smooth" });
+      });
   }
 
   function sendBooking() {
@@ -338,14 +456,6 @@ function TayzaHome() {
     whatsappDrag.current.active = false;
   }
 
-  const navigation = [
-    { id: "inicio", label: "Início" },
-    { id: "servicos", label: "Serviços" },
-    { id: "unhas", label: "Unhas" },
-    { id: "cilios", label: "Cílios" },
-    { id: "sobre", label: "Sobre" },
-  ];
-
   return (
     <div className="tn-page" id="inicio">
       <a href="#conteudo" className="tn-skip">Pular para o conteúdo</a>
@@ -355,10 +465,18 @@ function TayzaHome() {
             <strong>TAYZA<span>.</span></strong>
             <small>NAILS STUDIO</small>
           </a>
-          <nav className="tn-nav-desktop" aria-label="Navegação principal">
+          <nav ref={desktopNavRef} className="tn-nav-desktop" aria-label="Navegação principal">
             {navigation.map((item) => (
-              <a key={item.id} href={"#" + item.id} onClick={(event) => { event.preventDefault(); goTo(item.id); }}>{item.label}</a>
+              <a
+                key={item.id}
+                href={"#" + item.id}
+                data-nav-id={item.id}
+                className={"tn-nav-link" + (activeSection === item.id ? " is-active" : "")}
+                aria-current={activeSection === item.id ? "location" : undefined}
+                onClick={(event) => { event.preventDefault(); goTo(item.id); }}
+              ><span>{item.label}</span></a>
             ))}
+            <span className="tn-nav-indicator" aria-hidden="true" style={{ left: navIndicator.left, width: navIndicator.width, opacity: navIndicator.width ? 1 : 0 }} />
           </nav>
           <div className="tn-header-actions">
             <button className="tn-header-book" type="button" onClick={() => openBooking()}>Agendar horário <ArrowUpRight size={15} /></button>
@@ -545,7 +663,7 @@ function TayzaHome() {
         <div className="tn-menu-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) setMenuOpen(false); }}>
           <div className="tn-mobile-menu" role="dialog" aria-label="Menu de navegação" aria-modal="true">
             <div className="tn-mobile-menu-top"><span>TAYZA NAILS</span><button type="button" onClick={() => setMenuOpen(false)} aria-label="Fechar menu"><X size={24} /></button></div>
-            <nav>{navigation.map((item, index) => <a key={item.id} href={"#" + item.id} style={{ animationDelay: (0.13 + index * 0.065) + "s" }} onClick={(event) => { event.preventDefault(); goTo(item.id); }}><small>0{index + 1}</small>{item.label}<ArrowUpRight size={19} /></a>)}</nav>
+            <nav aria-label="Navegação do menu">{navigation.map((item, index) => <a key={item.id} href={"#" + item.id} className={activeSection === item.id ? "is-active" : ""} aria-current={activeSection === item.id ? "location" : undefined} style={{ animationDelay: (0.13 + index * 0.065) + "s" }} onClick={(event) => { event.preventDefault(); goTo(item.id); }}><small>0{index + 1}</small>{item.label}<ArrowUpRight size={19} /></a>)}</nav>
             <button type="button" className="tn-button tn-button--beige" onClick={() => openBooking()}>AGENDAR HORÁRIO <ArrowUpRight size={17} /></button>
           </div>
         </div>
