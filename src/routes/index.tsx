@@ -44,7 +44,6 @@ const nailGallery = [
     image,
     alt: "Trabalho de alongamento em gel realizado pelo Tayza Nails",
   })),
-  { id: "inspiracao", name: "Detalhes que encantam", price: "", image: galleryNails, alt: "Detalhe de unhas com acabamento delicado" },
 ];
 const serviceImages = [
   studioContent.hero.images[0] || galleryNails,
