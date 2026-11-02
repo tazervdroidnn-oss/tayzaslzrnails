@@ -1736,3 +1736,312 @@ html { scroll-padding-top: 78px; }
 @media(max-width:800px) {
   .tn-booking-modal form :is(input, textarea, select) { font-size: 16px; }
 }
+
+
+/* Tayza Nails — refinamento editorial e confiança 2026 */
+.tn-proof {
+  position: relative;
+  padding: clamp(64px,8vw,106px) 0 clamp(66px,7.5vw,94px);
+  color: #f9ebe6;
+  background: linear-gradient(140deg,#250c1b 0%,#371526 52%,#24101b 100%);
+  scroll-margin-top: 80px;
+}
+.tn-proof::before {
+  content: "";
+  height: 1px;
+  inset: 0 0 auto;
+  position: absolute;
+  background: linear-gradient(90deg,transparent 10%,rgba(230,179,139,.48),transparent 90%);
+}
+.tn-proof-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: clamp(20px,5vw,85px);
+}
+.tn-proof-heading h2 {
+  margin: 14px 0 0;
+  max-width: 730px;
+  font-size: clamp(32px,4.6vw,62px);
+  line-height: 1.03;
+  font-weight: 900;
+  letter-spacing: -.06em;
+}
+.tn-proof-heading h2 .tn-heading-line.tn-accent { color: #ecc496; }
+.tn-proof-heading > p {
+  max-width: 300px;
+  margin: 0 0 5px;
+  color: #e2c7c5;
+  font-size: clamp(12px,1.05vw,14px);
+  line-height: 1.75;
+}
+.tn-proof-gallery {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: clamp(10px,1.6vw,22px);
+  margin-top: 36px;
+}
+.tn-proof-item {
+  display: block;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(234,187,153,.24);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255,255,255,.025);
+  transition: border-color .25s ease, box-shadow .3s ease;
+}
+.tn-proof-item:hover, .tn-proof-item:focus-visible {
+  border-color: rgba(243,196,149,.78);
+  box-shadow: 0 16px 35px rgba(15,6,15,.17);
+}
+.tn-proof-item:focus-visible { outline: 2px solid #f5d6b0; outline-offset: 3px; }
+.tn-proof-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #4c3340;
+}
+.tn-proof-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform .6s cubic-bezier(.22,.65,.28,1);
+}
+.tn-proof-item:hover img { transform: scale(1.02); }
+.tn-proof-photo > span {
+  position: absolute;
+  top: 12px;
+  left: 13px;
+  color: #fff6ea;
+  padding: 5px 7px;
+  border: 1px solid rgba(243,221,208,.34);
+  background: rgba(26,10,20,.55);
+  font-size: 10px;
+  font-weight: 800;
+}
+.tn-proof-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 68px;
+  padding: 15px clamp(12px,1.7vw,22px);
+}
+.tn-proof-info strong {
+  font-size: clamp(12px,1.25vw,17px);
+  font-weight: 800;
+  line-height: 1.35;
+}
+.tn-proof-info svg { flex: none; color: #e8bd94; transition: transform .25s ease; }
+.tn-proof-item:hover .tn-proof-info svg { transform: translate(2px,-2px); }
+.tn-proof-bottom {
+  border-top: 1px solid rgba(239,199,172,.22);
+  padding-top: 20px;
+  margin-top: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.tn-proof-bottom > span {
+  font-size: 12px;
+  color: #e5c9c8;
+  line-height: 1.55;
+}
+.tn-proof-bottom a, .tn-about-instagram {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  color: #f3cfa7;
+  font-size: 12px;
+  font-weight: 800;
+  transition: color .2s ease;
+}
+.tn-proof-bottom a:hover,.tn-about-instagram:hover { color: #fff4e0; }
+.tn-about-instagram {
+  margin-bottom: 23px;
+  min-height: 33px;
+  border-bottom: 1px solid rgba(244,203,171,.32);
+}
+.tn-experience-copy .tn-about-instagram {
+  color: #f1c995;
+  font-size: clamp(12px,1.02vw,13px);
+}
+.tn-info {
+  scroll-margin-top: 80px;
+  background: #f8ece6;
+  color: #321e28;
+  padding: clamp(70px,8vw,108px) 0;
+}
+.tn-info-grid {
+  display: grid;
+  grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr);
+  gap: clamp(24px,5vw,78px);
+}
+.tn-info-where {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 18px;
+  padding: clamp(24px,3.8vw,46px);
+  background: linear-gradient(140deg,#381a30,#240e20);
+  color: #fff3e9;
+}
+.tn-info-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(231,192,151,.5);
+  border-radius: 50%;
+  color: #efcba4;
+}
+.tn-info-where .tn-eyebrow { color: #e9c091; }
+.tn-info h2 {
+  margin: 15px 0 0;
+  font-size: clamp(26px,3vw,42px);
+  line-height: 1.13;
+  font-weight: 900;
+  letter-spacing: -.055em;
+}
+.tn-info-where > p:not(.tn-eyebrow) {
+  color: #e6d1cc;
+  margin: 18px 0 26px;
+  font-size: clamp(13px,1.04vw,15px);
+  line-height: 1.75;
+}
+.tn-info-location {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 48px;
+  padding: 12px 20px;
+  border-radius: 24px;
+  background: #eed0a6;
+  color: #351c2a;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform .25s ease, background .25s ease;
+}
+.tn-info-location:hover { background: #ffedd5; transform: translateY(-2px); }
+.tn-info-where small { margin-top: 20px; color: #e5c6b3; font-size: 12px; line-height: 1.5; }
+.tn-info-faq { min-width: 0; padding-top: 6px; }
+.tn-info-faq .tn-eyebrow { color: #895c60; }
+.tn-info-faq h2 { margin-bottom: 27px; }
+.tn-faq-items { border-top: 1px solid #cdaaa0; }
+.tn-faq-items details { border-bottom: 1px solid #cdaaa0; }
+.tn-faq-items summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  min-height: 68px;
+  padding: 16px 5px;
+  color: #3a2330;
+  cursor: pointer;
+  list-style: none;
+  font-size: clamp(13px,1.3vw,16px);
+  font-weight: 800;
+  line-height: 1.4;
+}
+.tn-faq-items summary::-webkit-details-marker { display: none; }
+.tn-faq-items summary > span {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 31px;
+  height: 31px;
+  border: 1px solid #d2aa98;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+  color: #80525e;
+  transition: transform .26s ease, background .26s ease;
+}
+.tn-faq-items details[open] summary > span {
+  transform: rotate(45deg);
+  background: #eed0c0;
+}
+.tn-faq-items summary:focus-visible { outline: 2px solid #9a6470; outline-offset: 3px; }
+.tn-faq-items details p {
+  max-width: 640px;
+  margin: -4px 40px 20px 5px;
+  font-size: clamp(12px,1.03vw,14px);
+  line-height: 1.8;
+  color: #644d58;
+  animation: tn-faq-enter .25s ease both;
+}
+@keyframes tn-faq-enter {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tn-booking-modal .tn-form-date-hint,
+.tn-booking-modal .tn-form-date-error {
+  display: block;
+  font-size: 12px;
+  line-height: 1.55;
+  font-weight: 500;
+  margin-top: 6px;
+}
+.tn-booking-modal .tn-form-date-hint { color: #715e58; }
+.tn-booking-modal .tn-form-date-error { color: #b02d46; font-weight: 800; }
+.tn-booking-modal button[type="submit"]:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+.tn-booking-modal input[aria-invalid="true"] {
+  border-color: #b02d46 !important;
+  outline-color: #b02d46;
+}
+/* Legibility: no 9px body copy in the buying/booking journey. */
+.tn-service-info p { font-size: clamp(12px, 1.05vw, 14px); line-height: 1.6; }
+.tn-service-info strong { font-size: clamp(11px,1vw,13px); }
+.tn-service-cta { font-size: clamp(10px,.9vw,12px); min-height: 43px; }
+.tn-lash-info p { font-size: clamp(12px, 1.1vw, 14px); }
+.tn-nail-details p { font-size: clamp(11px, 1vw, 13px); }
+.tn-payment-card p,.tn-payment-note { font-size: 12px; }
+.tn-payment-note { line-height: 1.65; }
+.tn-book-action small { font-size: 12px; }
+.tn-hours-time-caption { font-size: 10px; }
+.tn-service-photo img.tn-photo-subject,
+.tn-lash-photo img.tn-photo-subject { image-rendering: auto; }
+@media (max-width: 880px) {
+  .tn-proof-heading { align-items: flex-start; flex-direction: column; }
+  .tn-proof-heading > p { max-width: 650px; }
+  .tn-info-grid { grid-template-columns: 1fr; gap: 30px; }
+}
+@media (max-width: 540px) {
+  .tn-proof-gallery { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 24px; }
+  .tn-proof-item:nth-child(3) { grid-column: 1 / -1; width: min(100%,340px); justify-self: center; }
+  .tn-proof-info { min-height: 61px; padding: 11px 12px; }
+  .tn-proof-bottom { flex-direction: column; align-items: flex-start; }
+  .tn-info { padding: 56px 0 65px; }
+  .tn-info-where { padding: 27px 20px; }
+  .tn-info-where h2 { font-size: clamp(26px,7vw,34px); }
+  .tn-info-faq h2 { font-size: clamp(28px,7vw,37px); }
+  .tn-service-info p { font-size: 12px; line-height: 1.48; }
+  .tn-service-info strong { font-size: 11px; }
+  .tn-service-cta { font-size: 10px; min-height: 43px; }
+  .tn-nail-details p { font-size: 12px; }
+  .tn-hours-time-caption { font-size: 9px; }
+  .tn-price-dock {
+    left: max(9px,env(safe-area-inset-left));
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    max-width: calc(100vw - 94px);
+  }
+  .tn-price-sheet { width: min(305px,calc(100vw - 95px)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tn-proof-photo img, .tn-proof-info svg,
+  .tn-faq-items details p, .tn-info-location { transition: none; animation: none; }
+}
