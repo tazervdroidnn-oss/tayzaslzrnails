@@ -1187,18 +1187,10 @@ html { scroll-padding-top: 78px; }
   vector-effect: non-scaling-stroke;
 }
 @media (hover: hover) and (pointer: fine) {
-  .tn-logo--animated:hover .tn-logo-shine,
-  .tn-logo--animated:focus-visible .tn-logo-shine {
-    animation: tn-logo-sweep-hover 1.15s cubic-bezier(.35,.05,.35,1) both;
-  }
   .tn-logo--animated:hover .tn-logo-drawn-line,
   .tn-logo--animated:focus-visible .tn-logo-drawn-line {
     filter: drop-shadow(0 0 5px rgba(240,189,155,.62));
   }
-}
-@keyframes tn-logo-sweep-hover {
-  from { background-position: 135% 50%; }
-  to { background-position: -90% 50%; }
 }
 @media (max-width: 540px) {
   .tn-logo--animated .tn-logo-word { font-size: 27px; }
@@ -1238,4 +1230,74 @@ html { scroll-padding-top: 78px; }
 @media(max-width:640px) {
   .tn-selection-bar { flex-direction: column; align-items: stretch; }
   .tn-selection-bar button, .tn-book-action .tn-button { width: 100%; justify-content: center; }
+}
+
+
+/* Loop sofisticado da marca — brilho corre sempre da esquerda para a direita.
+   A passagem leva ~1.6 s e descansa ~3.9 s entre ciclos. */
+.tn-logo--animated .tn-logo-subtitle-layer {
+  position: relative;
+  display: block;
+  margin-top: 5px;
+  padding-left: 3px;
+  width: max-content;
+  max-width: 100%;
+  line-height: 1.2;
+}
+.tn-logo--animated .tn-logo-subtitle-layer .tn-logo-subtitle {
+  margin-top: 0;
+  padding-left: 0;
+}
+.tn-logo--animated .tn-logo-shine,
+.tn-logo--animated .tn-logo-subtitle-shine {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(237,187,151,.06) 46%,
+    rgba(253,229,201,.46) 49%,
+    rgba(255,248,231,.95) 50.4%,
+    rgba(244,199,169,.45) 52%,
+    rgba(229,173,136,.07) 56%,
+    transparent 62%
+  );
+  background-size: 290% 100%;
+  background-position: 135% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  pointer-events: none;
+  animation: tn-logo-shimmer-loop 5.6s 1.5s linear infinite both;
+}
+.tn-logo--animated .tn-logo-subtitle-shine {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 0;
+  margin: 0;
+  z-index: 2;
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: .32em;
+  white-space: nowrap;
+  animation-delay: 1.64s; /* subtítulo acompanha a passagem de luz */
+}
+@keyframes tn-logo-shimmer-loop {
+  0%, 10% { background-position: 135% 50%; }
+  39%, 100% { background-position: -90% 50%; }
+}
+@media (max-width: 540px) {
+  .tn-logo--animated .tn-logo-subtitle-layer { margin-top: 4px; }
+  .tn-logo--animated .tn-logo-subtitle-shine {
+    font-size: 7px;
+    letter-spacing: .28em;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tn-logo--animated .tn-logo-shine,
+  .tn-logo--animated .tn-logo-subtitle-shine {
+    display: none !important;
+    animation: none !important;
+  }
 }
