@@ -8,6 +8,7 @@ import heroPortrait from "@/assets/hero.jpg";
 import galleryNails from "@/assets/gallery-nails.jpg";
 import galleryMaintenance from "@/assets/gallery-maintenance.jpg";
 import studioContent from "@/data/studio-content.json";
+import TayzaPreloader from "@/components/TayzaPreloader";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -640,6 +641,7 @@ function TayzaHome() {
 
   return (
     <div className="tn-page" id="inicio">
+      <TayzaPreloader />
       <a href="#conteudo" className="tn-skip">Pular para o conteúdo</a>
       <header className={"tn-header " + (scrolled ? "tn-header--solid" : "")}>
         <div className="tn-container tn-header-inner">
