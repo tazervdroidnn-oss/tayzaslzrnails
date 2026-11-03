@@ -60,7 +60,9 @@ export default function TayzaPreloader() {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let previouslyViewed = false;
     try { previouslyViewed = sessionStorage.getItem(SESSION_KEY) === "1"; } catch { /* no-op */ }
-    if (reduced || previouslyViewed) {
+    // ?intro=1 lets clients replay the cinematic opening without clearing session storage.
+    const previewIntro = new URLSearchParams(window.location.search).get("intro") === "1";
+    if (reduced || (previouslyViewed && !previewIntro)) {
       finishedRef.current = true;
       setVisible(false);
       return;
