@@ -27,6 +27,7 @@ export const Route = createFileRoute("/")({
 const whatsAppBase = "https://wa.me/" + studioContent.contact.whatsapp;
 const instagramUrl = "https://instagram.com/" + studioContent.contact.instagram;
 const priceByService = new Map<string, string>([
+  ["Alongamento em gel", "R$ 100,00"],
   ...studioContent.services.map(({ name, startingPrice }) => [name, startingPrice] as const),
   ...[...studioContent.nails, ...studioContent.lashes].map(({ name, price }) => [name, price] as const),
 ]);
@@ -35,14 +36,14 @@ const bookingOptions = [
   ...studioContent.services.map((service) => service.name),
   ...studioContent.nails.map((item) => item.name),
   ...studioContent.lashes.map((item) => item.name),
-
+  "Alongamento em gel",
 ];
 const nailGallery = [
   ...studioContent.nails,
   ...studioContent.hero.images.map((image, index) => ({
     id: "alongamento-" + index,
     name: "Alongamento em gel",
-    price: "",
+    price: "R$ 100,00",
     image,
     alt: "Trabalho de alongamento em gel realizado pelo Tayza Nails",
   })),
@@ -713,7 +714,7 @@ function TayzaHome() {
                     <span className="tn-photo-index">0{index + 1} / 0{nailGallery.length}</span>
                   </div>
                   <div className="tn-nail-details">
-                    <div><h3>{item.name}</h3>{item.price ? <p>{item.price}</p> : <p>Conheça nosso trabalho</p>}</div>
+                    <div><h3>{item.name}</h3>{item.price ? <p className="tn-nail-price"><span>VALOR</span><strong>{item.price}</strong></p> : <p>Conheça nosso trabalho</p>}</div>
                     <button type="button" onClick={() => { if (!sliderDrag.current.moved) openBooking(item.name); }} aria-label={"Agendar " + item.name}><ArrowUpRight size={20} /></button>
                   </div>
                 </article>
