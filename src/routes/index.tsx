@@ -236,8 +236,8 @@ function TayzaHome() {
           );
 
 
-          // Luxurious handwritten lettering, revealed from left to right by natural scroll.
-          // A single connected script preserves real calligraphic joins and proportions.
+          // Luxurious handwritten lettering: starts automatically when the section enters view.
+          // The animation runs independently of scroll speed, once per page visit.
           const signature = scope.querySelector<HTMLElement>(".tn-signature-scene");
           if (signature) {
             const stage = signature.querySelector<HTMLElement>(".tn-signature-stage");
@@ -248,16 +248,18 @@ function TayzaHome() {
             const message = signature.querySelector<HTMLElement>(".tn-signature-message");
             const note = signature.querySelector<HTMLElement>(".tn-signature-scroll-note");
 
-            // The final lettering remains fully readable without JavaScript or motion.
+            // ScrollTrigger only starts the timeline; it no longer scrubs the animation.
+            // Reduced-motion visitors retain the visible static signature.
             const timeline = gsap.timeline({
               scrollTrigger: {
                 trigger: signature,
-                start: "top 78%",
-                end: "bottom 24%",
-                scrub: 0.55,
-                invalidateOnRefresh: true,
+                start: "top 82%",
+                toggleActions: "play none none none",
+                once: true,
               },
             });
+            // About four seconds of motion, regardless of scrolling speed.
+            timeline.timeScale(1.45);
 
             if (stage) {
               timeline.fromTo(stage,
