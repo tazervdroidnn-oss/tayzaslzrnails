@@ -234,6 +234,19 @@ function TayzaHome() {
             { autoAlpha: 1, y: 0, duration: 0.65, stagger: 0.10, delay: 0.25, ease: "power2.out", clearProps: "transform,opacity,visibility" }
           );
 
+          // Abertura editorial com fotografias reais do trabalho da Tayza.
+          // A primeira foto e os textos permanecem visíveis mesmo sem GSAP.
+          const cinema = scope.querySelector<HTMLElement>(".tn-cinema");
+          if (cinema) {
+            const first = cinema.querySelector<HTMLElement>(".tn-cinema-photo--first");
+            const second = cinema.querySelector<HTMLElement>(".tn-cinema-photo--second");
+            const copy = cinema.querySelectorAll<HTMLElement>(".tn-cinema-eyebrow, .tn-cinema-rule, .tn-cinema-heading, .tn-cinema-description, .tn-cinema-book");
+            const timeline = gsap.timeline();
+            if (first) timeline.fromTo(first, { scale: 1.075 }, { scale: 1, duration: 6.8, ease: "none" }, 0);
+            timeline.fromTo(copy, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.16, duration: 0.95, ease: "power3.out", clearProps: "transform,opacity,visibility" }, 0.3);
+            if (second) timeline.fromTo(second, { opacity: 0, scale: 1.055 }, { opacity: 1, scale: 1, duration: 2.25, ease: "power1.inOut", clearProps: "transform" }, 3.3);
+          }
+
           // Titles reveal line by line within real clipping masks. No split plugin or layout shift.
           scope.querySelectorAll<HTMLElement>("[data-motion-title]").forEach((heading) => {
             const lines = heading.querySelectorAll<HTMLElement>(".tn-heading-line");
@@ -629,18 +642,29 @@ function TayzaHome() {
       </header>
 
       <main id="conteudo">
-        <section className="tn-cover" aria-labelledby="tn-cover-title">
-          <h1 id="tn-cover-title" className="sr-only">Tayza Nails — unhas, cílios e sobrancelhas</h1>
-            <button className="tn-nails-banner" type="button" onClick={() => openBooking()} aria-label="Agendar um horário no Tayza Nails">
-              <img src="/tayza-unhas.png" alt="Tayza Nails — unhas, cílios e sobrancelhas. Beleza e cuidado em cada detalhe." loading="eager" fetchPriority="high" decoding="async" />
-              <span>Agende seu horário <ArrowUpRight size={18} /></span>
-            </button>
-          <div className="tn-mobile-cover">
-            <div className="tn-cover-detail" role="img" aria-label="Unhas em rosa e vinho com acabamento dourado" />
-            <div className="tn-cover-brand" role="img" aria-label="Tayza Nails — unhas, cílios e sobrancelhas" />
-            <p>Beleza e cuidado em cada detalhe</p>
-            <button type="button" onClick={() => openBooking()}>Agende seu horário <ArrowUpRight size={18} /></button>
+        <section className="tn-cover tn-cinema" aria-labelledby="tn-cover-title">
+          <div className="tn-cinema-visual" aria-hidden="true">
+            <img className="tn-cinema-photo tn-cinema-photo--first" src="/alongamento2.jpeg" alt="" loading="eager" fetchPriority="high" decoding="async" />
+            <img className="tn-cinema-photo tn-cinema-photo--second" src="/gel%20na%20tips.jpg" alt="" loading="lazy" decoding="async" />
+            <span className="tn-cinema-vignette" />
+            <span className="tn-cinema-ambient" />
           </div>
+          <div className="tn-cinema-inner tn-container">
+            <div className="tn-cinema-editorial">
+              <span className="tn-cinema-eyebrow">BELEZA EM SUA FORMA MAIS ELEGANTE</span>
+              <span className="tn-cinema-rule" aria-hidden="true" />
+              <h1 id="tn-cover-title" className="tn-cinema-heading">
+                <span className="tn-cinema-brand">TAYZA<span className="tn-cinema-dot">.</span></span>
+                <span className="tn-cinema-subbrand">NAILS STUDIO</span>
+              </h1>
+              <p className="tn-cinema-description">Cada detalhe é uma expressão da sua beleza.</p>
+              <button className="tn-cinema-book" type="button" onClick={() => openBooking()}>
+                <span>AGENDE SEU MOMENTO</span><ArrowUpRight size={19} aria-hidden="true" />
+              </button>
+            </div>
+            <div className="tn-cinema-footnote" aria-hidden="true"><span>UNHAS FEITAS COM CUIDADO</span><span className="tn-cinema-footnote-line" /><span>01 — 02</span></div>
+          </div>
+          <span className="tn-cinema-edge" aria-hidden="true" />
         </section>
 
         <section className="tn-section tn-section--cream tn-services" id="servicos">
