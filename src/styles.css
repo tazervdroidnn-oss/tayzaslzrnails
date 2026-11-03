@@ -2205,15 +2205,6 @@ html { scroll-padding-top: 78px; }
   opacity: .8;
   filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .3));
 }
-.tn-signature-sheen {
-  position: absolute; z-index: 2; inset: -10% auto -10% 0;
-  pointer-events: none; width: 30%;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,245,224,.04) 24%, rgba(255,236,195,.36) 49%, transparent 100%);
-  filter: blur(9px);
-  mix-blend-mode: screen;
-  transform: translateX(-180%);
-  opacity: 0;
-}
 .tn-signature-subtitle {
   color: #e7c6b3;
   margin-top: -12px;
@@ -2259,5 +2250,4 @@ html { scroll-padding-top: 78px; }
   .tn-signature-lettering { clip-path: none !important; will-change: auto; }
   .tn-signature-flourish-path { stroke-dasharray: none !important; stroke-dashoffset: 0 !important; }
   .tn-signature-subtitle, .tn-signature-message, .tn-signature-scroll-note { opacity: 1 !important; visibility: visible !important; transform: none !important; }
-  .tn-signature-sheen { display: none; }
 }
