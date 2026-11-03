@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!-- Template cinematográfico criado a partir de um prompt de @rafha.gpt. Templates Cinematográficos Premium: https://promptfly.com.br -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tayza Nails — Studio | Preloader de Unhas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/alongamento2.jpeg" />
+  <link rel="preload" as="image" href="/gel%20na%20tips.jpg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="is-loading">
+  <!-- PRELOADER: imagens reais de unhas no lugar do personagem do exemplo -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__stage">
+      <div class="loader__nails">
+        <img class="loader__image loader__image--first" id="loaderImage" src="/gel%20na%20tips.jpg" alt="" />
+        <img class="loader__image loader__image--second" id="loaderImage2" src="/alongamento2.jpeg" alt="" />
+      </div>
+    </div>
+    <div class="loader__counter">
+      <span class="loader__num" id="count">0</span><span class="loader__pct">%</span>
+    </div>
+  </div>
+
+  <main class="hero" id="hero">
+    <header class="nav">
+      <a href="/" class="nav__logo r-item">Tayza Nails Studio</a>
+      <span class="nav__time r-item" id="clock">--:--</span>
+      <nav class="nav__links">
+        <a href="/" class="r-item">Início</a>
+        <span class="nav__sep r-item">/</span>
+        <a href="/#servicos" class="r-item">Serviços</a>
+        <span class="nav__sep r-item">/</span>
+        <a href="/#unhas" class="r-item">Unhas</a>
+      </nav>
+      <a href="/" class="nav__cta r-item">Agendar horário</a>
+    </header>
+
+    <div class="hero__figure">
+      <img class="hero__img" id="heroImg" src="/alongamento2.jpeg"
+        alt="Alongamento de unhas em gel do Tayza Nails Studio" />
+    </div>
+    <span class="hero__side hero__side--left r-item">Unhas</span>
+    <span class="hero__side hero__side--right r-item">Beleza</span>
+    <a href="/#unhas" class="hero__arrow r-item" aria-label="Ver trabalhos">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 17 17 7M8 7h9v9"/>
+      </svg>
+    </a>
+    <h1 class="hero__title">
+      <span class="line"><span class="line__inner">TAYZA</span></span>
+      <span class="line"><span class="line__inner">NAILS STUDIO</span></span>
+    </h1>
+    <div class="hero__about">
+      <p class="r-item">Unhas feitas com cuidado, delicadeza e atenção a cada detalhe.</p>
+      <a href="/" class="hero__badge r-item"><span class="dot"></span>Agende seu momento</a>
+    </div>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
