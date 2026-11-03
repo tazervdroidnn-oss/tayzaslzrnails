@@ -262,8 +262,8 @@ function TayzaHome() {
 
             if (stage) {
               timeline.fromTo(stage,
-                { rotationX: 6, rotationY: -4, scale: 0.985 },
-                { rotationX: 0, rotationY: 0, scale: 1, duration: 5.6, ease: "none" }, 0);
+                { rotationX: 3, scale: 0.99 },
+                { rotationX: 0, scale: 1, duration: 5.6, ease: "none" }, 0);
             }
             if (lettering) {
               timeline.fromTo(lettering,
@@ -420,7 +420,7 @@ function TayzaHome() {
         // Only fine pointers get subtle magnetic motion; touch stays native.
         if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
           scope.querySelectorAll<HTMLElement>(
-            ".tn-hero .tn-button, .tn-experience-copy .tn-button, .tn-book-action .tn-button, .tn-header-book"
+            ".tn-hero .tn-button, .tn-experience-copy .tn-button, .tn-book-action .tn-button"
           ).forEach((button) => {
             const onMove = (event: MouseEvent) => {
               const rect = button.getBoundingClientRect();
@@ -675,7 +675,7 @@ function TayzaHome() {
             <span className="tn-nav-indicator" aria-hidden="true" style={{ left: navIndicator.left, width: navIndicator.width, opacity: navIndicator.width ? 1 : 0 }} />
           </nav>
           <div className="tn-header-actions">
-            <button className="tn-header-book" type="button" onClick={() => openBooking()}>Agendar horário <ArrowUpRight size={15} /></button>
+            <button className="tn-header-book tn-appointment-cta" type="button" aria-haspopup="dialog" aria-expanded={bookingOpen} onClick={() => openBooking()}><span className="tn-appointment-cta__label">Agendar horário</span><span className="tn-appointment-cta__icon" aria-hidden="true"><ArrowUpRight size={16} /></span></button>
             <button className="tn-menu-toggle" type="button" onClick={() => setMenuOpen(true)} aria-label="Abrir menu" aria-expanded={menuOpen}><Menu size={26} /></button>
           </div>
         </div>
@@ -692,7 +692,7 @@ function TayzaHome() {
             <div className="tn-cover-detail" role="img" aria-label="Unhas em rosa e vinho com acabamento dourado" />
             <div className="tn-cover-brand" role="img" aria-label="Tayza Nails — unhas, cílios e sobrancelhas" />
             <p>Beleza e cuidado em cada detalhe</p>
-            <button type="button" onClick={() => openBooking()}>Agende seu horário <ArrowUpRight size={18} /></button>
+            <button type="button" className="tn-mobile-appointment" onClick={() => openBooking()}><span>Agende seu horário</span><ArrowUpRight size={18} aria-hidden="true" /></button>
           </div>
         </section>
 
@@ -766,7 +766,7 @@ function TayzaHome() {
             </div>
             <div className="tn-selection-bar">
               <div><strong>Seu atendimento</strong><p aria-live="polite">{selectedServices.join(" · ") || "Selecione os serviços acima ou consulte um horário."}</p></div>
-              <button className="tn-button tn-button--beige" type="button" onClick={() => openBooking()}>Agendar horário <ArrowUpRight size={18} /></button>
+              <button className="tn-button tn-button--beige tn-appointment-secondary" type="button" onClick={() => openBooking()}><span>Agendar horário</span><ArrowUpRight size={18} aria-hidden="true" /></button>
             </div>
           </div>
         </section>
@@ -1007,7 +1007,7 @@ function TayzaHome() {
           <div className="tn-mobile-menu" role="dialog" aria-label="Menu de navegação" aria-modal="true">
             <div className="tn-mobile-menu-top"><span>TAYZA NAILS</span><button type="button" onClick={() => setMenuOpen(false)} aria-label="Fechar menu"><X size={24} /></button></div>
             <nav aria-label="Navegação do menu">{navigation.map((item, index) => <a key={item.id} href={"#" + item.id} className={activeSection === item.id ? "is-active" : ""} aria-current={activeSection === item.id ? "location" : undefined} style={{ animationDelay: (0.13 + index * 0.065) + "s" }} onClick={(event) => { event.preventDefault(); goTo(item.id); }}><small>0{index + 1}</small>{item.label}<ArrowUpRight size={19} /></a>)}</nav>
-            <button type="button" className="tn-button tn-button--beige" onClick={() => openBooking()}>AGENDAR HORÁRIO <ArrowUpRight size={17} /></button>
+            <button type="button" className="tn-button tn-button--beige tn-appointment-secondary" onClick={() => openBooking()}><span>AGENDAR HORÁRIO</span><ArrowUpRight size={17} aria-hidden="true" /></button>
           </div>
         </div>
       )}
