@@ -727,7 +727,6 @@ function TayzaHome() {
                       strokeWidth={index === signatureStrokes.length - 1 ? 3 : 9}
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      vectorEffect="non-scaling-stroke"
                     />
                   ))}
                 </svg>
