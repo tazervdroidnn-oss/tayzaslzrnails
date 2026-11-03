@@ -45,6 +45,13 @@ export default function TayzaPreloader() {
           duration: 0.62,
           ease: "power2.inOut",
         });
+        // A discreet entrance of the real hero completes the handoff from the character.
+        const hero = document.querySelector<HTMLElement>(".tn-cover");
+        if (hero) timeline.fromTo(hero,
+          { autoAlpha: 0.84, y: 18 },
+          { autoAlpha: 1, y: 0, duration: 0.88, ease: "power2.out", clearProps: "opacity,visibility,transform" },
+          0.16
+        );
       })
       .catch(complete);
   }, []);
