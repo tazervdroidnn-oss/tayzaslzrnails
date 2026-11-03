@@ -62,6 +62,17 @@ const navigation = [
   { id: "sobre", label: "Sobre" },
 ];
 
+
+const signatureStrokes = [
+  "M 74 79 C 102 48, 164 35, 216 44 C 236 48, 245 60, 234 69 C 227 75, 209 71, 199 65",
+  "M 175 46 C 164 89, 143 150, 124 203 C 116 226, 105 239, 92 230 C 85 222, 90 207, 105 201",
+  "M 258 127 C 246 112, 226 119, 220 142 C 209 180, 232 190, 253 165 C 267 148, 277 119, 279 119 C 265 160, 273 183, 293 176 C 305 173, 319 153, 328 134",
+  "M 338 125 C 332 144, 324 180, 338 178 C 352 175, 376 140, 393 120 C 381 149, 363 201, 344 237 C 332 260, 314 270, 304 259 C 293 245, 314 227, 348 216 C 365 210, 388 200, 402 185",
+  "M 409 138 C 421 118, 458 105, 476 114 C 493 125, 459 146, 439 162 C 448 163, 480 172, 503 156 C 515 149, 518 138, 524 133",
+  "M 550 127 C 538 112, 518 118, 511 142 C 501 180, 524 190, 544 165 C 560 147, 568 118, 570 119 C 557 156, 560 177, 580 175 C 595 173, 605 156, 615 140",
+  "M 622 137 C 653 167, 710 164, 772 143",
+];
+
 const paymentOptions = [
   { label: "Cartão", detail: "Crédito e débito", icon: CreditCard, enabled: studioContent.payments.card },
   { label: "Pix", detail: "Pagamento prático", icon: QrCode, enabled: studioContent.payments.pix },
@@ -233,6 +244,50 @@ function TayzaHome() {
             { autoAlpha: 0, y: 17 },
             { autoAlpha: 1, y: 0, duration: 0.65, stagger: 0.10, delay: 0.25, ease: "power2.out", clearProps: "transform,opacity,visibility" }
           );
+
+
+          // Luxury Signature 3D: os traços são escritos em resposta ao scroll.
+          // Sem pin/scroll-jacking, sem download de vídeo ou plugins extras.
+          const signature = scope.querySelector<HTMLElement>(".tn-signature-scene");
+          if (signature) {
+            const stage = signature.querySelector<HTMLElement>(".tn-signature-stage");
+            const strokes = Array.from(signature.querySelectorAll<SVGPathElement>(".tn-signature-path"));
+            const sheen = signature.querySelector<HTMLElement>(".tn-signature-sheen");
+            const subtitle = signature.querySelector<HTMLElement>(".tn-signature-subtitle");
+            const message = signature.querySelector<HTMLElement>(".tn-signature-message");
+            const note = signature.querySelector<HTMLElement>(".tn-signature-scroll-note");
+            // O comprimento real de cada caminho garante um desenho preciso,
+            // inclusive em telas de alta densidade.
+            strokes.forEach((path) => {
+              const length = path.getTotalLength();
+              gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+            });
+            const signatureTimeline = gsap.timeline({
+              scrollTrigger: {
+                trigger: signature,
+                start: "top 76%",
+                end: "bottom 25%",
+                scrub: 0.65,
+                invalidateOnRefresh: true,
+              },
+            });
+            if (stage) {
+              signatureTimeline.fromTo(stage,
+                { rotationX: 12, rotationY: -9, scale: 0.945 },
+                { rotationX: 0, rotationY: 0, scale: 1, duration: 6.4, ease: "none" }, 0
+              );
+            }
+            strokes.forEach((path, index) => {
+              signatureTimeline.to(path, { strokeDashoffset: 0, duration: index === 6 ? 0.65 : 1.05, ease: "none" }, index === 0 ? 0 : 0.58 + (index - 1) * 0.82);
+            });
+            if (subtitle) signatureTimeline.fromTo(subtitle, { y: 14, autoAlpha: 0, letterSpacing: ".55em" }, { y: 0, autoAlpha: 1, letterSpacing: ".36em", duration: 0.9, ease: "power2.out" }, 5.25);
+            if (message) signatureTimeline.fromTo(message, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8, ease: "power2.out" }, 5.5);
+            if (note) signatureTimeline.fromTo(note, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.7 }, 5.8);
+            if (sheen) {
+              signatureTimeline.fromTo(sheen, { xPercent: -180, opacity: 0 }, { xPercent: 165, opacity: 0.85, duration: 1.15, ease: "power1.inOut" }, 5.5);
+              signatureTimeline.to(sheen, { opacity: 0, duration: 0.3 }, 6.45);
+            }
+          }
 
           // Titles reveal line by line within real clipping masks. No split plugin or layout shift.
           scope.querySelectorAll<HTMLElement>("[data-motion-title]").forEach((heading) => {
@@ -640,6 +695,51 @@ function TayzaHome() {
             <div className="tn-cover-brand" role="img" aria-label="Tayza Nails — unhas, cílios e sobrancelhas" />
             <p>Beleza e cuidado em cada detalhe</p>
             <button type="button" onClick={() => openBooking()}>Agende seu horário <ArrowUpRight size={18} /></button>
+          </div>
+        </section>
+
+
+        <section className="tn-signature-scene" aria-labelledby="tn-signature-title">
+          <span className="tn-signature-halo tn-signature-halo--left" aria-hidden="true" />
+          <span className="tn-signature-halo tn-signature-halo--right" aria-hidden="true" />
+          <div className="tn-signature-content tn-container">
+            <p className="tn-signature-overline">BELEZA QUE SE TRANSFORMA EM ARTE</p>
+            <div className="tn-signature-stage">
+              <span className="tn-signature-line tn-signature-line--start" aria-hidden="true" />
+              <h2 id="tn-signature-title" className="sr-only">Tayza Nails Studio — a beleza está em cada detalhe.</h2>
+              <div className="tn-signature-wordmark" aria-hidden="true">
+                <svg className="tn-signature-svg" viewBox="0 0 860 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="tn-signature-gold" x1="4%" y1="15%" x2="96%" y2="84%">
+                      <stop offset="0%" stopColor="#ae725b" />
+                      <stop offset="27%" stopColor="#ffebca" />
+                      <stop offset="56%" stopColor="#e5b88f" />
+                      <stop offset="78%" stopColor="#fae4c4" />
+                      <stop offset="100%" stopColor="#a36d5e" />
+                    </linearGradient>
+                  </defs>
+                  {signatureStrokes.map((d, index) => (
+                    <path
+                      key={index}
+                      className={"tn-signature-path" + (index === signatureStrokes.length - 1 ? " tn-signature-path--swash" : "")}
+                      d={d}
+                      stroke="url(#tn-signature-gold)"
+                      strokeWidth={index === signatureStrokes.length - 1 ? 3 : 9}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  ))}
+                </svg>
+                <span className="tn-signature-sheen" />
+              </div>
+              <div className="tn-signature-subtitle" aria-hidden="true">
+                <span>NAILS STUDIO</span>
+              </div>
+              <span className="tn-signature-line tn-signature-line--end" aria-hidden="true" />
+            </div>
+            <p className="tn-signature-message">A beleza está em cada detalhe.</p>
+            <p className="tn-signature-scroll-note" aria-hidden="true"><span /> SUA ASSINATURA DE BELEZA <span /></p>
           </div>
         </section>
 
