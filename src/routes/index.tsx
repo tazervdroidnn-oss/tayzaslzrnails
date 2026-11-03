@@ -243,7 +243,6 @@ function TayzaHome() {
             const stage = signature.querySelector<HTMLElement>(".tn-signature-stage");
             const lettering = signature.querySelector<HTMLElement>(".tn-signature-lettering");
             const flourish = signature.querySelector<SVGPathElement>(".tn-signature-flourish-path");
-            const sheen = signature.querySelector<HTMLElement>(".tn-signature-sheen");
             const subtitle = signature.querySelector<HTMLElement>(".tn-signature-subtitle");
             const message = signature.querySelector<HTMLElement>(".tn-signature-message");
             const note = signature.querySelector<HTMLElement>(".tn-signature-scroll-note");
@@ -286,12 +285,6 @@ function TayzaHome() {
             if (note) timeline.fromTo(note,
               { autoAlpha: 0 },
               { autoAlpha: 1, duration: 0.6 }, 4.8);
-            if (sheen) {
-              timeline.fromTo(sheen,
-                { xPercent: -190, opacity: 0 },
-                { xPercent: 185, opacity: 0.75, duration: 1.15, ease: "power1.inOut" }, 4.5);
-              timeline.to(sheen, { opacity: 0, duration: 0.2 }, 5.4);
-            }
           }
 
           // Titles reveal line by line within real clipping masks. No split plugin or layout shift.
@@ -717,7 +710,6 @@ function TayzaHome() {
                 <svg className="tn-signature-flourish" viewBox="0 0 430 64" fill="none" aria-hidden="true">
                   <path className="tn-signature-flourish-path" d="M 12 38 C 102 55, 194 30, 255 32 C 330 34, 381 38, 416 12" stroke="#d5ac91" strokeWidth="1.6" strokeLinecap="round" />
                 </svg>
-                <span className="tn-signature-sheen" />
               </div>
               <div className="tn-signature-subtitle" aria-hidden="true">
                 <span>NAILS STUDIO</span>
