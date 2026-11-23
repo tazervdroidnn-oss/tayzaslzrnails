@@ -1,9 +1,10 @@
 import { Fragment, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight, CalendarDays, Check, ChevronLeft, ChevronRight, Instagram, MapPin, MessageCircle, Plus, Wallet, X } from "lucide-react";
+import { ArrowUpRight, CalendarDays, Check, ChevronLeft, ChevronRight, CreditCard, Instagram, Layers, MapPin, Menu, MessageCircle, Plus, Tag, Wallet, X } from "lucide-react";
 import studioContent from "@/data/studio-content.json";
 import TayzaIntro from "@/components/TayzaIntro";
 import TayzaGuide from "@/components/TayzaGuide";
+import HeroDecor, { SantaHat } from "@/components/HeroDecor";
 import type { StudioContent } from "@/lib/studio-content-schema";
 
 export const Route = createFileRoute("/")({
@@ -141,6 +142,7 @@ function TayzaHome() {
   const [selected, setSelected] = useState<string[]>([]);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [cookieOpen, setCookieOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
@@ -180,7 +182,7 @@ function TayzaHome() {
     let decided = false;
     try { decided = Boolean(localStorage.getItem(COOKIE_KEY)); } catch { /* sem armazenamento: mostra o aviso */ }
     if (decided) return;
-    const wait = document.documentElement.classList.contains("tn-skip-intro") ? 1400 : 4200;
+    const wait = document.documentElement.classList.contains("tn-skip-intro") ? 2500 : 6500;
     const timer = window.setTimeout(() => setCookieOpen(true), wait);
     return () => window.clearTimeout(timer);
   }, []);
@@ -273,8 +275,8 @@ function TayzaHome() {
   }, []);
 
   useEffect(() => {
-    if (!bookingOpen) return;
-    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setBookingOpen(false); };
+    if (!bookingOpen && !menuOpen) return;
+    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") { setBookingOpen(false); setMenuOpen(false); } };
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
@@ -282,7 +284,7 @@ function TayzaHome() {
       document.body.style.overflow = previous;
       window.removeEventListener("keydown", onKey);
     };
-  }, [bookingOpen]);
+  }, [bookingOpen, menuOpen]);
 
   // Subtle 3D parallax on the opening scene, only for mouse/trackpad users.
   function tilt(event: ReactPointerEvent<HTMLDivElement>) {
@@ -467,11 +469,38 @@ function TayzaHome() {
               <a key={item.id} href={"#" + item.id} onClick={(event) => { event.preventDefault(); goTo(item.id); }}>{item.label}</a>
             ))}
           </nav>
-          <button type="button" className="tn-btn tn-btn--ghost tn-header-cta" onClick={() => setBookingOpen(true)}>
-            Agendar <ArrowUpRight size={15} aria-hidden="true" />
-          </button>
+          <div className="tn-header-actions">
+            <button type="button" className="tn-btn tn-btn--ghost tn-header-cta" onClick={() => setBookingOpen(true)}>
+              Agendar <ArrowUpRight size={15} aria-hidden="true" />
+            </button>
+            <button type="button" className="tn-burger" onClick={() => setMenuOpen(true)} aria-label="Abrir menu" aria-expanded={menuOpen}>
+              <Menu size={22} strokeWidth={1.6} />
+            </button>
+          </div>
         </div>
       </header>
+
+      {menuOpen && (
+        <div className="tn-menu-sheet" role="dialog" aria-modal="true" aria-label="Menu" onMouseDown={(event) => { if (event.target === event.currentTarget) setMenuOpen(false); }}>
+          <nav>
+            <button type="button" className="tn-menu-close" onClick={() => setMenuOpen(false)} aria-label="Fechar menu"><X size={20} /></button>
+            <p className="tn-eyebrow">Navegue</p>
+            {navigation.map((item, index) => (
+              <a
+                key={item.id}
+                href={"#" + item.id}
+                style={{ ["--i" as string]: index }}
+                onClick={(event) => { event.preventDefault(); setMenuOpen(false); window.setTimeout(() => goTo(item.id), 220); }}
+              >
+                <small>0{index + 1}</small>{item.label}<ArrowUpRight size={18} aria-hidden="true" />
+              </a>
+            ))}
+            <button type="button" className="tn-btn tn-btn--gold" onClick={() => { setMenuOpen(false); setBookingOpen(true); }}>
+              <CalendarDays size={17} aria-hidden="true" /> Agendar horário
+            </button>
+          </nav>
+        </div>
+      )}
 
       <main id="conteudo">
         <section className="tn-hero" id="inicio" aria-label={content.brand}>
@@ -479,8 +508,11 @@ function TayzaHome() {
             {Array.from({ length: 18 }, (_, index) => <i key={index} />)}
           </div>
 
-          <p className="tn-season" data-hero style={{ ["--i" as string]: 0 }}>
+          <HeroDecor />
+
+          <p className="tn-season tn-goldline" data-hero style={{ ["--i" as string]: 0 }}>
             <Star className="tn-season-star" /> Agenda de Natal aberta
+            <SantaHat className="tn-season-hat" />
           </p>
 
           <div className="tn-stage" onPointerMove={tilt} onPointerLeave={resetTilt}>
@@ -505,11 +537,25 @@ function TayzaHome() {
                   </figure>
                 ))}
                 <h1 className="tn-mark" aria-label={content.brand}>
+                  <span className="tn-mark-glow" aria-hidden="true">{brandFirst}</span>
                   <span className="tn-mark-word" aria-hidden="true">
                     {Array.from(brandFirst).map((letter, index) => (
                       <span key={index} style={{ ["--l" as string]: index }}>{letter}</span>
                     ))}
                   </span>
+                  <svg className="tn-flourish" viewBox="0 0 400 40" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="tn-flourish-gold" x1="0" x2="1">
+                        <stop offset="0" stopColor="#c8a56a" stopOpacity="0" />
+                        <stop offset=".3" stopColor="#e6cf9f" />
+                        <stop offset=".5" stopColor="#fff3da" />
+                        <stop offset=".7" stopColor="#e6cf9f" />
+                        <stop offset="1" stopColor="#c8a56a" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <path className="tn-flourish-line" d="M20 20 C 90 30, 150 28, 186 21 M214 21 C 250 28, 310 30, 380 20" pathLength="100" fill="none" stroke="url(#tn-flourish-gold)" strokeWidth="1.4" strokeLinecap="round" />
+                    <path className="tn-flourish-heart" d="M200 30 C 191 24, 189 15, 195.5 14.2 C 198.4 13.9, 199.6 16, 200 17.4 C 200.4 16, 201.6 13.9, 204.5 14.2 C 211 15, 209 24, 200 30 Z" fill="#e6cf9f" />
+                  </svg>
                   <span className="tn-mark-sub" aria-hidden="true"><i />{brandSecond}<i /></span>
                 </h1>
                 <p className="tn-mark-tag">{content.hero.eyebrow}</p>
@@ -520,16 +566,16 @@ function TayzaHome() {
           <div className="tn-hero-foot" data-hero style={{ ["--i" as string]: 1 }}>
             <div className="tn-hero-actions">
               <button type="button" className="tn-btn tn-btn--gold" onClick={() => setBookingOpen(true)}>
-                Agendar horário <ArrowUpRight size={17} aria-hidden="true" />
+                <CalendarDays size={17} aria-hidden="true" /> Agendar horário <ArrowUpRight size={16} aria-hidden="true" />
               </button>
-              <a href="#vitrine" className="tn-btn tn-btn--line" onClick={(event) => { event.preventDefault(); goTo("vitrine"); }}>
-                Ver valores
+              <a href="#vitrine" className="tn-btn tn-btn--line tn-goldline" onClick={(event) => { event.preventDefault(); goTo("vitrine"); }}>
+                <Tag size={16} aria-hidden="true" /> Ver valores
               </a>
             </div>
             <ul className="tn-hero-facts">
-              <li><span>Seg a Sáb</span>08h às 17h30</li>
-              {lowestPrice && <li><span>A partir de</span>{lowestPrice}</li>}
-              <li><span>Pagamento</span>{paymentLabels.join(", ")}</li>
+              <li><CalendarDays size={18} strokeWidth={1.5} aria-hidden="true" /><div><span>Seg a Sáb</span>08h às 17h30</div></li>
+              {lowestPrice && <li><Layers size={18} strokeWidth={1.5} aria-hidden="true" /><div><span>A partir de</span>{lowestPrice}</div></li>}
+              <li><CreditCard size={18} strokeWidth={1.5} aria-hidden="true" /><div><span>Pagamento</span>{paymentLabels.join(", ")}</div></li>
             </ul>
           </div>
         </section>
@@ -856,7 +902,7 @@ function TayzaHome() {
         </div>
       )}
 
-      <TayzaGuide suppressed={bookingOpen || cookieOpen || selected.length > 0} category={category.id} />
+      <TayzaGuide suppressed={bookingOpen || cookieOpen || menuOpen || selected.length > 0} category={category.id} />
 
       {selected.length > 0 && !bookingOpen ? (
         <aside className="tn-dock" aria-label="Seu atendimento">

@@ -423,6 +423,86 @@ html:not(.tn-skip-intro) { --hero-delay: 2.75s; }
 .tn-credit:hover svg { transform: translate(2px, -2px); }
 @keyframes tn-credit-sheen { 0%, 60% { background-position: 100% 0; } 100% { background-position: -20% 0; } }
 
+/* ==========================================================================
+   Abertura de Natal: cenário, molduras com ouro correndo, gorro e logotipo
+   ========================================================================== */
+@property --tn-ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes tn-ang { to { --tn-ang: 360deg; } }
+
+/* Moldura dourada com um brilho que percorre a borda. */
+.tn-card-inner { padding: 7px; border: 0; background: #2a0d18; box-shadow: 0 50px 90px -40px rgba(0, 0, 0, .95), 0 0 34px -8px rgba(200, 165, 106, .45); }
+.tn-card-inner::before, .tn-goldline::before { content: ""; position: absolute; inset: 0; z-index: 2; padding: 2px; border-radius: inherit; background: conic-gradient(from var(--tn-ang), rgba(200, 165, 106, .6) 0deg, rgba(200, 165, 106, .6) 210deg, #fff6e2 255deg, #f2dca8 275deg, rgba(200, 165, 106, .6) 320deg); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: tn-ang 4.5s linear infinite; pointer-events: none; }
+.tn-card--2 .tn-card-inner::before { animation-delay: -1.5s; }
+.tn-card--3 .tn-card-inner::before { animation-delay: -3s; }
+.tn-card-inner::after { content: ""; position: absolute; inset: 7px; z-index: 2; border: 1px solid rgba(242, 220, 168, .35); pointer-events: none; background: linear-gradient(115deg, transparent 30%, rgba(255, 246, 226, .22) 45%, transparent 60%) no-repeat; background-size: 300% 100%; background-position: 100% 0; animation: tn-glass 7s ease-in-out infinite; }
+.tn-card--2 .tn-card-inner::after { animation-delay: -2.3s; }
+.tn-card--3 .tn-card-inner::after { animation-delay: -4.6s; }
+@keyframes tn-glass { 0%, 70% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+.tn-goldline { position: relative; }
+.tn-goldline::before { inset: -1px; padding: 1.5px; animation-duration: 5s; }
+.tn-season { border-color: transparent; overflow: visible; box-shadow: 0 0 30px -10px rgba(200, 165, 106, .5); }
+
+/* Gorro de Papai Noel com balanço leve. */
+.tn-season-hat { position: absolute; right: -20px; top: -26px; width: 48px; height: auto; transform-origin: 22% 88%; animation: tn-hat-sway 3.4s ease-in-out infinite; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .45)); }
+@keyframes tn-hat-sway { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(9deg) translateY(-1px); } }
+
+/* Cenário: seda com borda dourada, laço, bolas de Natal e galhos. */
+.tn-decor { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.tn-silk { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tn-silk-drift { animation: tn-drift 16s ease-in-out infinite alternate; }
+.tn-silk-drift--b { animation-duration: 19s; animation-delay: -6s; }
+.tn-silk-drift--c { animation-duration: 13s; animation-delay: -3s; }
+.tn-silk-shine { stroke-dasharray: 160 1300; animation: tn-shine-run 6s linear infinite; }
+@keyframes tn-drift { from { transform: translate(-14px, 6px); } to { transform: translate(14px, -8px); } }
+@keyframes tn-shine-run { from { stroke-dashoffset: 1460; } to { stroke-dashoffset: 0; } }
+.tn-bow { position: absolute; left: -3%; top: -2%; width: clamp(120px, 21vw, 250px); height: auto; transform-origin: 42% 48%; animation: tn-bow 8s ease-in-out infinite; filter: drop-shadow(0 18px 24px rgba(0, 0, 0, .5)); }
+@keyframes tn-bow { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(-4deg) translateY(3px); } }
+.tn-ornament { position: absolute; height: auto; transform-origin: 50% 0; animation: tn-swing 4.6s ease-in-out infinite; filter: drop-shadow(0 14px 18px rgba(0, 0, 0, .55)); }
+.tn-ornament--right { right: 1.5%; top: 64px; width: clamp(46px, 6vw, 80px); }
+.tn-ornament--left { left: 4%; bottom: 4%; width: clamp(48px, 6.5vw, 86px); top: auto; transform-origin: 50% 0; animation-delay: -2s; }
+.tn-ornament--gold { left: 20%; top: 40px; width: clamp(34px, 3.6vw, 52px); animation-delay: -1s; animation-duration: 5.4s; }
+@keyframes tn-swing { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+.tn-sprig { position: absolute; height: auto; opacity: .85; }
+.tn-sprig--right { right: -3%; top: 22%; width: clamp(110px, 15vw, 200px); transform: rotate(160deg); }
+.tn-sprig--left { left: -4%; bottom: 10%; width: clamp(110px, 15vw, 200px); transform: rotate(-10deg); }
+
+/* Logotipo: metal dourado com reflexo, brilho e floreio com coração. */
+.tn-mark-word span { background: linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, .85) 50%, transparent 60%) no-repeat, linear-gradient(180deg, #fff4da 0%, #ecd29c 30%, #b98a3f 52%, #f4dfa8 68%, #a37b38 100%); background-size: 300% 100%, 100% 100%; background-position: 100% 0, 0 0; -webkit-background-clip: text; background-clip: text; }
+@keyframes tn-sheen { from { background-position: 100% 0, 0 0; } to { background-position: 0% 0, 0 0; } }
+@keyframes tn-sheen-loop { 0%, 82% { background-position: 100% 0, 0 0; } 100% { background-position: 0% 0, 0 0; } }
+.tn-skip-intro .tn-mark-word span { background-position: 100% 0, 0 0; }
+.tn-mark { position: relative; }
+.tn-mark-glow { position: absolute; left: 50%; top: 0; font-family: var(--tn-serif); font-style: italic; font-weight: 500; font-size: clamp(96px, 19vw, 220px); line-height: .86; letter-spacing: -.02em; white-space: nowrap; color: #d9b36b; filter: blur(26px); opacity: 0; transform: translateX(-50%) translateZ(-30px); animation: tn-glow-in 1.6s ease 1.5s forwards; pointer-events: none; }
+.tn-skip-intro .tn-mark-glow { animation: none; opacity: .32; }
+@keyframes tn-glow-in { to { opacity: .32; } }
+.tn-flourish { display: block; width: clamp(220px, 38vw, 420px); height: auto; margin: -4px 0 2px; overflow: visible; }
+.tn-flourish-line { stroke-dasharray: 100; stroke-dashoffset: 100; animation: tn-draw 1.3s cubic-bezier(.65, 0, .35, 1) 1.65s forwards; }
+.tn-flourish-heart { opacity: 0; transform-box: fill-box; transform-origin: 50% 60%; animation: tn-heart 0.9s cubic-bezier(.34, 1.56, .64, 1) 2.25s forwards, tn-beat 2.6s ease-in-out 3.4s infinite; }
+.tn-skip-intro .tn-flourish-line { animation: none; stroke-dashoffset: 0; }
+.tn-skip-intro .tn-flourish-heart { animation: tn-beat 2.6s ease-in-out 1s infinite; opacity: 1; }
+@keyframes tn-draw { to { stroke-dashoffset: 0; } }
+@keyframes tn-heart { from { opacity: 0; transform: scale(.2); } to { opacity: 1; transform: scale(1); } }
+@keyframes tn-beat { 0%, 70%, 100% { transform: scale(1); } 80% { transform: scale(1.22); } 90% { transform: scale(.96); } }
+
+/* Botões e informações com ícones (micro-interações estilo Figma). */
+.tn-btn svg { flex: 0 0 auto; }
+.tn-btn:hover svg:last-child { transform: translate(2px, -2px); }
+.tn-btn svg { transition: transform .35s var(--tn-ease); }
+.tn-hero-facts li { display: flex; align-items: flex-start; justify-content: center; gap: 10px; text-align: left; }
+.tn-hero-facts li > svg { margin-top: 2px; color: var(--tn-gold); }
+
+/* Cabeçalho: menu no celular. */
+.tn-header-actions { display: flex; align-items: center; gap: 6px; }
+.tn-burger { display: none; place-items: center; width: 44px; height: 44px; border: 0; background: none; color: var(--tn-gold-2); }
+.tn-menu-sheet { position: fixed; inset: 0; z-index: 85; display: flex; justify-content: flex-end; background: rgba(13, 3, 7, .6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); animation: tn-fade-in .3s ease both; }
+.tn-menu-sheet nav { position: relative; display: flex; flex-direction: column; gap: 4px; width: min(360px, 86vw); height: 100%; padding: 86px 28px calc(28px + env(safe-area-inset-bottom)); background: radial-gradient(80% 50% at 100% 0%, rgba(107, 22, 49, .6), transparent 70%), var(--tn-ink); border-left: 1px solid rgba(200, 165, 106, .35); overflow-y: auto; animation: tn-sheet-side .5s var(--tn-ease) both; }
+.tn-menu-sheet a { display: flex; align-items: center; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--tn-line-light); font-family: var(--tn-serif); font-size: 28px; color: var(--tn-ivory); text-decoration: none; animation: tn-rise .6s var(--tn-ease) both; animation-delay: calc(.12s + var(--i) * .06s); }
+.tn-menu-sheet a small { font-family: var(--tn-sans); font-size: 10px; font-weight: 700; letter-spacing: .2em; color: var(--tn-gold); }
+.tn-menu-sheet a svg { margin-left: auto; color: var(--tn-gold); }
+.tn-menu-sheet .tn-btn { margin-top: 24px; }
+.tn-menu-close { position: absolute; top: 18px; right: 18px; display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid var(--tn-line-light); border-radius: 50%; background: none; color: var(--tn-ivory); }
+@keyframes tn-sheet-side { from { transform: translateX(100%); } to { transform: none; } }
+
 /* ---------- Abertura: detalhes de cinema ---------- */
 /* Fade de abertura (do preto), feixe de luz anamórfico, raios dourados e faíscas. */
 .tn-hero::after { content: ""; position: absolute; inset: 0; z-index: 0; background: #0d0307; pointer-events: none; animation: tn-veil 1.5s cubic-bezier(.65, 0, .35, 1) both; }
@@ -608,10 +688,23 @@ html:not(.tn-skip-intro) { --hero-delay: 2.75s; }
   .tn-logo-tag { letter-spacing: .26em; }
   .tn-hero { padding: 78px 0 26px; }
   .tn-stage { width: calc(100% - 24px); min-height: clamp(360px, 54svh, 480px); }
-  .tn-card { width: 36vw; }
-  .tn-card--1 { left: 3%; top: 0; transform: rotateY(16deg) rotateZ(-5deg) translateZ(-90px); --fx: -60vw; --fy: -10vh; }
-  .tn-card--2 { right: 5%; top: 5%; transform: rotateY(-16deg) rotateZ(5deg) translateZ(-130px); --fx: 60vw; --fy: -20vh; }
-  .tn-card--3 { left: 50%; right: auto; bottom: 2%; width: 28vw; margin-left: -14vw; transform: rotateX(16deg) rotateZ(-2deg) translateZ(-60px); }
+  .tn-card { width: 40vw; }
+  .tn-burger { display: grid; }
+  .tn-header-cta { min-height: 38px; padding: 0 12px; }
+  .tn-season-hat { width: 46px; right: -18px; top: -26px; }
+  .tn-bow { width: 34vw; left: -9%; top: 3%; }
+  .tn-ornament--right { top: 22%; right: -2%; }
+  .tn-ornament--gold { display: none; }
+  .tn-ornament--left { bottom: auto; top: 50%; left: 1%; width: 44px; }
+  .tn-sprig--left { bottom: auto; top: 56%; width: 110px; }
+  .tn-hero-actions .tn-btn--gold svg:last-child { display: none; }
+  .tn-sprig--right { top: 30%; }
+  .tn-mark-glow { font-size: clamp(84px, 25vw, 120px); }
+  .tn-flourish { width: 64vw; }
+  .tn-hero-facts li { flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+  .tn-card--1 { left: 2%; top: 0; transform: rotateY(16deg) rotateZ(-5deg) translateZ(-90px); --fx: -60vw; --fy: -10vh; }
+  .tn-card--2 { right: 2%; top: 2%; transform: rotateY(-16deg) rotateZ(5deg) translateZ(-130px); --fx: 60vw; --fy: -20vh; }
+  .tn-card--3 { left: 50%; right: auto; bottom: 0; width: 34vw; margin-left: -17vw; transform: rotateX(16deg) rotateZ(-2deg) translateZ(-60px); }
   .tn-mark-word { font-size: clamp(84px, 25vw, 120px); }
   .tn-card--3 figcaption { display: none; }
   .tn-card figcaption { font-size: 12px; padding: 22px 8px 7px; }
