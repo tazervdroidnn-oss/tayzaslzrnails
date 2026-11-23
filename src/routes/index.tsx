@@ -47,6 +47,13 @@ const portfolio = [
   ...content.lashes.map((item) => ({ ...item, kind: "cilios" as const })),
 ];
 
+const portfolioByImage = new Map(portfolio.map((item) => [item.image, item]));
+const itemKeyByName = new Map(allItems.map((item) => [item.name.toLowerCase(), item.key]));
+function categoryFrom(category: StudioContent["menu"][number]) {
+  const values = category.items.map((item) => parsePrice(item.price)).filter((value): value is number => value !== null);
+  return values.length ? brl.format(Math.min(...values)).replace(/,00$/, "") : "";
+}
+
 const prices = allItems.map((item) => parsePrice(item.price)).filter((value): value is number => value !== null);
 const lowestPrice = prices.length ? brl.format(Math.min(...prices)).replace(/,00$/, "") : "";
 
@@ -319,14 +326,18 @@ function TayzaHome() {
 
   function reelDown(event: ReactPointerEvent<HTMLDivElement>) {
     if (event.pointerType !== "mouse" || event.button !== 0 || !reelRef.current) return;
+    if ((event.target as HTMLElement).closest("button, a")) return; // let buttons inside cards click normally
     drag.current = { active: true, x: event.clientX, left: reelRef.current.scrollLeft, moved: false };
-    reelRef.current.classList.add("is-dragging");
   }
 
   function reelMove(event: ReactPointerEvent<HTMLDivElement>) {
     if (!drag.current.active || !reelRef.current) return;
     const dx = event.clientX - drag.current.x;
-    if (Math.abs(dx) > 4) drag.current.moved = true;
+    if (!drag.current.moved && Math.abs(dx) > 4) {
+      drag.current.moved = true;
+      reelRef.current.classList.add("is-dragging");
+    }
+    if (!drag.current.moved) return;
     reelRef.current.scrollLeft = drag.current.left - dx;
   }
 
@@ -398,9 +409,12 @@ function TayzaHome() {
     travelRef.current = cancel;
     window.addEventListener("wheel", cancel, { passive: true });
     window.addEventListener("touchstart", cancel, { passive: true });
+    // Re-measure every frame so lazy images loading above never make us overshoot.
+    const measure = () => id === "inicio" ? 0 : Math.max(0, target.getBoundingClientRect().top + window.scrollY - offset);
     const step = (now: number) => {
       const t = Math.min(1, (now - start) / duration);
-      window.scrollTo(0, from + distance * ease(t));
+      const end = measure();
+      window.scrollTo(0, from + (end - from) * ease(t));
       if (t < 1) frame = requestAnimationFrame(step);
       else stop(true);
     };
@@ -472,10 +486,21 @@ function TayzaHome() {
           <div className="tn-stage" onPointerMove={tilt} onPointerLeave={resetTilt}>
             <div className="tn-cam">
               <div className="tn-tilt" ref={tiltRef}>
+                <span className="tn-rays" aria-hidden="true" />
+                <span className="tn-flare" aria-hidden="true" />
+                <span className="tn-sparks" aria-hidden="true">
+                  {Array.from({ length: 14 }, (_, index) => <i key={index} style={{ ["--a" as string]: index * (360 / 14) + "deg", ["--r" as string]: 110 + (index % 3) * 46 + "px", ["--s" as string]: index % 2 ? "3px" : "5px" }} />)}
+                </span>
                 {content.hero.images.slice(0, 3).map((src, index) => (
                   <figure className={"tn-card tn-card--" + (index + 1)} key={src + index}>
                     <div className="tn-card-inner">
-                      <img src={src} alt={index === 0 ? "Trabalho da " + content.brand : ""} loading="eager" decoding="async" />
+                      <img src={src} alt={portfolioByImage.get(src)?.alt ?? (index === 0 ? "Trabalho da " + content.brand : "")} loading="eager" decoding="async" />
+                      {portfolioByImage.get(src) && (
+                        <figcaption>
+                          <small>{portfolioByImage.get(src)!.kind === "unhas" ? "Unhas" : "Cílios"}</small>
+                          {portfolioByImage.get(src)!.name}
+                        </figcaption>
+                      )}
                     </div>
                   </figure>
                 ))}
@@ -553,6 +578,7 @@ function TayzaHome() {
                 <figcaption>
                   <strong>{category.title}</strong>
                   <span>{category.subtitle}</span>
+                  <em>{category.items.length} opções{categoryFrom(category) ? " · a partir de " + categoryFrom(category) : ""}</em>
                 </figcaption>
               </figure>
               <ul className="tn-menu-list">
@@ -620,6 +646,16 @@ function TayzaHome() {
                   <span>{item.kind === "unhas" ? "Unhas" : "Cílios"} · {String(index + 1).padStart(2, "0")}</span>
                   {item.name}
                   {item.description && <small>{item.description}</small>}
+                  <button
+                    type="button"
+                    className="tn-shot-cta"
+                    onClick={() => {
+                      const key = itemKeyByName.get(item.name.toLowerCase());
+                      if (key) setSelected((items) => items.includes(key) ? items : [...items, key]);
+                      else setNote((current) => current || "Vi no portfólio: " + item.name);
+                      setBookingOpen(true);
+                    }}
+                  >Quero esse <ArrowUpRight size={13} aria-hidden="true" /></button>
                 </figcaption>
               </figure>
             ))}

@@ -4,17 +4,33 @@ import { X } from "lucide-react";
 const HIDE_KEY = "tayza-guide-hidden";
 const SECTIONS = ["inicio", "sobre", "vitrine", "portfolio", "agenda", "dicas", "perfil"];
 
-const messages: Record<string, string> = {
-  inicio: "Oi, eu sou a Tayza! Vem que eu te mostro o studio.",
-  sobre: "Oi, eu sou a Tayza! Aqui cada detalhe é feito com capricho.",
-  "vitrine:cilios": "Na dúvida entre os volumes? Me chama que eu te ajudo a escolher o ideal para o seu olhar.",
-  "vitrine:sobrancelhas": "A henna preenche falhas e deixa o desenho marcado por mais tempo.",
-  "vitrine:unhas": "Unha fraca? A blindagem protege a unha natural e deixa mais resistente.",
-  vitrine: "Toque nos serviços para montar seu atendimento.",
-  portfolio: "Arraste para o lado. Toque em Cílios ou Unhas para ver cada técnica.",
-  agenda: "Toque em um dia livre que eu já preparo sua mensagem.",
-  dicas: "Cuidar em casa faz o resultado durar muito mais!",
-  perfil: "Prazer! Me segue no Instagram para ver as novidades.",
+const messages: Record<string, string[]> = {
+  inicio: ["Oi, eu sou a Tayza! Vem que eu te mostro o studio.", "Toque em Ver valores para conhecer cada serviço."],
+  sobre: ["Oi, eu sou a Tayza! Aqui cada detalhe é feito com capricho.", "Trabalho só com horário agendado, para te atender com calma."],
+  "vitrine:cilios": [
+    "Na dúvida entre os volumes? Me chama que eu te ajudo a escolher o ideal para o seu olhar.",
+    "Quer algo natural? O fio a fio efeito molhado é bem leve.",
+    "Para manter o volume bonito, agende a manutenção com antecedência.",
+  ],
+  "vitrine:sobrancelhas": [
+    "A henna preenche falhas e deixa o desenho marcado por mais tempo.",
+    "A brow lamination deixa os fios alinhados, com efeito penteado.",
+  ],
+  "vitrine:unhas": [
+    "Unha fraca? A blindagem protege a unha natural e deixa mais resistente.",
+    "O banho em gel dá brilho e força sem alongar.",
+  ],
+  vitrine: ["Toque nos serviços para montar seu atendimento."],
+  portfolio: [
+    "Arraste para o lado. Toque em Cílios ou Unhas para ver cada técnica.",
+    "Gostou de algum? Toque em Quero esse que eu já separo para você.",
+  ],
+  agenda: [
+    "Toque em um dia livre que eu já preparo sua mensagem.",
+    "Domingo é meu descanso, mas de segunda a sábado estou aqui!",
+  ],
+  dicas: ["Cuidar em casa faz o resultado durar muito mais!", "Deslize os cartões para ver as dicas de cada área."],
+  perfil: ["Prazer! Me segue no Instagram para ver as novidades.", "São mais de 3 anos cuidando de cada detalhe."],
 };
 
 /** Personagem guia: acompanha as seções e dá dicas em um balão de fala. */
@@ -24,6 +40,7 @@ export default function TayzaGuide({ suppressed, category }: { suppressed: boole
   const [talking, setTalking] = useState(false);
   const [ready, setReady] = useState(false);
   const [atEnd, setAtEnd] = useState(false);
+  const [tip, setTip] = useState(0);
   const readyRef = useRef(false);
   const hideTimer = useRef<number | null>(null);
 
@@ -46,19 +63,32 @@ export default function TayzaGuide({ suppressed, category }: { suppressed: boole
     return () => observer.disconnect();
   }, [hidden]);
 
-  // Each new section (or price category) makes her speak for a few seconds.
+  // Each new section (or price category) makes her speak, then she keeps giving a new tip every few seconds.
   useEffect(() => {
     if (hidden) return;
     const firstDelay = document.documentElement.classList.contains("tn-skip-intro") ? 900 : 3600;
-    const delay = readyRef.current ? 250 : firstDelay;
-    const show = window.setTimeout(() => {
+    const delay = readyRef.current ? 300 : firstDelay;
+    const timers: number[] = [];
+    const speak = (index: number) => {
+      setTip(index);
+      setTalking(true);
+      if (hideTimer.current) window.clearTimeout(hideTimer.current);
+      hideTimer.current = window.setTimeout(() => setTalking(false), 6200);
+    };
+    timers.push(window.setTimeout(() => {
       readyRef.current = true;
       setReady(true);
-      setTalking(true);
-    }, delay);
-    if (hideTimer.current) window.clearTimeout(hideTimer.current);
-    hideTimer.current = window.setTimeout(() => setTalking(false), delay + 5600);
-    return () => window.clearTimeout(show);
+      speak(0);
+    }, delay));
+    let index = 0;
+    const cycle = window.setInterval(() => {
+      index += 1;
+      speak(index);
+    }, 11000);
+    return () => {
+      timers.forEach((timer) => window.clearTimeout(timer));
+      window.clearInterval(cycle);
+    };
   }, [key, hidden]);
 
   useEffect(() => () => { if (hideTimer.current) window.clearTimeout(hideTimer.current); }, []);
@@ -74,6 +104,8 @@ export default function TayzaGuide({ suppressed, category }: { suppressed: boole
 
   if (hidden) return null;
 
+  const list = messages[key] ?? messages.inicio;
+
   const className = "tn-guide"
     + (ready ? " is-ready" : "")
     + (suppressed || atEnd ? " is-suppressed" : "")
@@ -84,7 +116,7 @@ export default function TayzaGuide({ suppressed, category }: { suppressed: boole
     <aside className={className} aria-label="Assistente do site">
       <div className={"tn-guide-bubble" + (talking ? " is-open" : "")} role="status" aria-live="polite">
         <span className="tn-guide-label">{key.startsWith("vitrine:") || key === "dicas" ? "Dica da Tayza" : "Tayza"}</span>
-        <p key={key}>{messages[key] ?? messages.inicio}</p>
+        <p key={key + tip}>{list[tip % list.length]}</p>
         <button
           type="button"
           className="tn-guide-close"
