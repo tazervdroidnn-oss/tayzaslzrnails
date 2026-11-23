@@ -23,6 +23,7 @@ export default function TayzaGuide({ suppressed, category }: { suppressed: boole
   const [section, setSection] = useState("inicio");
   const [talking, setTalking] = useState(false);
   const [ready, setReady] = useState(false);
+  const [atEnd, setAtEnd] = useState(false);
   const readyRef = useRef(false);
   const hideTimer = useRef<number | null>(null);
 
@@ -62,11 +63,20 @@ export default function TayzaGuide({ suppressed, category }: { suppressed: boole
 
   useEffect(() => () => { if (hideTimer.current) window.clearTimeout(hideTimer.current); }, []);
 
+  // Steps aside at the very end so the footer and credits stay clear.
+  useEffect(() => {
+    const footer = document.querySelector(".tn-footer");
+    if (!footer || !("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver(([entry]) => setAtEnd(entry.isIntersecting), { threshold: 0.05 });
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+
   if (hidden) return null;
 
   const className = "tn-guide"
     + (ready ? " is-ready" : "")
-    + (suppressed ? " is-suppressed" : "")
+    + (suppressed || atEnd ? " is-suppressed" : "")
     + (talking ? "" : " is-quiet")
     + (section === "inicio" ? " is-hero" : "");
 

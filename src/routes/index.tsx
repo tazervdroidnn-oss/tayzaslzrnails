@@ -749,8 +749,12 @@ function TayzaHome() {
         <div className="tn-wrap tn-footer-base">
           <span>© {new Date().getFullYear()} {content.brand}</span>
           <button type="button" onClick={() => setCookieOpen(true)}>Cookies</button>
-          <a href="https://instagram.com/joaodstudio" target="_blank" rel="noreferrer">Site por @joaodstudio</a>
         </div>
+        <a className="tn-credit" href="https://instagram.com/joaodstudio" target="_blank" rel="noreferrer">
+          <span>Site feito por</span>
+          <strong>@joaodstudio</strong>
+          <ArrowUpRight size={13} aria-hidden="true" />
+        </a>
       </footer>
 
       <TayzaGuide suppressed={bookingOpen || cookieOpen || selected.length > 0} category={category.id} />
