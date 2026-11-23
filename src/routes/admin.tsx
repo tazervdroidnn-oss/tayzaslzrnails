@@ -18,7 +18,7 @@ export const Route = createFileRoute("/admin")({
 
 type GalleryItem = StudioContent["lashes"][number];
 type GalleryKey = "lashes" | "nails";
-type Tab = "inicio" | "servicos" | "cilios" | "unhas" | "contato";
+type Tab = "inicio" | "precos" | "cilios" | "unhas" | "contato";
 
 async function api(payload?: Record<string, unknown>) {
   const response = await fetch("/api/studio-admin", {
@@ -194,7 +194,7 @@ function AdminPanel() {
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="font-display text-3xl text-amber-200">{group === "lashes" ? "Trabalhos de cílios" : "Trabalhos de unhas"}</h2>
-            <p className="mt-1 text-sm text-white/60">Atualize os nomes, fotos e valores que aparecem no site.</p>
+            <p className="mt-1 text-sm text-white/60">Fotos e nomes do portfólio. Os valores exibidos no site ficam na Tabela de preços.</p>
           </div>
           <button
             type="button"
@@ -292,9 +292,9 @@ function AdminPanel() {
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "inicio", label: "Página inicial" },
-    { id: "servicos", label: "Serviços" },
-    { id: "cilios", label: "Cílios" },
-    { id: "unhas", label: "Unhas" },
+    { id: "precos", label: "Tabela de preços" },
+    { id: "cilios", label: "Portfólio de cílios" },
+    { id: "unhas", label: "Portfólio de unhas" },
     { id: "contato", label: "Contato e pagamentos" },
   ];
 
@@ -361,7 +361,7 @@ function AdminPanel() {
                 </div>
                 <Field label="Texto de apresentação" multiline value={content.hero.intro} onChange={(v) => edit((s) => ({ ...s, hero: { ...s.hero, intro: v } }))} />
                 <h3 className="border-t border-white/10 pt-5 font-display text-2xl text-amber-200">Fotos de destaque</h3>
-                <p className="text-sm text-white/60">As fotos se alternam suavemente no topo do site.</p>
+                <p className="text-sm text-white/60">As três primeiras fotos aparecem em 3D no topo do site e na abertura.</p>
                 {content.hero.images.map((img, index) => (
                   <PhotoInput
                     key={index} label={"Foto de destaque " + (index + 1)} url={img}
@@ -384,22 +384,50 @@ function AdminPanel() {
                 >Remover última foto</button>}
               </section>
             )}
-            {tab === "servicos" && (
-              <section className="space-y-5">
-                <h2 className="font-display text-3xl text-amber-200">Serviços oferecidos</h2>
-                <p className="text-sm text-white/60">Estes são os quadradinhos da seção “Tudo para suas unhas”.</p>
-                {content.services.map((service) => (
-                  <div key={service.id} className="space-y-4 rounded-2xl border border-white/10 bg-white/[.04] p-5">
-                    <div className="grid gap-4 sm:grid-cols-[80px_1fr_145px]">
-                      <Field label="Ícone" value={service.icon} onChange={(v) => edit((s) => ({ ...s, services: s.services.map((it) => it.id === service.id ? { ...it, icon: v } : it) }))} />
-                      <Field label="Nome" value={service.name} onChange={(v) => edit((s) => ({ ...s, services: s.services.map((it) => it.id === service.id ? { ...it, name: v } : it) }))} />
-                      <Field label="A partir de" value={service.startingPrice} onChange={(v) => edit((s) => ({ ...s, services: s.services.map((it) => it.id === service.id ? { ...it, startingPrice: v } : it) }))} />
+            {tab === "precos" && (
+              <section className="space-y-6">
+                <div>
+                  <h2 className="font-display text-3xl text-amber-200">Tabela de preços</h2>
+                  <p className="mt-1 text-sm text-white/60">Esta é a vitrine de valores do site. Use o formato “R$ 90,00” para o total ser calculado automaticamente.</p>
+                </div>
+                {content.menu.map((category) => {
+                  const editCategory = (update: (current: typeof category) => typeof category) =>
+                    edit((s) => ({ ...s, menu: s.menu.map((it) => it.id === category.id ? update(it) : it) }));
+                  return (
+                    <div key={category.id} className="space-y-4 rounded-2xl border border-white/10 bg-white/[.04] p-5">
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <Field label="Categoria" value={category.title} onChange={(v) => editCategory((c) => ({ ...c, title: v }))} />
+                        <Field label="Subtítulo" value={category.subtitle} onChange={(v) => editCategory((c) => ({ ...c, subtitle: v }))} />
+                      </div>
+                      <PhotoInput
+                        label="Foto da categoria" url={category.image}
+                        busy={uploading === "menu-" + category.id}
+                        onUpload={(file) => void upload(file, "menu-" + category.id, (url) => editCategory((c) => ({ ...c, image: url })))}
+                        onUrl={(value) => editCategory((c) => ({ ...c, image: value }))}
+                      />
+                      <div className="space-y-3">
+                        {category.items.map((item) => (
+                          <div key={item.id} className="grid items-end gap-3 rounded-xl border border-white/10 p-3 sm:grid-cols-[1fr_130px_150px_auto]">
+                            <Field label="Serviço" value={item.name} onChange={(v) => editCategory((c) => ({ ...c, items: c.items.map((it) => it.id === item.id ? { ...it, name: v } : it) }))} />
+                            <Field label="Preço" value={item.price} onChange={(v) => editCategory((c) => ({ ...c, items: c.items.map((it) => it.id === item.id ? { ...it, price: v } : it) }))} />
+                            <Field label="Selo (opcional)" value={item.note ?? ""} onChange={(v) => editCategory((c) => ({ ...c, items: c.items.map((it) => it.id === item.id ? { ...it, note: v || undefined } : it) }))} />
+                            <button
+                              type="button" disabled={category.items.length <= 1}
+                              aria-label={"Remover " + item.name}
+                              className="mb-1 inline-flex size-11 items-center justify-center rounded-xl border border-rose-200/30 text-rose-200 hover:bg-rose-200/10 disabled:opacity-30"
+                              onClick={() => editCategory((c) => ({ ...c, items: c.items.filter((it) => it.id !== item.id) }))}
+                            ><Trash2 className="size-4" /></button>
+                          </div>
+                        ))}
+                      </div>
+                      <button
+                        type="button" disabled={category.items.length >= 30}
+                        className="inline-flex items-center gap-2 rounded-full border border-amber-300/50 px-4 py-2 text-sm text-amber-200 disabled:opacity-40"
+                        onClick={() => editCategory((c) => ({ ...c, items: [...c.items, { id: "item-" + Date.now(), name: "Novo serviço", price: "R$ 0,00" }] }))}
+                      ><Plus className="size-4" /> Adicionar serviço em {category.title}</button>
                     </div>
-                    <Field label="Descrição" multiline value={service.description} onChange={(v) => edit((s) => ({ ...s, services: s.services.map((it) => it.id === service.id ? { ...it, description: v } : it) }))} />
-                    {content.services.length > 1 && <button type="button" className="inline-flex items-center gap-1 text-xs text-rose-200" onClick={() => edit((s) => ({ ...s, services: s.services.filter((it) => it.id !== service.id) }))}><Trash2 className="size-4" /> Remover serviço</button>}
-                  </div>
-                ))}
-                <button type="button" disabled={content.services.length >= 12} className="inline-flex items-center gap-2 rounded-full border border-amber-300/50 px-4 py-2 text-sm text-amber-200 disabled:opacity-40" onClick={() => edit((s) => ({ ...s, services: [...s.services, { id: "serv-" + Date.now(), icon: "✧", name: "Novo serviço", startingPrice: "R$ 0", description: "Descrição do serviço." }] }))}><Plus className="size-4" /> Adicionar serviço</button>
+                  );
+                })}
               </section>
             )}
             {tab === "cilios" && gallery("lashes")}

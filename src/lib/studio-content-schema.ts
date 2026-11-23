@@ -28,13 +28,18 @@ export const studioContentSchema = z.object({
     whatsapp: z.string().regex(/^\d{10,15}$/, "Informe o número com DDI e DDD, apenas dígitos."),
     instagram: z.string().regex(/^[a-zA-Z0-9._]{1,30}$/, "Informe somente o usuário do Instagram."),
   }).strict(),
-  services: z.array(z.object({
-    id: line(80),
-    icon: line(6),
-    name: line(75),
-    description: line(350),
-    startingPrice: line(30),
-  }).strict()).min(1).max(12),
+  menu: z.array(z.object({
+    id: line(40),
+    title: line(40),
+    subtitle: line(80),
+    image,
+    items: z.array(z.object({
+      id: line(80),
+      name: line(70),
+      price: line(30),
+      note: z.string().trim().max(40).optional(),
+    }).strict()).min(1).max(30),
+  }).strict()).min(1).max(8),
   lashes: z.array(galleryItem).max(30),
   nails: z.array(galleryItem).max(30),
   payments: z.object({ card: z.boolean(), pix: z.boolean(), cash: z.boolean() }).strict()

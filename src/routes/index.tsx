@@ -1,76 +1,79 @@
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  ArrowRight, ArrowUpRight, Banknote, CalendarDays, ChevronLeft, ChevronRight,
-  Paintbrush, Clock3, CreditCard, Instagram, MapPin, Menu, QrCode, ShieldCheck, Sparkles, Sunrise, Sunset, X,
-} from "lucide-react";
-import heroPortrait from "@/assets/hero.jpg";
-import galleryNails from "@/assets/gallery-nails.jpg";
-import galleryMaintenance from "@/assets/gallery-maintenance.jpg";
+import { ArrowUpRight, Check, Clock3, Instagram, MapPin, Plus, Wallet, X } from "lucide-react";
 import studioContent from "@/data/studio-content.json";
-import TayzaPreloader from "@/components/TayzaPreloader";
+import TayzaIntro from "@/components/TayzaIntro";
+import type { StudioContent } from "@/lib/studio-content-schema";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Tayza Nails | Beleza em cada detalhe" },
-      { name: "description", content: "Unhas, cílios e cuidados personalizados no Tayza Nails. Conheça nossos trabalhos e consulte horários pelo WhatsApp." },
-      { property: "og:title", content: "Tayza Nails | Beleza em cada detalhe" },
-      { property: "og:description", content: "Um espaço dedicado à sua beleza. Veja unhas, cílios, serviços e agende seu horário." },
+      { title: "Tayza Nails | Unhas, cílios e sobrancelhas" },
+      { name: "description", content: "Unhas, cílios e sobrancelhas com acabamento premium. Veja a tabela de valores e agende pelo WhatsApp." },
+      { property: "og:title", content: "Tayza Nails | Unhas, cílios e sobrancelhas" },
+      { property: "og:description", content: "Tabela de valores, portfólio e agendamento pelo WhatsApp." },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "https://tayzanails.vercel.app/tayza-unhas.png" },
-      { name: "theme-color", content: "#230d1a" },
+      { name: "theme-color", content: "#1a0810" },
     ],
   }),
   component: TayzaHome,
 });
 
-const whatsAppBase = "https://wa.me/" + studioContent.contact.whatsapp;
-const instagramUrl = "https://instagram.com/" + studioContent.contact.instagram;
-const priceByService = new Map<string, string>([
-  ["Alongamento em gel", "R$ 100,00"],
-  ...studioContent.services.map(({ name, startingPrice }) => [name, startingPrice] as const),
-  ...[...studioContent.nails, ...studioContent.lashes].map(({ name, price }) => [name, price] as const),
-]);
-const formatPrice = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-const bookingOptions = [
-  ...studioContent.services.map((service) => service.name),
-  ...studioContent.nails.map((item) => item.name),
-  ...studioContent.lashes.map((item) => item.name),
-  "Alongamento em gel",
+const content: StudioContent = studioContent;
+const whatsAppBase = "https://wa.me/" + content.contact.whatsapp;
+const instagramUrl = "https://instagram.com/" + content.contact.instagram;
+const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+
+/** "R$ 1.234,50" → 1234.5; returns null for anything that is not a plain price. */
+function parsePrice(label: string): number | null {
+  const match = label.trim().match(/^R\$\s*([\d.]+)(?:,(\d{1,2}))?$/);
+  if (!match) return null;
+  return Number(match[1].replace(/\./g, "") + "." + (match[2] || "0"));
+}
+
+/** Shows "R$ 90" instead of "R$ 90,00" when there are no cents, for a cleaner list. */
+function shortPrice(label: string) {
+  return label.replace(/,00$/, "");
+}
+
+const allItems = content.menu.flatMap((category) =>
+  category.items.map((item) => ({ ...item, key: category.id + ":" + item.id, category: category.title })));
+const itemByKey = new Map(allItems.map((item) => [item.key, item]));
+
+const portfolio = [
+  ...content.nails.map((item) => ({ ...item, kind: "unhas" as const })),
+  ...content.lashes.map((item) => ({ ...item, kind: "cilios" as const })),
 ];
-const nailGallery = [
-  ...studioContent.nails,
-  ...studioContent.hero.images.map((image, index) => ({
-    id: "alongamento-" + index,
-    name: "Alongamento em gel",
-    price: "R$ 100,00",
-    image,
-    alt: "Trabalho de alongamento em gel realizado pelo Tayza Nails",
-  })),
-];
-const serviceImages = [
-  studioContent.hero.images[0] || galleryNails,
-  studioContent.lashes[0]?.image || heroPortrait,
-  galleryMaintenance,
-  heroPortrait,
-];
+
+const prices = allItems.map((item) => parsePrice(item.price)).filter((value): value is number => value !== null);
+const lowestPrice = prices.length ? brl.format(Math.min(...prices)).replace(/,00$/, "") : "";
+
+const paymentLabels = [
+  content.payments.pix && "Pix",
+  content.payments.card && "Cartão",
+  content.payments.cash && "Dinheiro",
+].filter(Boolean) as string[];
+
 const navigation = [
-  { id: "inicio", label: "Início" },
-  { id: "servicos", label: "Serviços" },
-  { id: "unhas", label: "Unhas" },
-  { id: "cilios", label: "Cílios" },
-  { id: "sobre", label: "Sobre" },
+  { id: "vitrine", label: "Valores" },
+  { id: "portfolio", label: "Portfólio" },
+  { id: "info", label: "Informações" },
 ];
 
+function openWhatsApp(text: string) {
+  window.open(whatsAppBase + "?text=" + encodeURIComponent(text), "_blank", "noopener,noreferrer");
+}
 
-const paymentOptions = [
-  { label: "Cartão", detail: "Crédito e débito", icon: CreditCard, enabled: studioContent.payments.card },
-  { label: "Pix", detail: "Pagamento prático", icon: QrCode, enabled: studioContent.payments.pix },
-  { label: "Dinheiro", detail: "Pagamento presencial", icon: Banknote, enabled: studioContent.payments.cash },
-].filter((option) => option.enabled);
+function Star({ className = "" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 1.5c.5 5.6 4.9 10 10.5 10.5-5.6.5-10 4.9-10.5 10.5C11.5 16.9 7.1 12.5 1.5 12 7.1 11.5 11.5 7.1 12 1.5Z" fill="currentColor" />
+    </svg>
+  );
+}
 
-function WhatsAppLogo({ size = 25 }: { size?: number }) {
+function WhatsAppIcon({ size = 22 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
       <path d="M16.02 2.66A13.25 13.25 0 0 0 4.66 22.7L2.7 29.33l6.81-1.82a13.34 13.34 0 0 0 6.5 1.7h.01c7.33 0 13.31-5.95 13.31-13.28A13.31 13.31 0 0 0 16.02 2.66Zm0 24.2a10.9 10.9 0 0 1-5.56-1.52l-.4-.23-4.05 1.08 1.08-3.94-.26-.41a10.92 10.92 0 1 1 9.19 5.02Zm6.01-8.19c-.33-.16-1.95-.96-2.25-1.07-.3-.11-.52-.16-.74.17-.22.33-.85 1.07-1.04 1.29-.19.22-.38.25-.71.09-.33-.17-1.39-.51-2.64-1.64-.98-.87-1.64-1.95-1.83-2.28-.19-.33-.02-.51.14-.67.15-.15.33-.38.49-.57.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.79-1.02-2.45-.27-.64-.54-.55-.74-.56h-.63c-.22 0-.58.08-.88.41s-1.16 1.13-1.16 2.75 1.19 3.19 1.35 3.41c.16.22 2.32 3.54 5.62 4.97.78.34 1.39.54 1.86.69.78.25 1.49.21 2.05.13.62-.09 1.95-.8 2.23-1.57.28-.77.28-1.44.2-1.57-.08-.14-.3-.22-.63-.39Z" />
@@ -79,964 +82,390 @@ function WhatsAppLogo({ size = 25 }: { size?: number }) {
 }
 
 function TayzaHome() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [bookingOpen, setBookingOpen] = useState(false);
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [bookingName, setBookingName] = useState("");
-  const [bookingDate, setBookingDate] = useState("");
-  const [minBookingDate, setMinBookingDate] = useState("");
-  const [bookingNote, setBookingNote] = useState("");
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("inicio");
-  const [navIndicator, setNavIndicator] = useState({ left: 0, width: 0 });
-  const [activeNail, setActiveNail] = useState(0);
-  const [floatPosition, setFloatPosition] = useState<{ x: number; y: number } | null>(null);
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const desktopNavRef = useRef<HTMLElement>(null);
-  const navigationTweenRef = useRef<{ kill: () => void } | null>(null);
-  const navigationRequestRef = useRef(0);
-  const navigationInProgressRef = useRef(false);
-  const sliderDrag = useRef({ active: false, x: 0, scroll: 0, moved: false });
-  const whatsappDrag = useRef({ active: false, x: 0, y: 0, left: 0, top: 0, moved: false });
-  const suppressWhatsAppClick = useRef(false);
+  const [activeCategory, setActiveCategory] = useState(content.menu[0]?.id ?? "");
+  const [filter, setFilter] = useState<"todos" | "unhas" | "cilios">("todos");
+  const [selected, setSelected] = useState<string[]>([]);
+  const [bookingOpen, setBookingOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [date, setDate] = useState("");
+  const [note, setNote] = useState("");
+  const [minDate, setMinDate] = useState("");
+  const stackRef = useRef<HTMLDivElement>(null);
 
-  // Local date avoids locale-dependent en-CA formatting and hydration mismatches.
+  const category = content.menu.find((entry) => entry.id === activeCategory) ?? content.menu[0];
+  const visiblePortfolio = filter === "todos" ? portfolio : portfolio.filter((item) => item.kind === filter);
+
+  const total = useMemo(() => {
+    const values = selected.map((key) => parsePrice(itemByKey.get(key)?.price ?? ""));
+    return values.some((value) => value === null) ? null : values.reduce<number>((sum, value) => sum + (value ?? 0), 0);
+  }, [selected]);
+
+  const dateInvalid = Boolean(date && ((minDate && date < minDate) || new Date(date + "T12:00:00").getDay() === 0));
+
   useEffect(() => {
     const today = new Date();
-    const iso = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
-    setMinBookingDate(iso);
-  }, []);
-  const bookingDateInvalid = Boolean(bookingDate && (
-    (minBookingDate && bookingDate < minBookingDate) ||
-    new Date(bookingDate + "T12:00:00").getDay() === 0
-  ));
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 30);
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    setMinDate([today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-"));
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Scroll spy: the highlighted menu item follows manual scrolling as well as taps.
+  // Scroll reveal. Content is visible by default; the "tn-js" class (set before paint) enables the effect.
   useEffect(() => {
-    let frame = 0;
-    const measure = () => {
-      frame = 0;
-      if (navigationInProgressRef.current) return;
-      const header = document.querySelector<HTMLElement>(".tn-header");
-      const threshold = (header?.getBoundingClientRect().height || 70) + Math.min(130, window.innerHeight * 0.16);
-      let visible = "inicio";
-      navigation.slice(1).forEach(({ id }) => {
-        const section = document.getElementById(id);
-        if (section && section.getBoundingClientRect().top <= threshold) visible = id;
+    const elements = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-in)"));
+    if (!("IntersectionObserver" in window)) {
+      elements.forEach((element) => element.classList.add("is-in"));
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        observer.unobserve(entry.target);
       });
-      if (window.scrollY < 24) visible = "inicio";
-      setActiveSection((current) => current === visible ? current : visible);
-    };
-    const queueMeasure = () => {
-      if (!frame) frame = window.requestAnimationFrame(measure);
-    };
-    queueMeasure();
-    window.addEventListener("scroll", queueMeasure, { passive: true });
-    window.addEventListener("resize", queueMeasure);
-    return () => {
-      window.removeEventListener("scroll", queueMeasure);
-      window.removeEventListener("resize", queueMeasure);
-      window.cancelAnimationFrame(frame);
-      navigationRequestRef.current++;
-      navigationTweenRef.current?.kill();
-    };
-  }, []);
-
-  // Position the refined rose-gold indicator under the current menu option.
-  useEffect(() => {
-    const nav = desktopNavRef.current;
-    if (!nav) return;
-    const updateIndicator = () => {
-      const link = Array.from(nav.querySelectorAll<HTMLAnchorElement>("[data-nav-id]"))
-        .find((item) => item.dataset.navId === activeSection);
-      if (!link) return;
-      const navRect = nav.getBoundingClientRect();
-      const linkRect = link.getBoundingClientRect();
-      if (linkRect.width < 1) return;
-      setNavIndicator((current) => {
-        const left = linkRect.left - navRect.left + 14;
-        const width = Math.max(12, linkRect.width - 28);
-        return current.left === left && current.width === width ? current : { left, width };
-      });
-    };
-    updateIndicator();
-    window.addEventListener("resize", updateIndicator);
-    return () => window.removeEventListener("resize", updateIndicator);
-  }, [activeSection]);
-
-  // Motion system: progressive enhancements only; content remains visible if JS/GSAP fails.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const scope = document.querySelector<HTMLElement>(".tn-page");
-    if (!scope) return;
-
-    let disposed = false;
-    let disposeAnimations = () => {};
-
-    Promise.all([import("gsap"), import("gsap/ScrollTrigger")])
-      .then(([{ gsap }, { ScrollTrigger }]) => {
-        if (disposed) return;
-        gsap.registerPlugin(ScrollTrigger);
-        const listenerCleanups: Array<() => void> = [];
-
-        const context = gsap.context(() => {
-          gsap.fromTo(".tn-care-letter", { backgroundPosition: "100% 50%" }, {
-            backgroundPosition: "0% 50%", duration: 0.7, stagger: 0.065, ease: "sine.inOut",
-            scrollTrigger: { trigger: ".tn-care-title", start: "top 78%", toggleActions: "restart none none reset" },
-            delay: 0.45,
-          });
-          // Tayza logotype: individual letter entrance, rose-gold sweep and drawn underline.
-          const logo = scope.querySelector<HTMLElement>(".tn-logo--animated");
-          if (logo) {
-            const letters = logo.querySelectorAll<HTMLElement>(".tn-logo-letter");
-            const subtitle = logo.querySelector<HTMLElement>(".tn-logo-subtitle");
-            const underline = logo.querySelector<SVGPathElement>(".tn-logo-drawn-line path");
-
-            const logoTimeline = gsap.timeline({ delay: 0.12 });
-            logoTimeline.fromTo(letters,
-              { yPercent: 118, autoAlpha: 0 },
-              { yPercent: 0, autoAlpha: 1, duration: 0.67, stagger: 0.075, ease: "power3.out",
-                clearProps: "transform,opacity,visibility" }
-            );
-            if (subtitle) {
-              logoTimeline.fromTo(subtitle,
-                { y: 7, autoAlpha: 0, letterSpacing: ".43em" },
-                { y: 0, autoAlpha: 1, letterSpacing: ".32em", duration: 0.65, ease: "power2.out",
-                  clearProps: "transform,opacity,visibility,letterSpacing" }, "-=0.28");
-            }
-            if (underline) {
-              logoTimeline.fromTo(underline,
-                { strokeDasharray: 100, strokeDashoffset: 100 },
-                { strokeDashoffset: 0, duration: 0.66, ease: "power2.inOut",
-                  clearProps: "strokeDashoffset,strokeDasharray" }, "-=0.24");
-            }
-          }
-          gsap.fromTo(".tn-poster-glint", { backgroundPosition: "100% 0%" }, {
-            backgroundPosition: "0% 0%", ease: "none",
-            scrollTrigger: { trigger: ".tn-studio-poster", start: "top 85%", end: "center 30%", scrub: true },
-          });
-          const heroLines = scope.querySelectorAll<HTMLElement>(".tn-hero-title-line");
-          gsap.fromTo(heroLines,
-            { yPercent: 112, autoAlpha: 0 },
-            { yPercent: 0, autoAlpha: 1, duration: 1.04, stagger: 0.14, ease: "power3.out", delay: 0.08, clearProps: "transform,opacity,visibility" }
-          );
-          const heroDetails = scope.querySelectorAll<HTMLElement>(
-            ".tn-hero .tn-eyebrow, .tn-hero .tn-small-rule, .tn-hero-description, .tn-hero .tn-button, .tn-hero-caption"
-          );
-          gsap.fromTo(heroDetails,
-            { autoAlpha: 0, y: 17 },
-            { autoAlpha: 1, y: 0, duration: 0.65, stagger: 0.10, delay: 0.25, ease: "power2.out", clearProps: "transform,opacity,visibility" }
-          );
-
-
-          // Luxurious handwritten lettering: starts automatically when the section enters view.
-          // The animation runs independently of scroll speed, once per page visit.
-          const signature = scope.querySelector<HTMLElement>(".tn-signature-scene");
-          if (signature) {
-            const stage = signature.querySelector<HTMLElement>(".tn-signature-stage");
-            const lettering = signature.querySelector<HTMLElement>(".tn-signature-lettering");
-            const flourish = signature.querySelector<SVGPathElement>(".tn-signature-flourish-path");
-            const subtitle = signature.querySelector<HTMLElement>(".tn-signature-subtitle");
-            const message = signature.querySelector<HTMLElement>(".tn-signature-message");
-            const note = signature.querySelector<HTMLElement>(".tn-signature-scroll-note");
-
-            // ScrollTrigger only starts the timeline; it no longer scrubs the animation.
-            // Reduced-motion visitors retain the visible static signature.
-            const timeline = gsap.timeline({
-              scrollTrigger: {
-                trigger: signature,
-                start: "top 82%",
-                toggleActions: "play none none none",
-                once: true,
-              },
-            });
-            // About four seconds of motion, regardless of scrolling speed.
-            timeline.timeScale(1.45);
-
-            if (stage) {
-              timeline.fromTo(stage,
-                { rotationX: 3, scale: 0.99 },
-                { rotationX: 0, scale: 1, duration: 5.6, ease: "none" }, 0);
-            }
-            if (lettering) {
-              timeline.fromTo(lettering,
-                { clipPath: "inset(-18% 100% -30% 0%)" },
-                { clipPath: "inset(-18% 0% -30% 0%)", duration: 4.5, ease: "none" }, 0.2);
-            }
-            if (flourish) {
-              const length = flourish.getTotalLength();
-              timeline.fromTo(flourish,
-                { strokeDasharray: length, strokeDashoffset: length },
-                { strokeDasharray: length, strokeDashoffset: 0, duration: 0.9, ease: "power1.inOut" }, 3.75);
-            }
-            if (subtitle) timeline.fromTo(subtitle,
-              { y: 12, autoAlpha: 0, letterSpacing: ".48em" },
-              { y: 0, autoAlpha: 1, letterSpacing: ".30em", duration: 0.8, ease: "power2.out" }, 4.35);
-            if (message) timeline.fromTo(message,
-              { y: 12, autoAlpha: 0 },
-              { y: 0, autoAlpha: 1, duration: 0.7, ease: "power2.out" }, 4.55);
-            if (note) timeline.fromTo(note,
-              { autoAlpha: 0 },
-              { autoAlpha: 1, duration: 0.6 }, 4.8);
-          }
-
-          // Titles reveal line by line within real clipping masks. No split plugin or layout shift.
-          scope.querySelectorAll<HTMLElement>("[data-motion-title]").forEach((heading) => {
-            const lines = heading.querySelectorAll<HTMLElement>(".tn-heading-line");
-            gsap.fromTo(lines,
-              { yPercent: 108, autoAlpha: 0 },
-              {
-                yPercent: 0, autoAlpha: 1, duration: 0.84, stagger: 0.11, ease: "power3.out",
-                scrollTrigger: { trigger: heading, start: "top 87%", once: true },
-                clearProps: "transform,opacity,visibility",
-              }
-            );
-          });
-
-          // Editorial stagger: readable cards without long waits or scroll-jacking.
-          [
-            [".tn-service-grid", ".tn-service-card"],
-            [".tn-lash-grid", ".tn-lash-card"],
-            [".tn-payment-grid", ".tn-payment-card"],
-            [".tn-nail-track", ".tn-nail-card"],
-          ].forEach(([containerSelector, cardSelector]) => {
-            const container = scope.querySelector<HTMLElement>(containerSelector);
-            if (!container) return;
-            const cards = container.querySelectorAll<HTMLElement>(cardSelector);
-            if (!cards.length) return;
-            gsap.fromTo(cards,
-              { y: 38, autoAlpha: 0 },
-              {
-                y: 0, autoAlpha: 1, duration: 0.73, stagger: 0.10, ease: "power3.out",
-                scrollTrigger: { trigger: container, start: "top 86%", once: true },
-                clearProps: "transform,opacity,visibility",
-              }
-            );
-          });
-
-          // Quiet supporting copy, payment and booking panel entrances.
-          scope.querySelectorAll<HTMLElement>(
-            ".tn-section-lead, .tn-carousel-heading p:not(.tn-eyebrow), .tn-book-layout > div:first-child > p:not(.tn-eyebrow), .tn-book-action, .tn-experience-copy > p:not(.tn-eyebrow), .tn-experience-copy .tn-perks, .tn-payments-heading > p:not(.tn-eyebrow)"
-          ).forEach((element) => {
-            gsap.fromTo(element,
-              { y: 19, autoAlpha: 0 },
-              {
-                y: 0, autoAlpha: 1, duration: 0.73, ease: "power2.out",
-                scrollTrigger: { trigger: element, start: "top 91%", once: true },
-                clearProps: "transform,opacity,visibility",
-              }
-            );
-          });
-
-          // Contagem real dos horários: começa quando o painel (não só a seção)
-          // entra na área visível. A marcação HTML mantém os valores finais
-          // disponíveis a leitores de tela e usuários sem JavaScript.
-          const schedule = scope.querySelector<HTMLElement>(".tn-hours");
-          const hoursPanel = schedule?.querySelector<HTMLElement>(".tn-hours-panel");
-          if (schedule && hoursPanel) {
-            const counters = Array.from(hoursPanel.querySelectorAll<HTMLElement>("[data-time-count]"));
-            const progress = hoursPanel.querySelector<HTMLElement>(".tn-hours-count-progress span");
-            let animated = false;
-
-            ScrollTrigger.create({
-              trigger: hoursPanel,
-              start: "top 82%",
-              once: true,
-              onEnter: () => {
-                if (animated) return;
-                animated = true;
-                hoursPanel.classList.add("is-counting");
-                counters.forEach((element) => { element.textContent = "00"; });
-
-                gsap.fromTo(hoursPanel,
-                  { y: 22, opacity: 0.65 },
-                  { y: 0, opacity: 1, duration: 0.45, ease: "power2.out", clearProps: "transform,opacity" }
-                );
-
-                const counting = gsap.timeline({
-                  onComplete: () => {
-                    counters.forEach((element) => {
-                      element.textContent = String(Number(element.dataset.timeCount)).padStart(2, "0");
-                    });
-                    hoursPanel.classList.remove("is-counting");
-                    hoursPanel.classList.add("is-counted");
-                  },
-                });
-                counters.forEach((element, index) => {
-                  const target = Number(element.dataset.timeCount);
-                  if (!target) return; // "00" continua correto e legível.
-                  const value = { current: 0 };
-                  counting.to(value, {
-                    current: target,
-                    duration: 2.2,
-                    ease: "power1.inOut",
-                    onUpdate: () => {
-                      element.textContent = String(Math.round(value.current)).padStart(2, "0");
-                    },
-                  }, index >= 2 ? 0.27 : 0.12);
-                });
-                if (progress) {
-                  counting.fromTo(progress,
-                    { scaleX: 0 },
-                    { scaleX: 1, duration: 2.45, ease: "none" },
-                    0
-                  );
-                }
-              },
-            });
-
-            gsap.fromTo(schedule.querySelectorAll(".tn-hours-week span"),
-              { y: 12, autoAlpha: 0 },
-              {
-                y: 0, autoAlpha: 1, stagger: 0.07, duration: 0.5, ease: "power2.out",
-                scrollTrigger: { trigger: schedule, start: "top 92%", once: true },
-                clearProps: "opacity,visibility,transform",
-              }
-            );
-          }
-
-          // Image mask reveal uses clip-path, so no picture framing or object-fit changes.
-          scope.querySelectorAll<HTMLElement>(
-            ".tn-service-photo .tn-photo-subject, .tn-lash-photo .tn-photo-subject"
-          ).forEach((element) => {
-            gsap.fromTo(element,
-              { clipPath: "inset(0 0 100% 0)" },
-              {
-                clipPath: "inset(0 0 0% 0)", duration: 0.88, ease: "power2.inOut",
-                scrollTrigger: { trigger: element.closest("article") || element, start: "top 90%", once: true },
-                clearProps: "clipPath",
-              }
-            );
-          });
-        }, scope);
-
-        // Only fine pointers get subtle magnetic motion; touch stays native.
-        if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-          scope.querySelectorAll<HTMLElement>(
-            ".tn-hero .tn-button, .tn-experience-copy .tn-button, .tn-book-action .tn-button"
-          ).forEach((button) => {
-            const onMove = (event: MouseEvent) => {
-              const rect = button.getBoundingClientRect();
-              const dx = (event.clientX - rect.left - rect.width / 2) * 0.055;
-              const dy = (event.clientY - rect.top - rect.height / 2) * 0.085;
-              gsap.to(button, { x: dx, y: dy, duration: 0.3, ease: "power2.out", overwrite: "auto" });
-            };
-            const onLeave = () => gsap.to(button, { x: 0, y: 0, duration: 0.5, ease: "power3.out", overwrite: "auto" });
-            button.addEventListener("mousemove", onMove);
-            button.addEventListener("mouseleave", onLeave);
-            listenerCleanups.push(() => {
-              button.removeEventListener("mousemove", onMove);
-              button.removeEventListener("mouseleave", onLeave);
-            });
-          });
-        }
-
-        const refresh = () => ScrollTrigger.refresh();
-        window.addEventListener("load", refresh, { once: true });
-        disposeAnimations = () => {
-          window.removeEventListener("load", refresh);
-          listenerCleanups.forEach((removeListener) => removeListener());
-          context.revert();
-        };
-        requestAnimationFrame(() => ScrollTrigger.refresh());
-      })
-      .catch((error) => {
-        // Failure of optional motion must never block the storefront or booking.
-        console.warn("Tayza Nails: animações opcionais indisponíveis", error);
-      });
-
-    return () => {
-      disposed = true;
-      disposeAnimations();
-    };
-  }, []);
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, [filter]);
 
   useEffect(() => {
-    if (!bookingOpen && !menuOpen) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setBookingOpen(false);
-        setMenuOpen(false);
-      }
-    };
-    const previousOverflow = document.body.style.overflow;
+    if (!bookingOpen) return;
+    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setBookingOpen(false); };
+    const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = previousOverflow;
+      document.body.style.overflow = previous;
       window.removeEventListener("keydown", onKey);
     };
-  }, [bookingOpen, menuOpen]);
+  }, [bookingOpen]);
 
-  useEffect(() => {
-    if (!floatPosition) return;
-    const keepInView = () => {
-      setFloatPosition((current) => current ? {
-        x: Math.min(Math.max(8, current.x), Math.max(8, window.innerWidth - 68)),
-        y: Math.min(Math.max(8, current.y), Math.max(8, window.innerHeight - 68)),
-      } : null);
-    };
-    window.addEventListener("resize", keepInView);
-    return () => window.removeEventListener("resize", keepInView);
-  }, [floatPosition !== null]);
-
-  const [priceSummaryOpen, setPriceSummaryOpen] = useState(false);
-  const priceRows = selectedServices.map(name => ({ name, price: priceByService.get(name)?.trim() || "" }));
-  const amounts = priceRows.map(({ price }) => /^R\$\s*[\d.]+(?:,\d{2})?$/.test(price)
-    ? Number(price.replace(/[^\d,]/g, "").replace(",", ".")) : null);
-  const totalLabel = amounts.some(value => value === null) ? "Sob consulta"
-    : formatPrice.format(amounts.reduce<number>((sum, value) => sum + (value ?? 0), 0));
-
-  function toggleService(name: string) {
-    setSelectedServices((items) => items.includes(name) ? items.filter((item) => item !== name) : [...items, name]);
+  // 3D tilt on the hero photo stack, only for mouse/trackpad users.
+  function tilt(event: ReactPointerEvent<HTMLDivElement>) {
+    if (event.pointerType !== "mouse") return;
+    const stack = stackRef.current;
+    if (!stack) return;
+    const rect = stack.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    stack.style.setProperty("--ry", (x * 14).toFixed(2) + "deg");
+    stack.style.setProperty("--rx", (y * -10).toFixed(2) + "deg");
   }
 
-  function openBooking(service = "") {
-    if (service) setSelectedServices((items) => items.includes(service) ? items : [...items, service]);
-    setMenuOpen(false);
-    setBookingOpen(true);
+  function resetTilt() {
+    stackRef.current?.style.removeProperty("--ry");
+    stackRef.current?.style.removeProperty("--rx");
+  }
+
+  function toggle(key: string) {
+    setSelected((items) => items.includes(key) ? items.filter((item) => item !== key) : [...items, key]);
   }
 
   function goTo(id: string) {
-    const section = document.getElementById(id);
-    if (!section) return;
-
-    setMenuOpen(false);
-    setActiveSection(id);
-    if (window.location.hash !== "#" + id) {
-      window.history.replaceState(window.history.state, "", "#" + id);
-    }
-
-    const header = document.querySelector<HTMLElement>(".tn-header");
-    const offset = (header?.getBoundingClientRect().height || 70) + 12;
-    const destination = id === "inicio" ? 0 : Math.max(0, section.getBoundingClientRect().top + window.scrollY - offset);
-
-    navigationRequestRef.current += 1;
-    const requestId = navigationRequestRef.current;
-    navigationTweenRef.current?.kill();
-    navigationInProgressRef.current = true;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      window.scrollTo({ top: destination, behavior: "instant" });
-      navigationInProgressRef.current = false;
-      return;
-    }
-
-    // GSAP ScrollTo: eased navigation with interruption by user gesture.
-    Promise.all([import("gsap"), import("gsap/ScrollToPlugin")])
-      .then(([{ gsap }, { ScrollToPlugin }]) => {
-        if (navigationRequestRef.current !== requestId) return;
-        gsap.registerPlugin(ScrollToPlugin);
-        const root = document.documentElement;
-        const previousScrollStyle = root.style.scrollBehavior;
-        root.style.scrollBehavior = "auto";
-        const finish = () => {
-          root.style.scrollBehavior = previousScrollStyle;
-          if (navigationRequestRef.current === requestId) {
-            navigationInProgressRef.current = false;
-            navigationTweenRef.current = null;
-          }
-        };
-        navigationTweenRef.current = gsap.to(window, {
-          scrollTo: { y: destination, autoKill: true },
-          duration: Math.min(1.08, Math.max(0.6, Math.abs(destination - window.scrollY) / 1300)),
-          ease: "power3.inOut",
-          overwrite: "auto",
-          onComplete: finish,
-          onInterrupt: finish,
-        });
-      })
-      .catch(() => {
-        if (navigationRequestRef.current !== requestId) return;
-        navigationInProgressRef.current = false;
-        window.scrollTo({ top: destination, behavior: "smooth" });
-      });
+    const target = document.getElementById(id);
+    if (!target) return;
+    const top = id === "inicio" ? 0 : target.getBoundingClientRect().top + window.scrollY - 64;
+    window.scrollTo({ top, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    window.history.replaceState(window.history.state, "", "#" + id);
   }
 
   function sendBooking() {
-    if (bookingDateInvalid) return;
-    const parts = [
-      "Olá, Tayza! Gostaria de consultar um horário.",
-      bookingName.trim() ? "Meu nome: " + bookingName.trim() : "",
-      selectedServices.length ? "Serviços escolhidos: " + selectedServices.join(", ") : "Gostaria de saber os serviços disponíveis.",
-      bookingDate ? "Data de preferência: " + bookingDate.split("-").reverse().join("/") : "",
-      bookingNote.trim() ? "Observação: " + bookingNote.trim() : "",
-      "Pode me informar a disponibilidade?",
+    if (dateInvalid) return;
+    const services = selected.map((key) => itemByKey.get(key)).filter(Boolean)
+      .map((item) => "• " + item!.name + " (" + shortPrice(item!.price) + ")");
+    const lines = [
+      "Olá, Tayza! Gostaria de agendar um horário.",
+      name.trim() && "Nome: " + name.trim(),
+      services.length ? "Serviços:\n" + services.join("\n") : "Ainda estou escolhendo o serviço.",
+      total !== null && services.length ? "Total estimado: " + brl.format(total) : "",
+      date && "Data de preferência: " + date.split("-").reverse().join("/"),
+      note.trim() && "Observação: " + note.trim(),
     ].filter(Boolean);
-    window.open(whatsAppBase + "?text=" + encodeURIComponent(parts.join("\n")), "_blank", "noopener,noreferrer");
+    openWhatsApp(lines.join("\n"));
     setBookingOpen(false);
   }
 
-  function moveCarousel(direction: number) {
-    const slider = sliderRef.current;
-    if (!slider) return;
-    const card = slider.querySelector<HTMLElement>(".tn-nail-card");
-    const gap = parseFloat(window.getComputedStyle(slider).columnGap || "0") || 0;
-    slider.scrollBy({ left: direction * ((card?.offsetWidth || slider.clientWidth / 2) + gap), behavior: "smooth" });
-  }
-
-  function updateSlide() {
-    const slider = sliderRef.current;
-    if (!slider) return;
-    const first = slider.querySelector<HTMLElement>(".tn-nail-card");
-    const gap = parseFloat(window.getComputedStyle(slider).columnGap || "0") || 0;
-    const step = (first?.offsetWidth || 1) + gap;
-    setActiveNail(Math.min(nailGallery.length - 1, Math.max(0, Math.round(slider.scrollLeft / step))));
-  }
-
-  function nailPointerDown(event: PointerEvent<HTMLDivElement>) {
-    if (event.pointerType !== "mouse" || event.button !== 0) return;
-    const slider = sliderRef.current;
-    if (!slider) return;
-    sliderDrag.current = { active: true, x: event.clientX, scroll: slider.scrollLeft, moved: false };
-    slider.classList.add("is-dragging");
-  }
-
-  function nailPointerMove(event: PointerEvent<HTMLDivElement>) {
-    const drag = sliderDrag.current;
-    if (!drag.active || !sliderRef.current) return;
-    const distance = event.clientX - drag.x;
-    if (Math.abs(distance) > 5) drag.moved = true;
-    sliderRef.current.scrollLeft = drag.scroll - distance;
-  }
-
-  function nailPointerUp() {
-    sliderDrag.current.active = false;
-    sliderRef.current?.classList.remove("is-dragging");
-  }
-
-  function onWhatsappDown(event: PointerEvent<HTMLButtonElement>) {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    whatsappDrag.current = { active: true, x: event.clientX, y: event.clientY, left: rect.left, top: rect.top, moved: false };
-    suppressWhatsAppClick.current = false;
-    event.currentTarget.setPointerCapture(event.pointerId);
-  }
-
-  function onWhatsappMove(event: PointerEvent<HTMLButtonElement>) {
-    const drag = whatsappDrag.current;
-    if (!drag.active) return;
-    const dx = event.clientX - drag.x;
-    const dy = event.clientY - drag.y;
-    if (Math.abs(dx) + Math.abs(dy) > 7) drag.moved = true;
-    if (!drag.moved) return;
-    setFloatPosition({
-      x: Math.max(8, Math.min(window.innerWidth - 68, drag.left + dx)),
-      y: Math.max(8, Math.min(window.innerHeight - 68, drag.top + dy)),
-    });
-  }
-
-  function onWhatsappUp() {
-    suppressWhatsAppClick.current = whatsappDrag.current.moved;
-    whatsappDrag.current.active = false;
-  }
-
   return (
-    <div className="tn-page" id="inicio">
-      <TayzaPreloader />
-      <a href="#conteudo" className="tn-skip">Pular para o conteúdo</a>
-      <header className={"tn-header " + (scrolled ? "tn-header--solid" : "")}>
-        <div className="tn-container tn-header-inner">
-          <a className="tn-logo tn-logo--animated" href="#inicio" aria-label="Tayza Nails Studio — início" onClick={(event) => { event.preventDefault(); goTo("inicio"); }}>
-            <strong className="tn-logo-word">
-              <span className="tn-logo-letter-row" aria-hidden="true">
-                {Array.from("TAYZA").map((letter, index) => (
-                  <span className="tn-logo-letter-mask" key={index}><span className="tn-logo-letter">{letter}</span></span>
-                ))}
-                <span className="tn-logo-letter-mask"><span className="tn-logo-letter tn-logo-letter--dot">.</span></span>
-              </span>
-              <span className="tn-logo-shine" aria-hidden="true">TAYZA.</span>
-            </strong>
-            <span className="tn-logo-subtitle-layer">
-              <small className="tn-logo-subtitle">NAILS STUDIO</small>
-              <small className="tn-logo-subtitle-shine" aria-hidden="true">NAILS STUDIO</small>
-            </span>
-            <svg className="tn-logo-drawn-line" viewBox="0 0 148 6" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M 2 3 L 146 3" pathLength="100" fill="none" stroke="#dcb79c" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
+    <div className="tn-page">
+      <TayzaIntro images={content.hero.images} />
+      <a href="#conteudo" className="tn-skip-link">Pular para o conteúdo</a>
+
+      <header className={"tn-header" + (scrolled ? " is-solid" : "")}>
+        <div className="tn-wrap tn-header-row">
+          <a href="#inicio" className="tn-logo" onClick={(event) => { event.preventDefault(); goTo("inicio"); }} aria-label="Tayza Nails, início">
+            <span className="tn-logo-word">Tayza</span>
+            <span className="tn-logo-tag">Nails Studio</span>
           </a>
-          <nav ref={desktopNavRef} className="tn-nav-desktop" aria-label="Navegação principal">
+          <nav className="tn-nav" aria-label="Seções">
             {navigation.map((item) => (
-              <a
-                key={item.id}
-                href={"#" + item.id}
-                data-nav-id={item.id}
-                className={"tn-nav-link" + (activeSection === item.id ? " is-active" : "")}
-                aria-current={activeSection === item.id ? "location" : undefined}
-                onClick={(event) => { event.preventDefault(); goTo(item.id); }}
-              ><span>{item.label}</span></a>
+              <a key={item.id} href={"#" + item.id} onClick={(event) => { event.preventDefault(); goTo(item.id); }}>{item.label}</a>
             ))}
-            <span className="tn-nav-indicator" aria-hidden="true" style={{ left: navIndicator.left, width: navIndicator.width, opacity: navIndicator.width ? 1 : 0 }} />
           </nav>
-          <div className="tn-header-actions">
-            <button className="tn-header-book tn-appointment-cta" type="button" aria-haspopup="dialog" aria-expanded={bookingOpen} onClick={() => openBooking()}><span className="tn-appointment-cta__label">Agendar horário</span><span className="tn-appointment-cta__icon" aria-hidden="true"><ArrowUpRight size={16} /></span></button>
-            <button className="tn-menu-toggle" type="button" onClick={() => setMenuOpen(true)} aria-label="Abrir menu" aria-expanded={menuOpen}><Menu size={26} /></button>
-          </div>
+          <button type="button" className="tn-btn tn-btn--ghost tn-header-cta" onClick={() => setBookingOpen(true)}>
+            Agendar <ArrowUpRight size={15} aria-hidden="true" />
+          </button>
         </div>
       </header>
 
       <main id="conteudo">
-        <section className="tn-cover" aria-labelledby="tn-cover-title">
-          <h1 id="tn-cover-title" className="sr-only">Tayza Nails — unhas, cílios e sobrancelhas</h1>
-            <button className="tn-nails-banner" type="button" onClick={() => openBooking()} aria-label="Agendar um horário no Tayza Nails">
-              <img src="/tayza-unhas.png" alt="Tayza Nails — unhas, cílios e sobrancelhas. Beleza e cuidado em cada detalhe." loading="eager" fetchPriority="high" decoding="async" />
-              <span>Agende seu horário <ArrowUpRight size={18} /></span>
-            </button>
-          <div className="tn-mobile-cover">
-            <div className="tn-cover-detail" role="img" aria-label="Unhas em rosa e vinho com acabamento dourado" />
-            <div className="tn-cover-brand" role="img" aria-label="Tayza Nails — unhas, cílios e sobrancelhas" />
-            <p>Beleza e cuidado em cada detalhe</p>
-            <button type="button" className="tn-mobile-appointment" onClick={() => openBooking()}><span>Agende seu horário</span><ArrowUpRight size={18} aria-hidden="true" /></button>
+        <section className="tn-hero" id="inicio" aria-labelledby="tn-hero-title">
+          <div className="tn-snow" aria-hidden="true">
+            {Array.from({ length: 18 }, (_, index) => <i key={index} />)}
           </div>
-        </section>
-
-
-        <section className="tn-signature-scene" aria-labelledby="tn-signature-title">
-          <span className="tn-signature-halo tn-signature-halo--left" aria-hidden="true" />
-          <span className="tn-signature-halo tn-signature-halo--right" aria-hidden="true" />
-          <div className="tn-signature-content tn-container">
-            <p className="tn-signature-overline">BELEZA QUE SE TRANSFORMA EM ARTE</p>
-            <div className="tn-signature-stage">
-              <span className="tn-signature-line tn-signature-line--start" aria-hidden="true" />
-              <h2 id="tn-signature-title" className="sr-only">Tayza Nails Studio — a beleza está em cada detalhe.</h2>
-              <div className="tn-signature-wordmark" aria-hidden="true">
-                <span className="tn-signature-lettering">Tayza</span>
-                <svg className="tn-signature-flourish" viewBox="0 0 430 64" fill="none" aria-hidden="true">
-                  <path className="tn-signature-flourish-path" d="M 12 38 C 102 55, 194 30, 255 32 C 330 34, 381 38, 416 12" stroke="#d5ac91" strokeWidth="1.6" strokeLinecap="round" />
-                </svg>
-              </div>
-              <div className="tn-signature-subtitle" aria-hidden="true">
-                <span>NAILS STUDIO</span>
-              </div>
-              <span className="tn-signature-line tn-signature-line--end" aria-hidden="true" />
-            </div>
-            <p className="tn-signature-message">A beleza está em cada detalhe.</p>
-            <p className="tn-signature-scroll-note" aria-hidden="true"><span /> SUA ASSINATURA DE BELEZA <span /></p>
-          </div>
-        </section>
-
-        <section className="tn-section tn-section--cream tn-services" id="servicos">
-          <div className="tn-container">
-            <div className="tn-section-top" data-reveal>
-              <div>
-                <p className="tn-eyebrow">MUITO ALÉM DA BELEZA</p>
-                <h2 data-motion-title className="tn-care-title" aria-label="Um cuidado exclusivo.">
-                  {["UM CUIDADO", "EXCLUSIVO."].map((line, index) => (
-                    <span key={line} className="tn-title-mask" aria-hidden="true">
-                      <span className={index ? "tn-heading-line tn-accent" : "tn-heading-line"}>
-                        {Array.from(line, (letter, pos) => letter === " " ? " " : (
-                          <span className="tn-care-letter" key={pos}>{letter}</span>
-                        ))}
-                      </span>
-                    </span>
-                  ))}
-                </h2>
-              </div>
-              <p className="tn-section-lead">Monte seu atendimento. Escolha unhas, cílios ou sobrancelhas e combine os cuidados que deseja na mesma solicitação.</p>
-            </div>
-            <div className="tn-service-grid">
-              {studioContent.services.map((service, index) => (
-                <article className={["manutencao", "sobrancelha"].includes(service.id) ? "tn-service-card tn-service-option" : "tn-service-card"} data-service={service.id} key={service.id} data-reveal style={{ transitionDelay: (index % 2) * 110 + "ms" }}>
-                  {service.id === "manutencao" || service.id === "sobrancelha" ? (
-                    <div className="tn-option-label">{service.id === "manutencao" ? "Cuidado contínuo" : "Design do olhar"}</div>
-                  ) : (
-                  <div className="tn-service-photo">
-                    <img className="tn-photo-subject" src={serviceImages[index] || galleryNails} alt={"Foto do serviço de " + service.name + " do Tayza Nails"} loading="lazy" />
-                    <span className="tn-service-number">0{index + 1}</span>
-                  </div>
-                  )}
-                  <div className="tn-service-body">
-                    <div className="tn-service-info">
-                      <h3>{service.name}</h3>
-                      <p>{service.description}</p>
-                      <strong>A partir de {service.startingPrice}</strong>
-                    </div>
-                    <button type="button" className="tn-service-cta" aria-pressed={selectedServices.includes(service.name)} onClick={() => { setPriceSummaryOpen(!selectedServices.includes(service.name) || selectedServices.length > 1); toggleService(service.name); }} aria-label={(selectedServices.includes(service.name) ? "Remover " : "Incluir ") + service.name}>
-                      <span>{selectedServices.includes(service.name) ? "− Remover serviço" : "+ Incluir serviço"}</span>
-                    </button>
-                  </div>
-                </article>
-              ))}
-            </div>
-            <div className="tn-selection-bar">
-              <div><strong>Seu atendimento</strong><p aria-live="polite">{selectedServices.join(" · ") || "Selecione os serviços acima ou consulte um horário."}</p></div>
-              <button className="tn-button tn-button--beige tn-appointment-secondary" type="button" onClick={() => openBooking()}><span>Agendar horário</span><ArrowUpRight size={18} aria-hidden="true" /></button>
-            </div>
-          </div>
-        </section>
-
-        <section className="tn-section tn-section--dark tn-nails" id="unhas">
-          <div className="tn-container">
-            <div className="tn-carousel-heading" data-reveal>
-              <div>
-                <p className="tn-eyebrow tn-eyebrow--light">ARTE NA PONTA DOS DEDOS</p>
-                <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">UNHAS QUE</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">ENCANTAM.</span></span></h2>
-                <p>Resultados, cores e acabamentos que falam por você. Arraste para descobrir mais.</p>
-              </div>
-              <div className="tn-carousel-controls">
-                <button type="button" onClick={() => moveCarousel(-1)} aria-label="Ver unhas anteriores"><ChevronLeft size={22} /></button>
-                <button type="button" onClick={() => moveCarousel(1)} aria-label="Ver próximas unhas"><ChevronRight size={22} /></button>
-              </div>
-            </div>
-            <div className="tn-nail-track" ref={sliderRef} tabIndex={0} onKeyDown={(event) => { if (event.key === "ArrowLeft") { event.preventDefault(); moveCarousel(-1); } if (event.key === "ArrowRight") { event.preventDefault(); moveCarousel(1); } }} onScroll={updateSlide} onPointerDown={nailPointerDown} onPointerMove={nailPointerMove} onPointerUp={nailPointerUp} onPointerCancel={nailPointerUp} onPointerLeave={nailPointerUp} aria-label="Galeria de unhas, deslize horizontalmente">
-              {nailGallery.map((item, index) => (
-                <article className={"tn-nail-card" + (index === activeNail ? " is-current" : "")} key={item.id}>
-                  <div className="tn-nail-image">
-                    <img className="tn-photo-subject" src={item.image} alt={item.alt} loading={index < 2 ? "eager" : "lazy"} draggable={false} />
-                    <span className="tn-photo-index">0{index + 1} / 0{nailGallery.length}</span>
-                  </div>
-                  <div className="tn-nail-details">
-                    <div><h3>{item.name}</h3>{item.price ? <p className="tn-nail-price"><span>VALOR</span><strong>{item.price}</strong></p> : <p>Conheça nosso trabalho</p>}</div>
-                    <button type="button" onClick={() => { if (!sliderDrag.current.moved) openBooking(item.name); }} aria-label={"Agendar " + item.name}><ArrowUpRight size={20} /></button>
-                  </div>
-                </article>
-              ))}
-            </div>
-            <div className="tn-carousel-footer" aria-label="Progresso da galeria">
-              <div className="tn-slider-progress"><span style={{ width: ((activeNail + 2) / nailGallery.length * 100) + "%" }} /></div>
-              <span>{String(Math.min(activeNail + 1, nailGallery.length)).padStart(2, "0")} <i>/</i> {String(nailGallery.length).padStart(2, "0")}</span>
-              <span className="tn-swipe-tip">← ARRASTE PARA O LADO →</span>
-            </div>
-          </div>
-        </section>
-
-        <section className="tn-section tn-section--cream tn-lashes" id="cilios">
-          <div className="tn-container">
-            <div className="tn-section-top" data-reveal>
-              <div>
-                <p className="tn-eyebrow">OLHARES QUE MARCAM</p>
-                <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">SEU OLHAR,</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">SEU ESTILO.</span></span></h2>
-              </div>
-              <p className="tn-section-lead">De um efeito delicado ao volume mais intenso, cada técnica é escolhida para realçar sua expressão com elegância.</p>
-            </div>
-            <div className="tn-lash-grid">
-              {studioContent.lashes.map((style, index) => (
-                <article className="tn-lash-card" key={style.id} data-reveal style={{ transitionDelay: (index % 2) * 85 + "ms" }}>
-                  <div className="tn-lash-photo">
-                    <img className="tn-photo-subject" src={style.image} alt={style.alt} loading="lazy" />
-                    <span className="tn-lash-chip">CÍLIOS</span>
-                  </div>
-                  <div className="tn-lash-info">
-                    <div><h3>{style.name}</h3><p>{style.price}</p></div>
-                    <button type="button" aria-label={"Agendar " + style.name} onClick={() => openBooking(style.name)}><ArrowUpRight size={21} /></button>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="tn-experience" id="sobre">
-          <div className="tn-poster-frame">
-            <button className="tn-studio-poster" type="button" onClick={() => openBooking()} aria-label="Agendar um horário com Tayza Nails">
-              <img src="/tayza-studio.png" width="1086" height="1448" alt="Tayza Nails: alongamento e esmaltação em gel e design personalizado." loading="lazy" />
-              <span className="tn-poster-glint" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="tn-experience-copy" data-reveal>
-            <p className="tn-eyebrow tn-eyebrow--light">CONHEÇA O TAYZA NAILS STUDIO</p>
-            <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">BELEZA FEITA</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">COM CUIDADO.</span></span></h2>
-            <div className="tn-small-rule" />
-            <p>O Tayza Nails Studio é um espaço dedicado a valorizar sua beleza em cada detalhe. Conheça nossas opções de unhas, cílios e sobrancelhas, escolha o estilo que combina com você e converse diretamente com a Tayza para planejar seu atendimento.</p>
-            <a className="tn-about-instagram" href={instagramUrl} target="_blank" rel="noreferrer"><Instagram size={16} aria-hidden="true" /> Conheça os trabalhos no Instagram <ArrowUpRight size={15} aria-hidden="true" /></a>
-            <button type="button" className="tn-button tn-button--beige" onClick={() => openBooking()}>RESERVE SEU MOMENTO <ArrowUpRight size={18} /></button>
-            <div className="tn-perks">
-              <div><Sparkles size={25} strokeWidth={1.4} /><span>ACABAMENTO<br />CUIDADOSO</span></div>
-              <div><ShieldCheck size={25} strokeWidth={1.4} /><span>ATENDIMENTO<br />DEDICADO</span></div>
-              <div><Clock3 size={25} strokeWidth={1.4} /><span>SEU TEMPO<br />IMPORTA</span></div>
-            </div>
-          </div>
-        </section>
-
-        <section className="tn-hours" id="horarios" aria-labelledby="tn-hours-title">
-          <div className="tn-container tn-hours-inner">
-            <div className="tn-hours-intro">
-              <p className="tn-eyebrow tn-hours-eyebrow"><Clock3 size={17} strokeWidth={1.6} aria-hidden="true" /> SEU MOMENTO DE AUTOCUIDADO</p>
-              <h2 id="tn-hours-title" data-motion-title>
-                <span className="tn-title-mask"><span className="tn-heading-line">HORÁRIOS DE</span></span>
-                <span className="tn-title-mask"><span className="tn-heading-line tn-accent">ATENDIMENTO.</span></span>
-              </h2>
-              <p className="tn-hours-description">Reserve um momento para você. Atendemos de segunda a sábado, com cuidado e atenção em cada detalhe.</p>
-              <div className="tn-hours-week" aria-label="Atendimento de segunda a sábado">
-                {["SEG", "TER", "QUA", "QUI", "SEX", "SÁB"].map((day) => <span key={day}>{day}</span>)}
-              </div>
-            </div>
-            <div className="tn-hours-panel" aria-label="Segunda a sábado, das oito horas às dezessete horas e trinta minutos">
-              <div className="tn-hours-panel-top">
-                <span className="tn-hours-panel-kicker"><span className="tn-hours-live-dot" aria-hidden="true" /> SEGUNDA A SÁBADO</span>
-                <span className="tn-hours-panel-index">01 / 02</span>
-              </div>
-              <div className="tn-hours-time-grid">
-                <div className="tn-hours-time-card">
-                  <div className="tn-hours-time-label"><Sunrise size={21} strokeWidth={1.4} aria-hidden="true" /><span>ABERTURA</span></div>
-                  <time className="tn-hours-time" dateTime="08:00" aria-label="08 horas">
-                    <span aria-hidden="true"><span data-time-count="8">08</span><span className="tn-hours-h">h</span><span data-time-count="0">00</span></span>
-                  </time>
-                  <span className="tn-hours-time-caption">INÍCIO DO ATENDIMENTO</span>
-                </div>
-                <div className="tn-hours-time-divider" aria-hidden="true"><span>ATÉ</span></div>
-                <div className="tn-hours-time-card">
-                  <div className="tn-hours-time-label"><Sunset size={21} strokeWidth={1.4} aria-hidden="true" /><span>ENCERRAMENTO</span></div>
-                  <time className="tn-hours-time" dateTime="17:30" aria-label="17 horas e 30 minutos">
-                    <span aria-hidden="true"><span data-time-count="17">17</span><span className="tn-hours-h">h</span><span data-time-count="30">30</span></span>
-                  </time>
-                  <span className="tn-hours-time-caption">FIM DO ATENDIMENTO</span>
-                </div>
-              </div>
-              <div className="tn-hours-count-progress" aria-hidden="true"><span /></div>
-              <div className="tn-hours-panel-footer">
-                <p>Escolha o serviço e consulte os horários disponíveis pelo WhatsApp.</p>
-                <button className="tn-hours-book" type="button" onClick={() => openBooking()}>
-                  CONSULTAR HORÁRIO <ArrowUpRight size={18} aria-hidden="true" />
+          <div className="tn-wrap tn-hero-grid">
+            <div className="tn-hero-copy">
+              <p className="tn-season" data-hero style={{ ["--i" as string]: 0 }}>
+                <Star className="tn-season-star" /> Agenda de Natal aberta
+              </p>
+              <p className="tn-eyebrow" data-hero style={{ ["--i" as string]: 1 }}>{content.hero.eyebrow}</p>
+              <h1 id="tn-hero-title" className="tn-hero-title" data-hero style={{ ["--i" as string]: 2 }}>
+                {content.hero.title} <em>{content.hero.emphasis}</em>
+              </h1>
+              <p className="tn-hero-lead" data-hero style={{ ["--i" as string]: 3 }}>{content.hero.intro}</p>
+              <div className="tn-hero-actions" data-hero style={{ ["--i" as string]: 4 }}>
+                <button type="button" className="tn-btn tn-btn--gold" onClick={() => setBookingOpen(true)}>
+                  Agendar horário <ArrowUpRight size={17} aria-hidden="true" />
                 </button>
+                <a href="#vitrine" className="tn-btn tn-btn--line" onClick={(event) => { event.preventDefault(); goTo("vitrine"); }}>
+                  Ver valores
+                </a>
+              </div>
+              <ul className="tn-hero-facts" data-hero style={{ ["--i" as string]: 5 }}>
+                <li><span>Seg a Sáb</span>08h às 17h30</li>
+                {lowestPrice && <li><span>A partir de</span>{lowestPrice}</li>}
+                <li><span>Pagamento</span>{paymentLabels.join(", ")}</li>
+              </ul>
+            </div>
+
+            <div className="tn-hero-visual" onPointerMove={tilt} onPointerLeave={resetTilt}>
+              <div className="tn-stack" ref={stackRef}>
+                {content.hero.images.slice(0, 3).map((src, index) => (
+                  <figure className={"tn-stack-card tn-stack-card--" + (index + 1)} key={src + index}>
+                    <img src={src} alt={index === 0 ? "Trabalho de unhas da Tayza Nails" : ""} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+                  </figure>
+                ))}
+                <span className="tn-stack-seal" aria-hidden="true"><Star /> <b>Edição</b> Natal</span>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="tn-info" id="informacoes" aria-labelledby="tn-info-title">
-          <div className="tn-container tn-info-grid">
-            <div className="tn-info-where" data-reveal>
-              <div className="tn-info-icon"><MapPin size={26} strokeWidth={1.45} aria-hidden="true" /></div>
-              <p className="tn-eyebrow">COMO CHEGAR</p>
-              <h2 id="tn-info-title">SEU PRÓXIMO MOMENTO DE CUIDADO COMEÇA AQUI.</h2>
-              <p>Quer saber o endereço e como chegar ao atendimento? Fale diretamente com a Tayza e receba as orientações de localização.</p>
-              <a href={whatsAppBase + "?text=" + encodeURIComponent("Olá, Tayza! Pode me enviar o endereço e a localização do atendimento?")} target="_blank" rel="noreferrer" className="tn-info-location">
-                Solicitar localização <ArrowUpRight size={18} aria-hidden="true" />
-              </a>
-              <small>Atendimento de segunda a sábado · 08h00 às 17h30</small>
+        <section className="tn-vitrine" id="vitrine" aria-labelledby="tn-vitrine-title">
+          <div className="tn-wrap">
+            <div className="tn-head" data-reveal>
+              <p className="tn-eyebrow tn-eyebrow--dark">Vitrine</p>
+              <h2 id="tn-vitrine-title" className="tn-title">Tabela de <em>valores</em></h2>
+              <p className="tn-head-note">Toque nos serviços para montar seu atendimento e enviar tudo de uma vez pelo WhatsApp.</p>
             </div>
-            <div className="tn-info-faq">
-              <p className="tn-eyebrow">TIRE SUAS DÚVIDAS</p>
-              <h2>ANTES DE AGENDAR</h2>
-              <div className="tn-faq-items">
-                <details>
-                  <summary>Como faço para agendar? <span aria-hidden="true">+</span></summary>
-                  <p>Escolha os serviços no site e envie sua solicitação pelo WhatsApp. A Tayza confirma os horários disponíveis diretamente com você.</p>
-                </details>
-                <details>
-                  <summary>Posso combinar mais de um serviço? <span aria-hidden="true">+</span></summary>
-                  <p>Sim. Selecione os serviços desejados para enviar todos juntos na conversa de agendamento.</p>
-                </details>
-                <details>
-                  <summary>Quais são os dias de atendimento? <span aria-hidden="true">+</span></summary>
-                  <p>De segunda a sábado, das 08h00 às 17h30. Os horários específicos dependem de confirmação.</p>
-                </details>
-                <details>
-                  <summary>Quais formas de pagamento são aceitas? <span aria-hidden="true">+</span></summary>
-                  <p>Pix, cartão e dinheiro. Consulte as condições de pagamento ao agendar.</p>
-                </details>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        <section className="tn-section tn-section--cream tn-book" id="agendar">
-          <div className="tn-container tn-book-layout">
-            <div data-reveal>
-              <p className="tn-eyebrow">ESSE MOMENTO É SEU</p>
-              <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">VAMOS CUIDAR</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">DE VOCÊ?</span></span></h2>
-              <p>Escolha o serviço que deseja, informe sua preferência de data e envie uma mensagem pronta diretamente para o nosso WhatsApp.</p>
-            </div>
-            <div className="tn-book-action" data-reveal>
-              <span><CalendarDays size={29} strokeWidth={1.4} /></span>
-              <p>Escolha o dia para o seu cuidado.</p>
-              <button type="button" className="tn-button tn-button--dark" onClick={() => openBooking()}>AGENDAR MEU HORÁRIO <ArrowRight size={19} /></button>
-              <small>Sua seleção segue pelo WhatsApp. A equipe confirma a disponibilidade com você.</small>
-            </div>
-          </div>
-        </section>
-
-        <section className="tn-payments" id="pagamento">
-          <div className="tn-container">
-            <div className="tn-payments-heading" data-reveal>
-              <p className="tn-eyebrow tn-eyebrow--light">FACILIDADE PARA VOCÊ</p>
-              <h2 data-motion-title><span className="tn-title-mask"><span className="tn-heading-line">FORMAS DE</span></span><span className="tn-title-mask"><span className="tn-heading-line tn-accent">PAGAMENTO.</span></span></h2>
-              <p>Mais praticidade na hora de cuidar da sua beleza.</p>
-            </div>
-            <div className="tn-payment-grid">
-              {paymentOptions.map(({ label, detail, icon: Icon }, index) => (
-                <div className="tn-payment-card" key={label} data-reveal style={{ transitionDelay: index * 90 + "ms" }}>
-                  <Icon size={31} strokeWidth={1.4} />
-                  <h3>{label}</h3><p>{detail}</p>
-                </div>
+            <div className="tn-tabs" role="tablist" aria-label="Categorias" data-reveal>
+              {content.menu.map((entry) => (
+                <button
+                  key={entry.id}
+                  type="button"
+                  role="tab"
+                  id={"tab-" + entry.id}
+                  aria-selected={entry.id === category.id}
+                  aria-controls="tn-menu-panel"
+                  className={entry.id === category.id ? "is-active" : ""}
+                  onClick={() => setActiveCategory(entry.id)}
+                >
+                  {entry.title}<small>{entry.items.length}</small>
+                </button>
               ))}
             </div>
-            <p className="tn-payment-note">Consulte condições de pagamento e disponibilidade no agendamento.</p>
+
+            <div className="tn-menu" id="tn-menu-panel" role="tabpanel" aria-labelledby={"tab-" + category.id} key={category.id}>
+              <figure className="tn-menu-cover">
+                <img src={category.image} alt={"Serviço de " + category.title.toLowerCase() + " da Tayza Nails"} loading="lazy" decoding="async" />
+                <figcaption>
+                  <strong>{category.title}</strong>
+                  <span>{category.subtitle}</span>
+                </figcaption>
+              </figure>
+              <ul className="tn-menu-list">
+                {category.items.map((item, index) => {
+                  const key = category.id + ":" + item.id;
+                  const isOn = selected.includes(key);
+                  return (
+                    <li key={key} style={{ ["--i" as string]: index }}>
+                      <button type="button" className={"tn-row" + (isOn ? " is-on" : "")} aria-pressed={isOn} onClick={() => toggle(key)}>
+                        <span className="tn-row-name">
+                          {item.name}
+                          {item.note && <small>{item.note}</small>}
+                        </span>
+                        <span className="tn-row-dots" aria-hidden="true" />
+                        <span className="tn-row-price">{shortPrice(item.price)}</span>
+                        <span className="tn-row-add" aria-hidden="true">{isOn ? <Check size={15} /> : <Plus size={15} />}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <p className="tn-fineprint">Valores por sessão. Horário e valor final confirmados no atendimento.</p>
+          </div>
+        </section>
+
+        <section className="tn-portfolio" id="portfolio" aria-labelledby="tn-portfolio-title">
+          <div className="tn-wrap">
+            <div className="tn-head tn-head--split" data-reveal>
+              <div>
+                <p className="tn-eyebrow">Portfólio</p>
+                <h2 id="tn-portfolio-title" className="tn-title tn-title--light">Feito por <em>Tayza</em></h2>
+              </div>
+              <div className="tn-filters" role="group" aria-label="Filtrar portfólio">
+                {([["todos", "Todos"], ["unhas", "Unhas"], ["cilios", "Cílios"]] as const).map(([id, label]) => (
+                  <button key={id} type="button" aria-pressed={filter === id} className={filter === id ? "is-active" : ""} onClick={() => setFilter(id)}>{label}</button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="tn-reel" tabIndex={0} aria-label="Galeria de trabalhos, role para o lado">
+            {visiblePortfolio.map((item, index) => (
+              <figure className="tn-shot" key={item.kind + item.id} data-reveal style={{ ["--i" as string]: index % 4 }}>
+                <div className="tn-shot-frame">
+                  <img src={item.image} alt={item.alt} loading="lazy" decoding="async" draggable={false} />
+                </div>
+                <figcaption>
+                  <span>{item.kind === "unhas" ? "Unhas" : "Cílios"}</span>
+                  {item.name}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <div className="tn-wrap">
+            <a className="tn-insta" href={instagramUrl} target="_blank" rel="noreferrer">
+              <Instagram size={17} aria-hidden="true" /> Mais trabalhos em @{content.contact.instagram} <ArrowUpRight size={15} aria-hidden="true" />
+            </a>
+          </div>
+        </section>
+
+        <section className="tn-info" id="info" aria-labelledby="tn-info-title">
+          <div className="tn-wrap">
+            <h2 id="tn-info-title" className="sr-only">Informações de atendimento</h2>
+            <div className="tn-info-grid">
+              <article data-reveal style={{ ["--i" as string]: 0 }}>
+                <Clock3 size={20} strokeWidth={1.5} aria-hidden="true" />
+                <h3>Horário</h3>
+                <p>Segunda a sábado<br />08h00 às 17h30</p>
+              </article>
+              <article data-reveal style={{ ["--i" as string]: 1 }}>
+                <Wallet size={20} strokeWidth={1.5} aria-hidden="true" />
+                <h3>Pagamento</h3>
+                <p>{paymentLabels.join(" · ")}</p>
+              </article>
+              <article data-reveal style={{ ["--i" as string]: 2 }}>
+                <MapPin size={20} strokeWidth={1.5} aria-hidden="true" />
+                <h3>Endereço</h3>
+                <button type="button" className="tn-link" onClick={() => openWhatsApp("Olá, Tayza! Pode me enviar a localização do studio?")}>
+                  Pedir localização <ArrowUpRight size={14} aria-hidden="true" />
+                </button>
+              </article>
+              <article data-reveal style={{ ["--i" as string]: 3 }}>
+                <Instagram size={20} strokeWidth={1.5} aria-hidden="true" />
+                <h3>Instagram</h3>
+                <a className="tn-link" href={instagramUrl} target="_blank" rel="noreferrer">
+                  @{content.contact.instagram} <ArrowUpRight size={14} aria-hidden="true" />
+                </a>
+              </article>
+            </div>
+
+            <div className="tn-xmas" data-reveal>
+              <Star className="tn-xmas-star" />
+              <div>
+                <p className="tn-eyebrow">Dezembro</p>
+                <h2 className="tn-title tn-title--light">Chegue nas festas <em>pronta.</em></h2>
+                <p>Os horários de dezembro costumam esgotar primeiro. Reserve o seu com antecedência.</p>
+              </div>
+              <button type="button" className="tn-btn tn-btn--gold" onClick={() => setBookingOpen(true)}>
+                Reservar horário <ArrowUpRight size={17} aria-hidden="true" />
+              </button>
+            </div>
           </div>
         </section>
       </main>
 
       <footer className="tn-footer">
-        <div className="tn-container tn-footer-inner">
-          <div><a className="tn-logo tn-logo--footer" href="#inicio" onClick={(event) => { event.preventDefault(); goTo("inicio"); }}><strong>TAYZA<span>.</span></strong><small>NAILS STUDIO</small></a><p>Beleza que inspira confiança.</p></div>
-          <div className="tn-footer-links"><a href="#servicos" onClick={(event) => { event.preventDefault(); goTo("servicos"); }}>Serviços</a><a href="#unhas" onClick={(event) => { event.preventDefault(); goTo("unhas"); }}>Unhas</a><a href="#cilios" onClick={(event) => { event.preventDefault(); goTo("cilios"); }}>Cílios</a><a href="#horarios" onClick={(event) => { event.preventDefault(); goTo("horarios"); }}>Horários</a><a href="#informacoes" onClick={(event) => { event.preventDefault(); goTo("informacoes"); }}>Informações</a><button type="button" onClick={() => openBooking()}>Agendar</button></div>
-          <a href={instagramUrl} className="tn-social" target="_blank" rel="noreferrer" aria-label={"Instagram @" + studioContent.contact.instagram}><Instagram size={20} /><span>@{studioContent.contact.instagram}</span></a>
+        <div className="tn-wrap tn-footer-row">
+          <span className="tn-logo tn-logo--small"><span className="tn-logo-word">Tayza</span><span className="tn-logo-tag">Nails Studio</span></span>
+          <span>© {new Date().getFullYear()} {content.brand}</span>
+          <a href={instagramUrl} target="_blank" rel="noreferrer">@{content.contact.instagram}</a>
         </div>
-        <div className="tn-container tn-footer-bottom"><span>© {new Date().getFullYear()} {studioContent.brand}. Todos os direitos reservados.</span><span>Feito com cuidado, em cada detalhe.</span></div>
       </footer>
 
-      {selectedServices.length > 0 && !bookingOpen && !menuOpen && (
-        <aside className="tn-price-dock" aria-label="Resumo de preços">
-          {priceSummaryOpen && (
-            <div className="tn-price-sheet" id="tn-price-sheet">
-              <strong>Sua seleção · {priceRows.length} {priceRows.length === 1 ? "serviço" : "serviços"}</strong>
-              <div className="tn-price-list"><table aria-label="Valores dos serviços selecionados"><tbody>
-                {priceRows.map(({ name, price }) => <tr key={name}><th scope="row">{name}</th><td>{price && /^R\$/.test(price) ? `A partir de ${price}` : price || "Sob consulta"}</td><td><button type="button" className="tn-remove-service" aria-label={"Remover " + name} title={"Remover " + name} onClick={() => toggleService(name)}>−</button></td></tr>)}
-              </tbody></table></div>
-              <p>Use o botão − para remover. O valor final é confirmado pelo WhatsApp.</p>
-              <button type="button" onClick={() => openBooking()}>Agendar seleção <ArrowUpRight size={16} /></button>
-            </div>
-          )}
-          <button className="tn-price-toggle" type="button" aria-expanded={priceSummaryOpen} onClick={() => setPriceSummaryOpen(value => !value)}>
-            <Paintbrush size={18} aria-hidden="true" /> <span aria-live="polite">{totalLabel === "Sob consulta" ? totalLabel : "A partir de " + totalLabel}</span>
-            <span aria-hidden="true">{priceSummaryOpen ? "▾" : "▴"}</span>
+      {selected.length > 0 && !bookingOpen ? (
+        <aside className="tn-dock" aria-label="Seu atendimento">
+          <div className="tn-dock-info">
+            <strong>{selected.length} {selected.length === 1 ? "serviço" : "serviços"}</strong>
+            <span aria-live="polite">{total !== null ? brl.format(total) : "Sob consulta"}</span>
+          </div>
+          <button type="button" className="tn-dock-clear" onClick={() => setSelected([])} aria-label="Limpar seleção"><X size={16} /></button>
+          <button type="button" className="tn-btn tn-btn--gold tn-dock-cta" onClick={() => setBookingOpen(true)}>
+            Agendar <ArrowUpRight size={16} aria-hidden="true" />
           </button>
         </aside>
-      )}
-      <button type="button" className="tn-whatsapp-float" aria-label="Abrir WhatsApp. Arraste para reposicionar o botão." title="WhatsApp — arraste para mover" style={floatPosition ? { left: floatPosition.x, top: floatPosition.y, right: "auto", bottom: "auto" } : undefined} onPointerDown={onWhatsappDown} onPointerMove={onWhatsappMove} onPointerUp={onWhatsappUp} onPointerCancel={onWhatsappUp} onClick={() => { if (suppressWhatsAppClick.current) { suppressWhatsAppClick.current = false; return; } window.open(whatsAppBase + "?text=" + encodeURIComponent("Olá, Tayza! Gostaria de saber mais sobre os serviços e horários."), "_blank", "noopener,noreferrer"); }}><WhatsAppLogo /></button>
-
-      {menuOpen && (
-        <div className="tn-menu-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) setMenuOpen(false); }}>
-          <div className="tn-mobile-menu" role="dialog" aria-label="Menu de navegação" aria-modal="true">
-            <div className="tn-mobile-menu-top"><span>TAYZA NAILS</span><button type="button" onClick={() => setMenuOpen(false)} aria-label="Fechar menu"><X size={24} /></button></div>
-            <nav aria-label="Navegação do menu">{navigation.map((item, index) => <a key={item.id} href={"#" + item.id} className={activeSection === item.id ? "is-active" : ""} aria-current={activeSection === item.id ? "location" : undefined} style={{ animationDelay: (0.13 + index * 0.065) + "s" }} onClick={(event) => { event.preventDefault(); goTo(item.id); }}><small>0{index + 1}</small>{item.label}<ArrowUpRight size={19} /></a>)}</nav>
-            <button type="button" className="tn-button tn-button--beige tn-appointment-secondary" onClick={() => openBooking()}><span>AGENDAR HORÁRIO</span><ArrowUpRight size={17} aria-hidden="true" /></button>
-          </div>
-        </div>
+      ) : (
+        !bookingOpen && (
+          <button type="button" className="tn-wa" aria-label="Conversar no WhatsApp" onClick={() => openWhatsApp("Olá, Tayza! Gostaria de saber mais sobre os horários.")}>
+            <WhatsAppIcon />
+          </button>
+        )
       )}
 
       {bookingOpen && (
-        <div className="tn-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setBookingOpen(false); }}>
-          <div className="tn-booking-modal" role="dialog" aria-modal="true" aria-labelledby="tn-booking-title">
-            <button type="button" className="tn-modal-close" aria-label="Fechar agendamento" onClick={() => setBookingOpen(false)}><X size={23} /></button>
-            <p className="tn-eyebrow">AGENDE SUA EXPERIÊNCIA</p>
-            <h2 id="tn-booking-title">SEU MOMENTO <span>COMEÇA AQUI.</span></h2>
-            <p className="tn-modal-intro">Preencha suas preferências. Vamos abrir uma conversa no WhatsApp para confirmar a disponibilidade.</p>
+        <div className="tn-modal-bg" onMouseDown={(event) => { if (event.target === event.currentTarget) setBookingOpen(false); }}>
+          <div className="tn-modal" role="dialog" aria-modal="true" aria-labelledby="tn-modal-title">
+            <button type="button" className="tn-modal-close" onClick={() => setBookingOpen(false)} aria-label="Fechar"><X size={20} /></button>
+            <p className="tn-eyebrow tn-eyebrow--dark">Agendamento</p>
+            <h2 id="tn-modal-title" className="tn-title tn-title--modal">Seu <em>horário</em></h2>
             <form onSubmit={(event) => { event.preventDefault(); sendBooking(); }}>
-              <label>Seu nome <input type="text" placeholder="Como podemos chamar você?" maxLength={80} value={bookingName} onChange={(event) => setBookingName(event.target.value)} /></label>
-              <fieldset className="tn-choices">
-                <legend>Quais serviços você quer combinar?</legend>
-                {Array.from(new Set([...bookingOptions, ...selectedServices])).map((name) => (
-                  <button key={name} type="button" aria-pressed={selectedServices.includes(name)} onClick={() => toggleService(name)}>
-                    {selectedServices.includes(name) ? "✓ " : "+ "}{name}
-                  </button>
+              <label className="tn-field">
+                <span>Nome</span>
+                <input type="text" value={name} maxLength={80} autoComplete="given-name" placeholder="Como podemos te chamar?" onChange={(event) => setName(event.target.value)} />
+              </label>
+              <fieldset className="tn-field">
+                <legend>Serviços</legend>
+                {content.menu.map((group) => (
+                  <div className="tn-chips" key={group.id}>
+                    <small>{group.title}</small>
+                    <div>
+                      {group.items.map((item) => {
+                        const key = group.id + ":" + item.id;
+                        const isOn = selected.includes(key);
+                        return (
+                          <button type="button" key={key} aria-pressed={isOn} className={isOn ? "is-on" : ""} onClick={() => toggle(key)}>
+                            {item.name}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 ))}
               </fieldset>
-              <label>Data de preferência <input type="date" min={minBookingDate || undefined} value={bookingDate} aria-invalid={bookingDateInvalid} aria-describedby="tn-date-hint" onChange={(event) => setBookingDate(event.target.value)} />
-                <small id="tn-date-hint" className={bookingDateInvalid ? "tn-form-date-error" : "tn-form-date-hint"}>{bookingDateInvalid ? "Escolha uma data futura de segunda a sábado." : "Atendemos de segunda a sábado. Sua data será confirmada pelo WhatsApp."}</small>
+              <label className="tn-field">
+                <span>Data de preferência</span>
+                <input type="date" value={date} min={minDate || undefined} aria-invalid={dateInvalid} aria-describedby="tn-date-hint" onChange={(event) => setDate(event.target.value)} />
+                <small id="tn-date-hint" className={dateInvalid ? "is-error" : ""}>
+                  {dateInvalid ? "Escolha uma data futura, de segunda a sábado." : "Atendimento de segunda a sábado."}
+                </small>
               </label>
-              <label>Observações (opcional) <textarea rows={2} maxLength={220} placeholder="Conte o que você procura..." value={bookingNote} onChange={(event) => setBookingNote(event.target.value)} /></label>
-              <button type="submit" className="tn-button tn-button--dark" disabled={bookingDateInvalid}>CONTINUAR NO WHATSAPP <ArrowUpRight size={18} /></button>
-              <p className="tn-modal-disclaimer">O envio da mensagem não garante a reserva. A confirmação é feita pelo atendimento.</p>
+              <label className="tn-field">
+                <span>Observação <i>(opcional)</i></span>
+                <textarea rows={2} maxLength={220} value={note} placeholder="Cor, formato, referência..." onChange={(event) => setNote(event.target.value)} />
+              </label>
+              <div className="tn-modal-foot">
+                <div>
+                  <small>Total estimado</small>
+                  <strong>{selected.length === 0 ? "—" : total !== null ? brl.format(total) : "Sob consulta"}</strong>
+                </div>
+                <button type="submit" className="tn-btn tn-btn--wine" disabled={dateInvalid}>
+                  <WhatsAppIcon size={18} /> Enviar no WhatsApp
+                </button>
+              </div>
+              <p className="tn-modal-note">A reserva é confirmada pela Tayza na conversa.</p>
             </form>
           </div>
         </div>

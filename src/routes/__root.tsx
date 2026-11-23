@@ -78,10 +78,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Tayza Nails" },
-      { name: "description", content: "Unhas, cílios e manutenção — a arte de cuidar de você." },
+      { name: "description", content: "Unhas, cílios e sobrancelhas com acabamento premium." },
       { name: "author", content: "Tayza Nails" },
       { property: "og:title", content: "Tayza Nails" },
-      { property: "og:description", content: "Unhas, cílios e manutenção — a arte de cuidar de você." },
+      { property: "og:description", content: "Unhas, cílios e sobrancelhas com acabamento premium." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -90,7 +90,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap",
       },
       {
         rel: "stylesheet",
@@ -106,10 +106,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: lazy(async () => ({ default: ErrorComponent })),
 });
 
+const bootScript = `(function(){var r=document.documentElement;r.classList.add("tn-js");try{var p=new URLSearchParams(location.search).get("intro")==="1";var seen=sessionStorage.getItem("tayza-intro-v2")==="1";if(location.pathname!=="/"||matchMedia("(prefers-reduced-motion: reduce)").matches||(seen&&!p))r.classList.add("tn-skip-intro")}catch(e){r.classList.add("tn-skip-intro")}})();`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <head>
+        {/* Runs before paint: enables reveal motion and skips the intro for returning visitors. */}
+        <script dangerouslySetInnerHTML={{ __html: bootScript }} />
         <HeadContent />
       </head>
       <body>

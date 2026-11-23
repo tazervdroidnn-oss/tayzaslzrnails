@@ -1,47 +1,152 @@
 {
   "brand": "Tayza Nails",
   "hero": {
-    "eyebrow": "UNHAS QUE REALÇAM\nSUA BELEZA",
-    "title": "Cuidado, beleza e",
-    "emphasis": "autoestima",
-    "intro": "Unhas bem feitas não são apenas um detalhe,\nsão parte da sua confiança.",
+    "eyebrow": "Nails · Lashes · Brows",
+    "title": "O detalhe que",
+    "emphasis": "faz brilhar",
+    "intro": "Unhas, cílios e sobrancelhas com acabamento impecável. A agenda de dezembro já está aberta para as festas.",
     "images": [
-      "/alongamento1.jpeg",
-      "/alongamento2.jpeg"
+      "/alongamento2.jpeg",
+      "/volume%20brasileiro.jpg",
+      "/alongamento1.jpeg"
     ]
   },
   "contact": {
     "whatsapp": "5599991643916",
     "instagram": "tayzaslzr_nails"
   },
-  "services": [
-    {
-      "id": "unhas",
-      "icon": "✧",
-      "name": "Unhas",
-      "description": "Alongamento em gel, esmaltação em gel e nail art personalizada, com brilho de espelho e cutícula impecável.",
-      "startingPrice": "R$ 50"
-    },
+  "menu": [
     {
       "id": "cilios",
-      "icon": "❀",
-      "name": "Cílios",
-      "description": "Alongamento fio a fio e volume russo sob medida, com curvatura e espessura pensadas para o seu olhar.",
-      "startingPrice": "R$ 75"
+      "title": "Cílios",
+      "subtitle": "Extensões, manutenção e lifting",
+      "image": "/volume%20brasileiro.jpg",
+      "items": [
+        {
+          "id": "volume-brasileiro",
+          "name": "Volume Brasileiro",
+          "price": "R$ 90,00"
+        },
+        {
+          "id": "volume-brasileiro-marrom",
+          "name": "Volume Brasileiro Marrom",
+          "price": "R$ 85,00"
+        },
+        {
+          "id": "volume-mega-brasileiro",
+          "name": "Volume Mega Brasileiro",
+          "price": "R$ 100,00"
+        },
+        {
+          "id": "volume-4d",
+          "name": "Volume 4D",
+          "price": "R$ 130,00"
+        },
+        {
+          "id": "volume-5d",
+          "name": "Volume 5D",
+          "price": "R$ 125,00"
+        },
+        {
+          "id": "volume-mega-5d",
+          "name": "Volume Mega 5D",
+          "price": "R$ 135,00"
+        },
+        {
+          "id": "volume-ts-exclusive",
+          "name": "Volume TS Exclusive",
+          "price": "R$ 145,00",
+          "note": "Assinatura"
+        },
+        {
+          "id": "volume-mega-ts-exclusive",
+          "name": "Volume Mega TS Exclusive",
+          "price": "R$ 155,00",
+          "note": "Assinatura"
+        },
+        {
+          "id": "volume-fox-yes",
+          "name": "Volume Fox Yes",
+          "price": "R$ 150,00"
+        },
+        {
+          "id": "volume-mega-fox-yes",
+          "name": "Volume Mega Fox Yes",
+          "price": "R$ 165,00"
+        },
+        {
+          "id": "volume-fio-a-fio-efeito-molhado",
+          "name": "Volume Fio a Fio Efeito Molhado",
+          "price": "R$ 85,00"
+        },
+        {
+          "id": "manutencao",
+          "name": "Manutenção",
+          "price": "R$ 85,00",
+          "note": "Qualquer volume"
+        },
+        {
+          "id": "lash-lifting",
+          "name": "Lash Lifting",
+          "price": "R$ 100,00"
+        }
+      ]
     },
     {
-      "id": "manutencao",
-      "icon": "✦",
-      "name": "Manutenção",
-      "description": "Preenchimento, repreenchimento e hidratação no intervalo ideal — para o seu resultado durar muito mais.",
-      "startingPrice": "R$ 55"
+      "id": "sobrancelhas",
+      "title": "Sobrancelhas",
+      "subtitle": "Design, henna e laminação",
+      "image": "/img_0978_original-3d3ce70083377f7f7817519383757048-480-0.jpeg",
+      "items": [
+        {
+          "id": "design-com-henna",
+          "name": "Design com Henna",
+          "price": "R$ 45,00"
+        },
+        {
+          "id": "design-sem-henna",
+          "name": "Design sem Henna",
+          "price": "R$ 25,00"
+        },
+        {
+          "id": "brow-lamination",
+          "name": "Brow Lamination",
+          "price": "R$ 60,00"
+        }
+      ]
     },
     {
-      "id": "sobrancelha",
-      "icon": "❁",
-      "name": "Sobrancelha com henna",
-      "description": "Design de sobrancelha com henna, alinhando formato, preenchimento e simetria para um olhar marcado e natural.",
-      "startingPrice": "R$ 45"
+      "id": "unhas",
+      "title": "Unhas",
+      "subtitle": "Alongamento, gel e proteção",
+      "image": "/alongamento2.jpeg",
+      "items": [
+        {
+          "id": "molde-f1",
+          "name": "Molde F1",
+          "price": "R$ 100,00"
+        },
+        {
+          "id": "gel-na-tips",
+          "name": "Gel na Tips",
+          "price": "R$ 120,00"
+        },
+        {
+          "id": "banho-em-gel",
+          "name": "Banho em Gel",
+          "price": "R$ 65,00"
+        },
+        {
+          "id": "esmaltacao-em-gel",
+          "name": "Esmaltação em Gel",
+          "price": "R$ 50,00"
+        },
+        {
+          "id": "blindagem",
+          "name": "Blindagem",
+          "price": "R$ 45,00"
+        }
+      ]
     }
   ],
   "lashes": [
@@ -90,9 +195,23 @@
   ],
   "nails": [
     {
+      "id": "alongamento-1",
+      "name": "Alongamento em Gel",
+      "price": "Sob consulta",
+      "image": "/alongamento2.jpeg",
+      "alt": "Alongamento em gel vermelho"
+    },
+    {
+      "id": "alongamento-2",
+      "name": "Alongamento em Gel",
+      "price": "Sob consulta",
+      "image": "/alongamento1.jpeg",
+      "alt": "Alongamento em gel em tons nude e chocolate"
+    },
+    {
       "id": "unhas-1",
-      "name": "Banho de Gel",
-      "price": "R$ 55,00",
+      "name": "Banho em Gel",
+      "price": "R$ 65,00",
       "image": "/banho%20de%20gel.jpg",
       "alt": "Trabalho de unhas — banho de gel"
     },
