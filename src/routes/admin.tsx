@@ -18,7 +18,7 @@ export const Route = createFileRoute("/admin")({
 
 type GalleryItem = StudioContent["lashes"][number];
 type GalleryKey = "lashes" | "nails";
-type Tab = "inicio" | "precos" | "cilios" | "unhas" | "contato";
+type Tab = "inicio" | "precos" | "cilios" | "unhas" | "perfil" | "contato";
 
 async function api(payload?: Record<string, unknown>) {
   const response = await fetch("/api/studio-admin", {
@@ -151,7 +151,9 @@ function AdminPanel() {
     if (!content) return;
     setBusy(true); setError(""); setNotice("");
     try {
-      const result = await api({ action: "save", data: content, revision });
+      // Blank tip lines are allowed while typing; drop them before saving.
+      const data = { ...content, tips: content.tips.map((group) => ({ ...group, items: group.items.map((line) => line.trim()).filter(Boolean) })) };
+      const result = await api({ action: "save", data, revision });
       setRevision(result.revision || "");
       setDirty(false);
       setNotice("Alterações salvas no GitHub! A publicação no site será atualizada após o deploy da hospedagem.");
@@ -231,7 +233,8 @@ function AdminPanel() {
                 <Field label="Nome" value={item.name} onChange={(v) => editGallery(group, item.id, "name", v)} />
                 <Field label="Preço" value={item.price} onChange={(v) => editGallery(group, item.id, "price", v)} />
               </div>
-              <Field label="Descrição da imagem" value={item.alt} onChange={(v) => editGallery(group, item.id, "alt", v)} />
+              <Field label="Descrição da imagem (acessibilidade)" value={item.alt} onChange={(v) => editGallery(group, item.id, "alt", v)} />
+              <Field label="Texto que aparece no site (opcional)" value={item.description ?? ""} onChange={(v) => editGallery(group, item.id, "description", v)} />
             </article>
           ))}
         </div>
@@ -295,6 +298,7 @@ function AdminPanel() {
     { id: "precos", label: "Tabela de preços" },
     { id: "cilios", label: "Portfólio de cílios" },
     { id: "unhas", label: "Portfólio de unhas" },
+    { id: "perfil", label: "Perfil e dicas" },
     { id: "contato", label: "Contato e pagamentos" },
   ];
 
@@ -411,6 +415,9 @@ function AdminPanel() {
                             <Field label="Serviço" value={item.name} onChange={(v) => editCategory((c) => ({ ...c, items: c.items.map((it) => it.id === item.id ? { ...it, name: v } : it) }))} />
                             <Field label="Preço" value={item.price} onChange={(v) => editCategory((c) => ({ ...c, items: c.items.map((it) => it.id === item.id ? { ...it, price: v } : it) }))} />
                             <Field label="Selo (opcional)" value={item.note ?? ""} onChange={(v) => editCategory((c) => ({ ...c, items: c.items.map((it) => it.id === item.id ? { ...it, note: v || undefined } : it) }))} />
+                            <div className="sm:col-span-4">
+                              <Field label="Descrição curta (opcional)" value={item.description ?? ""} onChange={(v) => editCategory((c) => ({ ...c, items: c.items.map((it) => it.id === item.id ? { ...it, description: v || undefined } : it) }))} />
+                            </div>
                             <button
                               type="button" disabled={category.items.length <= 1}
                               aria-label={"Remover " + item.name}
@@ -432,6 +439,33 @@ function AdminPanel() {
             )}
             {tab === "cilios" && gallery("lashes")}
             {tab === "unhas" && gallery("nails")}
+            {tab === "perfil" && (
+              <section className="space-y-5">
+                <h2 className="font-display text-3xl text-amber-200">Perfil da Tayza</h2>
+                <PhotoInput
+                  label="Foto de perfil" url={content.profile.photo}
+                  busy={uploading === "perfil"}
+                  onUpload={(file) => void upload(file, "perfil", (url) => edit((s) => ({ ...s, profile: { ...s.profile, photo: url } })))}
+                  onUrl={(value) => edit((s) => ({ ...s, profile: { ...s.profile, photo: value } }))}
+                />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Nome" value={content.profile.name} onChange={(v) => edit((s) => ({ ...s, profile: { ...s.profile, name: v } }))} />
+                  <Field label="Especialidades" value={content.profile.role} onChange={(v) => edit((s) => ({ ...s, profile: { ...s.profile, role: v } }))} />
+                  <Field label="Cidade" value={content.profile.location} onChange={(v) => edit((s) => ({ ...s, profile: { ...s.profile, location: v } }))} />
+                  <Field label="Experiência" value={content.profile.experience} onChange={(v) => edit((s) => ({ ...s, profile: { ...s.profile, experience: v } }))} />
+                </div>
+                <Field label="Bio" multiline value={content.profile.bio} onChange={(v) => edit((s) => ({ ...s, profile: { ...s.profile, bio: v } }))} />
+                <Field label="Instagram pessoal (sem @, opcional)" value={content.profile.personal} onChange={(v) => edit((s) => ({ ...s, profile: { ...s.profile, personal: v } }))} />
+                <h3 className="border-t border-white/10 pt-5 font-display text-2xl text-amber-200">Dicas de cuidados</h3>
+                <p className="text-sm text-white/60">Uma dica por linha.</p>
+                {content.tips.map((group) => (
+                  <div key={group.id} className="space-y-3 rounded-2xl border border-white/10 bg-white/[.04] p-5">
+                    <Field label="Título" value={group.title} onChange={(v) => edit((s) => ({ ...s, tips: s.tips.map((it) => it.id === group.id ? { ...it, title: v } : it) }))} />
+                    <Field label="Dicas" multiline value={group.items.join("\n")} onChange={(v) => edit((s) => ({ ...s, tips: s.tips.map((it) => it.id === group.id ? { ...it, items: v.split("\n").slice(0, 8) } : it) }))} />
+                  </div>
+                ))}
+              </section>
+            )}
             {tab === "contato" && (
               <section className="space-y-5">
                 <h2 className="font-display text-3xl text-amber-200">Contato e pagamentos</h2>

@@ -2,22 +2,31 @@ import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 
 const HIDE_KEY = "tayza-guide-hidden";
+const SECTIONS = ["inicio", "sobre", "vitrine", "portfolio", "agenda", "dicas", "perfil"];
 
 const messages: Record<string, string> = {
   inicio: "Oi, eu sou a Tayza! Vem que eu te mostro o studio.",
   sobre: "Oi, eu sou a Tayza! Aqui cada detalhe é feito com capricho.",
+  "vitrine:cilios": "Na dúvida entre os volumes? Me chama que eu te ajudo a escolher o ideal para o seu olhar.",
+  "vitrine:sobrancelhas": "A henna preenche falhas e deixa o desenho marcado por mais tempo.",
+  "vitrine:unhas": "Unha fraca? A blindagem protege a unha natural e deixa mais resistente.",
   vitrine: "Toque nos serviços para montar seu atendimento.",
-  portfolio: "Arrasta pro lado e vê alguns dos meus trabalhos.",
-  info: "Te espero de segunda a sábado, das 8h às 17h30!",
+  portfolio: "Arraste para o lado. Toque em Cílios ou Unhas para ver cada técnica.",
+  agenda: "Toque em um dia livre que eu já preparo sua mensagem.",
+  dicas: "Cuidar em casa faz o resultado durar muito mais!",
+  perfil: "Prazer! Me segue no Instagram para ver as novidades.",
 };
 
-/** Personagem guia: acompanha as seções com um balão de fala. */
-export default function TayzaGuide({ suppressed }: { suppressed: boolean }) {
+/** Personagem guia: acompanha as seções e dá dicas em um balão de fala. */
+export default function TayzaGuide({ suppressed, category }: { suppressed: boolean; category: string }) {
   const [hidden, setHidden] = useState(false);
   const [section, setSection] = useState("inicio");
   const [talking, setTalking] = useState(false);
   const [ready, setReady] = useState(false);
-  const timer = useRef<number | null>(null);
+  const readyRef = useRef(false);
+  const hideTimer = useRef<number | null>(null);
+
+  const key = section === "vitrine" && messages["vitrine:" + category] ? "vitrine:" + category : section;
 
   useEffect(() => {
     try { if (sessionStorage.getItem(HIDE_KEY) === "1") setHidden(true); } catch { /* ignora */ }
@@ -25,8 +34,7 @@ export default function TayzaGuide({ suppressed }: { suppressed: boolean }) {
 
   useEffect(() => {
     if (hidden) return;
-    const ids = Object.keys(messages);
-    const targets = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const targets = SECTIONS.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     if (!targets.length || !("IntersectionObserver" in window)) return;
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -37,23 +45,36 @@ export default function TayzaGuide({ suppressed }: { suppressed: boolean }) {
     return () => observer.disconnect();
   }, [hidden]);
 
+  // Each new section (or price category) makes her speak for a few seconds.
   useEffect(() => {
     if (hidden) return;
-    const startDelay = document.documentElement.classList.contains("tn-skip-intro") ? 900 : 3600;
-    const delay = ready ? 250 : startDelay;
-    const show = window.setTimeout(() => { setReady(true); setTalking(true); }, delay);
-    if (timer.current) window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setTalking(false), delay + 5200);
+    const firstDelay = document.documentElement.classList.contains("tn-skip-intro") ? 900 : 3600;
+    const delay = readyRef.current ? 250 : firstDelay;
+    const show = window.setTimeout(() => {
+      readyRef.current = true;
+      setReady(true);
+      setTalking(true);
+    }, delay);
+    if (hideTimer.current) window.clearTimeout(hideTimer.current);
+    hideTimer.current = window.setTimeout(() => setTalking(false), delay + 5600);
     return () => window.clearTimeout(show);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [section, hidden]);
+  }, [key, hidden]);
+
+  useEffect(() => () => { if (hideTimer.current) window.clearTimeout(hideTimer.current); }, []);
 
   if (hidden) return null;
 
+  const className = "tn-guide"
+    + (ready ? " is-ready" : "")
+    + (suppressed ? " is-suppressed" : "")
+    + (talking ? "" : " is-quiet")
+    + (section === "inicio" ? " is-hero" : "");
+
   return (
-    <aside className={"tn-guide" + (ready ? " is-ready" : "") + (suppressed ? " is-suppressed" : "") + (talking ? "" : " is-quiet") + (section === "inicio" ? " is-hero" : "")} aria-label="Assistente do site">
+    <aside className={className} aria-label="Assistente do site">
       <div className={"tn-guide-bubble" + (talking ? " is-open" : "")} role="status" aria-live="polite">
-        <p key={section}>{messages[section] ?? messages.inicio}</p>
+        <span className="tn-guide-label">{key.startsWith("vitrine:") || key === "dicas" ? "Dica da Tayza" : "Tayza"}</span>
+        <p key={key}>{messages[key] ?? messages.inicio}</p>
         <button
           type="button"
           className="tn-guide-close"
@@ -64,7 +85,7 @@ export default function TayzaGuide({ suppressed }: { suppressed: boolean }) {
           }}
         ><X size={12} /></button>
       </div>
-      <button type="button" className="tn-guide-figure" aria-label="Falar com a assistente" onClick={() => setTalking((value) => !value)}>
+      <button type="button" className="tn-guide-figure" aria-label="Ouvir a dica da assistente" onClick={() => setTalking((value) => !value)}>
         <picture>
           <source srcSet="/media/tayza-guide.webp" type="image/webp" />
           <img src="/media/tayza-guide.png" alt="" width={150} height={280} loading="lazy" decoding="async" />

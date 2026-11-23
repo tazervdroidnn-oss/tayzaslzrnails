@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight, Check, Instagram, MapPin, Plus, Wallet, X } from "lucide-react";
+import { ArrowUpRight, CalendarDays, Check, ChevronLeft, ChevronRight, Instagram, MapPin, MessageCircle, Plus, Wallet, X } from "lucide-react";
 import studioContent from "@/data/studio-content.json";
 import TayzaIntro from "@/components/TayzaIntro";
 import TayzaGuide from "@/components/TayzaGuide";
@@ -59,8 +59,25 @@ const paymentLabels = [
 const navigation = [
   { id: "vitrine", label: "Valores" },
   { id: "portfolio", label: "Portfólio" },
-  { id: "info", label: "Informações" },
+  { id: "agenda", label: "Agenda" },
+  { id: "dicas", label: "Dicas" },
+  { id: "perfil", label: "A Tayza" },
 ];
+
+const weekdayShort = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const monthShort = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+type Day = { iso: string; weekday: string; day: string; month: string; off: boolean };
+function nextDays(count: number): Day[] {
+  const days: Day[] = [];
+  const cursor = new Date();
+  cursor.setHours(12, 0, 0, 0);
+  for (let i = 0; i < count; i += 1) {
+    const iso = [cursor.getFullYear(), String(cursor.getMonth() + 1).padStart(2, "0"), String(cursor.getDate()).padStart(2, "0")].join("-");
+    days.push({ iso, weekday: i === 0 ? "Hoje" : weekdayShort[cursor.getDay()], day: String(cursor.getDate()).padStart(2, "0"), month: monthShort[cursor.getMonth()], off: cursor.getDay() === 0 });
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return days;
+}
 
 function openWhatsApp(text: string) {
   window.open(whatsAppBase + "?text=" + encodeURIComponent(text), "_blank", "noopener,noreferrer");
@@ -119,8 +136,13 @@ function TayzaHome() {
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
   const [minDate, setMinDate] = useState("");
+  const [days, setDays] = useState<Day[]>([]);
+  const [reelProgress, setReelProgress] = useState(0);
   const tiltRef = useRef<HTMLDivElement>(null);
   const clockRef = useRef<HTMLDivElement>(null);
+  const reelRef = useRef<HTMLDivElement>(null);
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const drag = useRef({ active: false, x: 0, left: 0, moved: false });
 
   const category = content.menu.find((entry) => entry.id === activeCategory) ?? content.menu[0];
   const visiblePortfolio = filter === "todos" ? portfolio : portfolio.filter((item) => item.kind === filter);
@@ -135,6 +157,7 @@ function TayzaHome() {
   useEffect(() => {
     const today = new Date();
     setMinDate([today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-"));
+    setDays(nextDays(14));
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -197,6 +220,47 @@ function TayzaHome() {
     return () => { observer.disconnect(); cancelAnimationFrame(frame); };
   }, []);
 
+  // GSAP: scroll-linked depth (scrub only, so nothing is ever left hidden if it fails to load).
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let revert = () => {};
+    let cancelled = false;
+    Promise.all([import("gsap"), import("gsap/ScrollTrigger")])
+      .then(([{ gsap }, { ScrollTrigger }]) => {
+        if (cancelled) return;
+        gsap.registerPlugin(ScrollTrigger);
+        const ctx = gsap.context(() => {
+          const heroScroll = { trigger: ".tn-hero", start: "top top", end: "bottom top", scrub: 0.6 };
+          gsap.to(".tn-stage", { yPercent: 16, scale: 0.92, opacity: 0.25, ease: "none", scrollTrigger: heroScroll });
+          // Cards drift at different speeds (a CSS variable, so the 3D pose set in CSS is never touched).
+          gsap.to(".tn-card--1", { "--py": "-90px", ease: "none", scrollTrigger: heroScroll });
+          gsap.to(".tn-card--2", { "--py": "-150px", ease: "none", scrollTrigger: heroScroll });
+          gsap.to(".tn-card--3", { "--py": "-50px", ease: "none", scrollTrigger: heroScroll });
+          // Statement copy lights up word by word as it crosses the screen.
+          gsap.fromTo(".tn-about-lead .tn-lw", { opacity: 0.22 }, {
+            opacity: 1, stagger: 0.08, ease: "none",
+            scrollTrigger: { trigger: ".tn-about-lead", start: "top 85%", end: "bottom 45%", scrub: true },
+          });
+          gsap.fromTo(".tn-menu-cover img", { yPercent: -6, scale: 1.12 }, {
+            yPercent: 6, scale: 1.12, ease: "none",
+            scrollTrigger: { trigger: ".tn-menu", start: "top bottom", end: "bottom top", scrub: true },
+          });
+          gsap.fromTo(".tn-profile-ring", { rotate: -40 }, {
+            rotate: 140, ease: "none",
+            scrollTrigger: { trigger: ".tn-profile", start: "top bottom", end: "bottom top", scrub: true },
+          });
+          gsap.fromTo(".tn-profile-photo", { scale: 0.86, rotateY: -18 }, {
+            scale: 1, rotateY: 0, ease: "none",
+            scrollTrigger: { trigger: ".tn-profile", start: "top 90%", end: "center 55%", scrub: true },
+          });
+        });
+        revert = () => ctx.revert();
+        requestAnimationFrame(() => ScrollTrigger.refresh());
+      })
+      .catch(() => { /* animações opcionais: o site segue normal sem elas */ });
+    return () => { cancelled = true; revert(); };
+  }, []);
+
   useEffect(() => {
     if (!bookingOpen) return;
     const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setBookingOpen(false); };
@@ -224,6 +288,63 @@ function TayzaHome() {
   function resetTilt() {
     tiltRef.current?.style.removeProperty("--ry");
     tiltRef.current?.style.removeProperty("--rx");
+  }
+
+  function updateReel() {
+    const reel = reelRef.current;
+    if (!reel) return;
+    const max = reel.scrollWidth - reel.clientWidth;
+    setReelProgress(max > 0 ? reel.scrollLeft / max : 0);
+  }
+
+  function moveReel(direction: number) {
+    const reel = reelRef.current;
+    if (!reel) return;
+    const card = reel.querySelector<HTMLElement>(".tn-shot");
+    reel.scrollBy({ left: direction * ((card?.offsetWidth ?? 280) + 18), behavior: "smooth" });
+  }
+
+  function changeFilter(next: "todos" | "unhas" | "cilios") {
+    setFilter(next);
+    const reel = reelRef.current;
+    if (reel) reel.scrollTo({ left: 0, behavior: "smooth" });
+    setReelProgress(0);
+    const section = document.getElementById("portfolio");
+    if (section && section.getBoundingClientRect().top < -40) goTo("portfolio");
+  }
+
+  function reelDown(event: ReactPointerEvent<HTMLDivElement>) {
+    if (event.pointerType !== "mouse" || event.button !== 0 || !reelRef.current) return;
+    drag.current = { active: true, x: event.clientX, left: reelRef.current.scrollLeft, moved: false };
+    reelRef.current.classList.add("is-dragging");
+  }
+
+  function reelMove(event: ReactPointerEvent<HTMLDivElement>) {
+    if (!drag.current.active || !reelRef.current) return;
+    const dx = event.clientX - drag.current.x;
+    if (Math.abs(dx) > 4) drag.current.moved = true;
+    reelRef.current.scrollLeft = drag.current.left - dx;
+  }
+
+  function reelUp() {
+    drag.current.active = false;
+    reelRef.current?.classList.remove("is-dragging");
+  }
+
+  function changeCategory(id: string) {
+    setActiveCategory(id);
+    const tabs = tabsRef.current;
+    if (!tabs) return;
+    const menu = document.getElementById("tn-menu-panel");
+    if (menu && menu.getBoundingClientRect().top < tabs.getBoundingClientRect().bottom - 4) {
+      const top = menu.getBoundingClientRect().top + window.scrollY - tabs.offsetHeight - 70;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  }
+
+  function pickDay(iso: string) {
+    setDate(iso);
+    setBookingOpen(true);
   }
 
   function toggle(key: string) {
@@ -267,7 +388,9 @@ function TayzaHome() {
       <header className={"tn-header" + (scrolled ? " is-solid" : "")}>
         <div className="tn-wrap tn-header-row">
           <a href="#inicio" className="tn-logo" onClick={(event) => { event.preventDefault(); goTo("inicio"); }} aria-label={content.brand + ", início"}>
-            <span className="tn-logo-word">{brandFirst}</span>
+            <span className="tn-logo-word tn-logo-3d" aria-hidden="true">
+              {Array.from(brandFirst).map((letter, index) => <span key={index} style={{ ["--l" as string]: index }}>{letter}</span>)}
+            </span>
             <span className="tn-logo-tag">{brandSecond}</span>
           </a>
           <nav className="tn-nav" aria-label="Seções">
@@ -337,7 +460,9 @@ function TayzaHome() {
             <h2 id="tn-about-title" className="tn-title tn-title--light tn-about-title">
               <Words text={content.hero.title} /> <em><Words text={content.hero.emphasis} /></em>
             </h2>
-            <p className="tn-about-lead">{content.hero.intro}</p>
+            <p className="tn-about-lead">
+              {content.hero.intro.split(/\s+/).map((word, index) => <Fragment key={index}>{index > 0 && " "}<span className="tn-lw">{word}</span></Fragment>)}
+            </p>
           </div>
         </section>
 
@@ -350,7 +475,7 @@ function TayzaHome() {
               <p className="tn-head-note">Toque nos serviços para montar seu atendimento e enviar tudo de uma vez pelo WhatsApp.</p>
             </div>
 
-            <div className="tn-tabs" role="tablist" aria-label="Categorias" data-reveal>
+            <div className="tn-tabs" role="tablist" aria-label="Categorias" ref={tabsRef}>
               {content.menu.map((entry) => (
                 <button
                   key={entry.id}
@@ -360,7 +485,7 @@ function TayzaHome() {
                   aria-selected={entry.id === category.id}
                   aria-controls="tn-menu-panel"
                   className={entry.id === category.id ? "is-active" : ""}
-                  onClick={() => setActiveCategory(entry.id)}
+                  onClick={() => changeCategory(entry.id)}
                 >
                   {entry.title}<small>{entry.items.length}</small>
                 </button>
@@ -385,6 +510,7 @@ function TayzaHome() {
                         <span className="tn-row-name">
                           {item.name}
                           {item.note && <small>{item.note}</small>}
+                          {item.description && <em className="tn-row-desc">{item.description}</em>}
                         </span>
                         <span className="tn-row-dots" aria-hidden="true" />
                         <span className="tn-row-price">{shortPrice(item.price)}</span>
@@ -409,23 +535,46 @@ function TayzaHome() {
               </div>
               <div className="tn-filters" role="group" aria-label="Filtrar portfólio">
                 {([["todos", "Todos"], ["unhas", "Unhas"], ["cilios", "Cílios"]] as const).map(([id, label]) => (
-                  <button key={id} type="button" aria-pressed={filter === id} className={filter === id ? "is-active" : ""} onClick={() => setFilter(id)}>{label}</button>
+                  <button key={id} type="button" aria-pressed={filter === id} className={filter === id ? "is-active" : ""} onClick={() => changeFilter(id)}>{label}</button>
                 ))}
               </div>
             </div>
           </div>
-          <div className="tn-reel" tabIndex={0} aria-label="Galeria de trabalhos, role para o lado">
+          <div
+            className="tn-reel"
+            ref={reelRef}
+            tabIndex={0}
+            aria-label="Galeria de trabalhos, arraste para o lado"
+            onScroll={updateReel}
+            onPointerDown={reelDown}
+            onPointerMove={reelMove}
+            onPointerUp={reelUp}
+            onPointerCancel={reelUp}
+            onPointerLeave={reelUp}
+            onKeyDown={(event) => {
+              if (event.key === "ArrowRight") { event.preventDefault(); moveReel(1); }
+              if (event.key === "ArrowLeft") { event.preventDefault(); moveReel(-1); }
+            }}
+          >
             {visiblePortfolio.map((item, index) => (
-              <figure className="tn-shot" key={item.kind + item.id} data-reveal style={{ ["--i" as string]: index % 4 }}>
+              <figure className="tn-shot" key={filter + item.kind + item.id} data-reveal style={{ ["--i" as string]: index % 4 }}>
                 <div className="tn-shot-frame">
                   <img src={item.image} alt={item.alt} loading="lazy" decoding="async" draggable={false} />
                 </div>
                 <figcaption>
-                  <span>{item.kind === "unhas" ? "Unhas" : "Cílios"}</span>
+                  <span>{item.kind === "unhas" ? "Unhas" : "Cílios"} · {String(index + 1).padStart(2, "0")}</span>
                   {item.name}
+                  {item.description && <small>{item.description}</small>}
                 </figcaption>
               </figure>
             ))}
+          </div>
+          <div className="tn-wrap tn-reel-bar">
+            <div className="tn-reel-progress" aria-hidden="true"><span style={{ transform: "scaleX(" + Math.max(0.08, reelProgress) + ")" }} /></div>
+            <div className="tn-reel-arrows">
+              <button type="button" onClick={() => moveReel(-1)} aria-label="Trabalho anterior"><ChevronLeft size={18} /></button>
+              <button type="button" onClick={() => moveReel(1)} aria-label="Próximo trabalho"><ChevronRight size={18} /></button>
+            </div>
           </div>
           <div className="tn-wrap">
             <a className="tn-insta" href={instagramUrl} target="_blank" rel="noreferrer">
@@ -435,12 +584,13 @@ function TayzaHome() {
         </section>
 
         <Seam tone="light" />
-        <section className="tn-info" id="info" aria-labelledby="tn-info-title">
+        <section className="tn-info" id="agenda" aria-labelledby="tn-info-title">
           <div className="tn-wrap">
             <div className="tn-hours" data-reveal>
               <div className="tn-hours-head">
-                <p className="tn-eyebrow tn-eyebrow--dark">Atendimento</p>
+                <p className="tn-eyebrow tn-eyebrow--dark">Agenda</p>
                 <h2 id="tn-info-title" className="tn-title"><Words text="Horário do" /> <em><Words text="studio" /></em></h2>
+                <p className="tn-head-note">Atendimento somente com horário agendado, em {content.profile.location}.</p>
                 <ul className="tn-days" aria-label="Segunda a sábado">
                   {["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].map((day, index) => (
                     <li key={day} className={index === 6 ? "is-off" : ""} style={{ ["--i" as string]: index }}>{day}</li>
@@ -460,6 +610,45 @@ function TayzaHome() {
               </div>
             </div>
 
+            <div className="tn-steps" data-reveal>
+              {[
+                { icon: Plus, title: "Escolha", text: "Marque os serviços na tabela de valores." },
+                { icon: CalendarDays, title: "Sugira o dia", text: "Toque em uma data abaixo, de segunda a sábado." },
+                { icon: MessageCircle, title: "Confirme", text: "A Tayza confirma o horário com você no WhatsApp." },
+              ].map(({ icon: Icon, title, text }, index) => (
+                <article key={title} style={{ ["--i" as string]: index }}>
+                  <span className="tn-step-num">0{index + 1}</span>
+                  <Icon size={18} strokeWidth={1.6} aria-hidden="true" />
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="tn-dates" data-reveal>
+              <div className="tn-dates-head">
+                <h3>Próximos dias</h3>
+                <small>Toque para sugerir a data</small>
+              </div>
+              <div className="tn-dates-row" role="list">
+                {days.map((day) => (
+                  <button
+                    key={day.iso}
+                    type="button"
+                    role="listitem"
+                    disabled={day.off}
+                    className={date === day.iso ? "is-on" : ""}
+                    onClick={() => pickDay(day.iso)}
+                    aria-label={day.off ? day.day + " de " + day.month + ", fechado" : "Sugerir " + day.day + " de " + day.month}
+                  >
+                    <small>{day.weekday}</small>
+                    <strong>{day.day}</strong>
+                    <span>{day.off ? "fechado" : day.month}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="tn-info-grid">
               <article data-reveal style={{ ["--i" as string]: 0 }}>
                 <Wallet size={20} strokeWidth={1.5} aria-hidden="true" />
@@ -468,7 +657,7 @@ function TayzaHome() {
               </article>
               <article data-reveal style={{ ["--i" as string]: 1 }}>
                 <MapPin size={20} strokeWidth={1.5} aria-hidden="true" />
-                <h3>Endereço</h3>
+                <h3>{content.profile.location}</h3>
                 <button type="button" className="tn-link" onClick={() => openWhatsApp("Olá, Tayza! Pode me enviar a localização do studio?")}>
                   Pedir localização <ArrowUpRight size={14} aria-hidden="true" />
                 </button>
@@ -481,7 +670,31 @@ function TayzaHome() {
                 </a>
               </article>
             </div>
+          </div>
+        </section>
 
+        <Seam tone="dark" />
+        <section className="tn-tips" id="dicas" aria-labelledby="tn-tips-title">
+          <div className="tn-wrap">
+            <div className="tn-head" data-reveal>
+              <p className="tn-eyebrow">Dicas da Tayza</p>
+              <h2 id="tn-tips-title" className="tn-title tn-title--light"><Words text="Cuidados que fazem" /> <em><Words text="durar mais" /></em></h2>
+            </div>
+          </div>
+          <div className="tn-tips-row">
+            {content.tips.map((group, groupIndex) => (
+              <article className="tn-tip" key={group.id} data-reveal style={{ ["--i" as string]: groupIndex }}>
+                <header>
+                  <span>0{groupIndex + 1}</span>
+                  <h3>{group.title}</h3>
+                </header>
+                <ol>
+                  {group.items.map((tip) => <li key={tip}>{tip}</li>)}
+                </ol>
+              </article>
+            ))}
+          </div>
+          <div className="tn-wrap">
             <div className="tn-xmas" data-reveal>
               <Star className="tn-xmas-star" />
               <div>
@@ -492,6 +705,37 @@ function TayzaHome() {
               <button type="button" className="tn-btn tn-btn--gold" onClick={() => setBookingOpen(true)}>
                 Reservar horário <ArrowUpRight size={17} aria-hidden="true" />
               </button>
+            </div>
+          </div>
+        </section>
+
+        <Seam tone="light" />
+        <section className="tn-profile" id="perfil" aria-labelledby="tn-profile-title">
+          <div className="tn-wrap tn-profile-grid">
+            <div className="tn-profile-visual" data-reveal>
+              <div className="tn-profile-ring" aria-hidden="true">
+                <svg viewBox="0 0 200 200">
+                  <defs><path id="tn-ring-path" d="M100,100 m-86,0 a86,86 0 1,1 172,0 a86,86 0 1,1 -172,0" /></defs>
+                  <text><textPath href="#tn-ring-path">{(content.brand + " · " + content.profile.role + " · ").toUpperCase()}</textPath></text>
+                </svg>
+              </div>
+              <div className="tn-profile-photo">
+                <img src={content.profile.photo} alt={"Foto de " + content.profile.name} loading="lazy" decoding="async" />
+              </div>
+              <span className="tn-profile-badge tn-profile-badge--a">{content.profile.experience}<small>de experiência</small></span>
+              <span className="tn-profile-badge tn-profile-badge--b"><MapPin size={13} aria-hidden="true" /> {content.profile.location}</span>
+            </div>
+            <div className="tn-profile-copy" data-reveal>
+              <p className="tn-eyebrow tn-eyebrow--dark">Prazer, eu sou a</p>
+              <h2 id="tn-profile-title" className="tn-title"><Words text={content.profile.name.split(" ")[0]} /> <em><Words text={content.profile.name.split(" ").slice(1).join(" ")} /></em></h2>
+              <p className="tn-profile-role">{content.profile.role}</p>
+              <p className="tn-profile-bio">{content.profile.bio}</p>
+              <div className="tn-profile-actions">
+                <a className="tn-btn tn-btn--wine" href={instagramUrl} target="_blank" rel="noreferrer"><Instagram size={16} aria-hidden="true" /> @{content.contact.instagram}</a>
+                {content.profile.personal && (
+                  <a className="tn-btn tn-btn--outline" href={"https://instagram.com/" + content.profile.personal} target="_blank" rel="noreferrer">@{content.profile.personal}</a>
+                )}
+              </div>
             </div>
           </div>
         </section>
@@ -509,7 +753,7 @@ function TayzaHome() {
         </div>
       </footer>
 
-      <TayzaGuide suppressed={bookingOpen || cookieOpen || selected.length > 0} />
+      <TayzaGuide suppressed={bookingOpen || cookieOpen || selected.length > 0} category={category.id} />
 
       {selected.length > 0 && !bookingOpen ? (
         <aside className="tn-dock" aria-label="Seu atendimento">

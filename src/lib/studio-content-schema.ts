@@ -13,6 +13,7 @@ const galleryItem = z.object({
   price: line(30),
   image,
   alt: line(160),
+  description: z.string().trim().max(200).optional(),
 }).strict();
 
 export const studioContentSchema = z.object({
@@ -38,8 +39,23 @@ export const studioContentSchema = z.object({
       name: line(70),
       price: line(30),
       note: z.string().trim().max(40).optional(),
+      description: z.string().trim().max(160).optional(),
     }).strict()).min(1).max(30),
   }).strict()).min(1).max(8),
+  profile: z.object({
+    name: line(60),
+    role: line(90),
+    bio: line(500),
+    photo: image,
+    location: line(60),
+    experience: line(30),
+    personal: z.string().regex(/^[a-zA-Z0-9._]{0,30}$/, "Informe somente o usuário do Instagram."),
+  }).strict(),
+  tips: z.array(z.object({
+    id: line(40),
+    title: line(40),
+    items: z.array(line(160)).min(1).max(8),
+  }).strict()).max(6),
   lashes: z.array(galleryItem).max(30),
   nails: z.array(galleryItem).max(30),
   payments: z.object({ card: z.boolean(), pix: z.boolean(), cash: z.boolean() }).strict()

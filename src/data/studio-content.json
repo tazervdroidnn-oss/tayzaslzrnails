@@ -25,70 +25,83 @@
         {
           "id": "volume-brasileiro",
           "name": "Volume Brasileiro",
-          "price": "R$ 90,00"
+          "price": "R$ 90,00",
+          "description": "Fios em formato Y que dão volume leve, com acabamento natural."
         },
         {
           "id": "volume-brasileiro-marrom",
           "name": "Volume Brasileiro Marrom",
-          "price": "R$ 85,00"
+          "price": "R$ 85,00",
+          "description": "O volume brasileiro com fios marrons, para um olhar mais suave."
         },
         {
           "id": "volume-mega-brasileiro",
           "name": "Volume Mega Brasileiro",
-          "price": "R$ 100,00"
+          "price": "R$ 100,00",
+          "description": "Versão mais cheia do brasileiro, para quem quer mais presença."
         },
         {
           "id": "volume-4d",
           "name": "Volume 4D",
-          "price": "R$ 130,00"
+          "price": "R$ 130,00",
+          "description": "Leques de 4 fios por cílio natural: volume marcado e uniforme."
         },
         {
           "id": "volume-5d",
           "name": "Volume 5D",
-          "price": "R$ 125,00"
+          "price": "R$ 125,00",
+          "description": "Leques de 5 fios: mais densidade e um olhar bem definido."
         },
         {
           "id": "volume-mega-5d",
           "name": "Volume Mega 5D",
-          "price": "R$ 135,00"
+          "price": "R$ 135,00",
+          "description": "O 5D com mais intensidade, para um efeito marcante."
         },
         {
           "id": "volume-ts-exclusive",
           "name": "Volume TS Exclusive",
           "price": "R$ 145,00",
-          "note": "Assinatura"
+          "note": "Assinatura",
+          "description": "Técnica assinatura do studio, feita sob medida para o seu olhar."
         },
         {
           "id": "volume-mega-ts-exclusive",
           "name": "Volume Mega TS Exclusive",
           "price": "R$ 155,00",
-          "note": "Assinatura"
+          "note": "Assinatura",
+          "description": "A técnica assinatura na versão mais intensa."
         },
         {
           "id": "volume-fox-yes",
           "name": "Volume Fox Yes",
-          "price": "R$ 150,00"
+          "price": "R$ 150,00",
+          "description": "Fios mais longos no canto externo, para o efeito olhar de raposa."
         },
         {
           "id": "volume-mega-fox-yes",
           "name": "Volume Mega Fox Yes",
-          "price": "R$ 165,00"
+          "price": "R$ 165,00",
+          "description": "O efeito raposa com mais volume e dramaticidade."
         },
         {
           "id": "volume-fio-a-fio-efeito-molhado",
           "name": "Volume Fio a Fio Efeito Molhado",
-          "price": "R$ 85,00"
+          "price": "R$ 85,00",
+          "description": "Fios agrupados que imitam cílios molhados, com toque natural."
         },
         {
           "id": "manutencao",
           "name": "Manutenção",
           "price": "R$ 85,00",
-          "note": "Qualquer volume"
+          "note": "Qualquer volume",
+          "description": "Reposição dos fios para manter o volume bonito por mais tempo."
         },
         {
           "id": "lash-lifting",
           "name": "Lash Lifting",
-          "price": "R$ 100,00"
+          "price": "R$ 100,00",
+          "description": "Curva e levanta os seus próprios cílios, sem extensão."
         }
       ]
     },
@@ -101,17 +114,20 @@
         {
           "id": "design-com-henna",
           "name": "Design com Henna",
-          "price": "R$ 45,00"
+          "price": "R$ 45,00",
+          "description": "Desenho personalizado com henna, que preenche falhas e marca o formato."
         },
         {
           "id": "design-sem-henna",
           "name": "Design sem Henna",
-          "price": "R$ 25,00"
+          "price": "R$ 25,00",
+          "description": "Desenho e limpeza dos fios, respeitando o formato natural."
         },
         {
           "id": "brow-lamination",
           "name": "Brow Lamination",
-          "price": "R$ 60,00"
+          "price": "R$ 60,00",
+          "description": "Alinha e fixa os fios para um efeito penteado e cheio."
         }
       ]
     },
@@ -124,110 +140,183 @@
         {
           "id": "molde-f1",
           "name": "Molde F1",
-          "price": "R$ 100,00"
+          "price": "R$ 100,00",
+          "description": "Alongamento feito com molde F1: formato uniforme e acabamento fino."
         },
         {
           "id": "gel-na-tips",
           "name": "Gel na Tips",
-          "price": "R$ 120,00"
+          "price": "R$ 120,00",
+          "description": "Alongamento com tips e camada de gel, resistente e elegante."
         },
         {
           "id": "banho-em-gel",
           "name": "Banho em Gel",
-          "price": "R$ 65,00"
+          "price": "R$ 65,00",
+          "description": "Camada de gel sobre a unha natural para fortalecer e dar brilho."
         },
         {
           "id": "esmaltacao-em-gel",
           "name": "Esmaltação em Gel",
-          "price": "R$ 50,00"
+          "price": "R$ 50,00",
+          "description": "Esmalte em gel com secagem em cabine e brilho duradouro."
         },
         {
           "id": "blindagem",
           "name": "Blindagem",
-          "price": "R$ 45,00"
+          "price": "R$ 45,00",
+          "description": "Proteção extra que deixa a unha natural mais forte."
         }
+      ]
+    }
+  ],
+  "profile": {
+    "name": "Tayza Salazar",
+    "role": "Cílios, sobrancelhas e unhas",
+    "photo": "/tayza-perfil.jpg",
+    "bio": "Unhas, sobrancelhas e cílios. Mais de 3 anos de experiência. Trabalho somente com horário agendado: agende o seu horário! Estreito – MA.",
+    "location": "Estreito – MA",
+    "experience": "+3 anos",
+    "personal": "tayza_salazar_"
+  },
+  "tips": [
+    {
+      "id": "cilios",
+      "title": "Cílios",
+      "items": [
+        "Evite molhar os cílios nas primeiras 24 horas.",
+        "Penteie os fios todos os dias com uma escovinha limpa.",
+        "Prefira demaquilantes sem óleo na região dos olhos.",
+        "Evite dormir com o rosto apertado no travesseiro."
+      ]
+    },
+    {
+      "id": "unhas",
+      "title": "Unhas",
+      "items": [
+        "Use luvas para lavar louça e fazer limpeza.",
+        "Hidrate as cutículas com óleo todos os dias.",
+        "Não use as unhas para abrir latas e embalagens.",
+        "Se alguma descolar, não arranque: fale com o studio."
+      ]
+    },
+    {
+      "id": "sobrancelhas",
+      "title": "Sobrancelhas",
+      "items": [
+        "Evite molhar a região nas primeiras horas após a henna.",
+        "Não esfolie a área nos dias seguintes.",
+        "Evite sol forte e piscina logo após o procedimento.",
+        "Faça retoques regulares para manter o desenho."
       ]
     }
   ],
   "lashes": [
     {
+      "id": "cilios-natal",
+      "name": "Cílios de Natal",
+      "price": "Sob consulta",
+      "image": "/ig-cilios-natal.jpg",
+      "alt": "Cliente com extensão de cílios e gorro de Natal",
+      "description": "Olhar marcado e pronto para as festas de fim de ano."
+    },
+    {
       "id": "fio-a-fio",
       "name": "Volume Fio a Fio Efeito Molhado",
       "price": "R$ 85,00",
       "image": "/volume%20fio%20a%20fio.jpg",
-      "alt": "Extensão de cílios fio a fio efeito molhado"
+      "alt": "Extensão de cílios fio a fio efeito molhado",
+      "description": "Fios agrupados que imitam cílios molhados, com toque natural."
     },
     {
       "id": "mega6d",
       "name": "Volume Mega 6D",
       "price": "R$ 155,00",
       "image": "/mega%206d.jpg",
-      "alt": "Cílios volume mega 6D"
+      "alt": "Cílios volume mega 6D",
+      "description": "Leques de 6 fios para um volume intenso e marcante."
     },
     {
       "id": "mega-fox",
       "name": "Volume Mega Fox Yes",
       "price": "R$ 165,00",
       "image": "/mega%20fox%20yes.jpg",
-      "alt": "Cílios volume mega fox yes"
+      "alt": "Cílios volume mega fox yes",
+      "description": "O efeito raposa com mais volume e dramaticidade."
     },
     {
       "id": "brasileiro",
       "name": "Volume Brasileiro",
       "price": "R$ 90,00",
       "image": "/volume%20brasileiro.jpg",
-      "alt": "Cílios volume brasileiro"
+      "alt": "Cílios volume brasileiro",
+      "description": "Fios em formato Y que dão volume leve, com acabamento natural."
     },
     {
       "id": "brasileiro-marrom",
       "name": "Volume Brasileiro Marrom",
       "price": "R$ 85,00",
       "image": "/volume%20brasileiro%20marrom.jpg",
-      "alt": "Cílios volume brasileiro marrom"
+      "alt": "Cílios volume brasileiro marrom",
+      "description": "O volume brasileiro com fios marrons, para um olhar mais suave."
     },
     {
       "id": "5d",
       "name": "Volume 5D",
       "price": "R$ 125,00",
       "image": "/volume%205d.jpg",
-      "alt": "Cílios volume 5D"
+      "alt": "Cílios volume 5D",
+      "description": "Leques de 5 fios: mais densidade e um olhar bem definido."
     }
   ],
   "nails": [
+    {
+      "id": "unhas-azul",
+      "name": "Alongamento com Nail Art",
+      "price": "Sob consulta",
+      "image": "/ig-unhas-azul.jpg",
+      "alt": "Unhas longas com francesinha azul e pedraria",
+      "description": "Francesinha azul com detalhe em pedraria, feita sob medida."
+    },
     {
       "id": "alongamento-1",
       "name": "Alongamento em Gel",
       "price": "Sob consulta",
       "image": "/alongamento2.jpeg",
-      "alt": "Alongamento em gel vermelho"
+      "alt": "Alongamento em gel vermelho",
+      "description": "Formato e comprimento sob medida, com acabamento em gel."
     },
     {
       "id": "alongamento-2",
       "name": "Alongamento em Gel",
       "price": "Sob consulta",
       "image": "/alongamento1.jpeg",
-      "alt": "Alongamento em gel em tons nude e chocolate"
+      "alt": "Alongamento em gel em tons nude e chocolate",
+      "description": "Formato e comprimento sob medida, com acabamento em gel."
     },
     {
       "id": "unhas-1",
       "name": "Banho em Gel",
       "price": "R$ 65,00",
       "image": "/banho%20de%20gel.jpg",
-      "alt": "Trabalho de unhas — banho de gel"
+      "alt": "Trabalho de unhas — banho de gel",
+      "description": "Camada de gel sobre a unha natural para fortalecer e dar brilho."
     },
     {
       "id": "unhas-2",
       "name": "Gel na Tips",
       "price": "R$ 120,00",
       "image": "/gel%20na%20tips.jpg",
-      "alt": "Trabalho de unhas — gel na tips"
+      "alt": "Trabalho de unhas — gel na tips",
+      "description": "Alongamento com tips e camada de gel, resistente e elegante."
     },
     {
       "id": "unhas-3",
       "name": "Postiça Realista",
       "price": "R$ 55,00",
       "image": "/postiça%20realista.jpg",
-      "alt": "Trabalho de unhas — postiça realista"
+      "alt": "Trabalho de unhas — postiça realista",
+      "description": "Unhas postiças com aparência natural, para ocasiões especiais."
     }
   ],
   "payments": {
