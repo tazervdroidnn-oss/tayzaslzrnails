@@ -423,6 +423,30 @@ html:not(.tn-skip-intro) { --hero-delay: 2.75s; }
 .tn-credit:hover svg { transform: translate(2px, -2px); }
 @keyframes tn-credit-sheen { 0%, 60% { background-position: 100% 0; } 100% { background-position: -20% 0; } }
 
+/* ---------- Navegação cinematográfica ---------- */
+.tn-travel { position: fixed; inset: 0; z-index: 75; pointer-events: none; }
+.tn-travel-bar { position: absolute; left: 0; right: 0; height: 9vh; background: rgba(18, 5, 11, .94); transform: scaleY(0); animation: tn-letterbox var(--travel) cubic-bezier(.65, 0, .35, 1) both; }
+.tn-travel-bar--top { top: 0; transform-origin: 50% 0; border-bottom: 1px solid rgba(200, 165, 106, .5); }
+.tn-travel-bar--bottom { bottom: 0; transform-origin: 50% 100%; border-top: 1px solid rgba(200, 165, 106, .5); }
+.tn-travel-bar i { position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%; background: linear-gradient(90deg, var(--tn-gold), #fff3da, var(--tn-gold)); transform-origin: 0 50%; animation: tn-travel-progress var(--travel) cubic-bezier(.65, 0, .35, 1) both; }
+.tn-travel-label { position: absolute; left: 50%; top: 50%; display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; border: 1px solid rgba(230, 207, 159, .5); border-radius: 100px; background: rgba(26, 8, 16, .82); color: var(--tn-gold-2); font-family: var(--tn-serif); font-style: italic; font-size: 22px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transform: translate(-50%, -50%); animation: tn-travel-label var(--travel) cubic-bezier(.65, 0, .35, 1) both; box-shadow: 0 20px 50px -20px rgba(0, 0, 0, .8); }
+.tn-travel-label svg { width: 12px; height: 12px; color: var(--tn-gold); }
+.tn-travel--down .tn-travel-label { --from: 40px; --to: -40px; }
+.tn-travel--up .tn-travel-label { --from: -40px; --to: 40px; }
+@keyframes tn-letterbox { 0% { transform: scaleY(0); } 22%, 78% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+@keyframes tn-travel-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes tn-travel-label { 0% { opacity: 0; transform: translate(-50%, calc(-50% + var(--from))) scale(.92); filter: blur(6px); } 25%, 72% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: none; } 100% { opacity: 0; transform: translate(-50%, calc(-50% + var(--to))) scale(.96); filter: blur(6px); } }
+
+/* Chegada na seção: um traço dourado varre o topo e o título ganha destaque. */
+#sobre, #vitrine, #portfolio, #agenda, #dicas, #perfil { position: relative; }
+.tn-arrive::before { content: ""; position: absolute; left: 0; right: 0; top: 0; z-index: 4; height: 2px; background: linear-gradient(90deg, transparent, var(--tn-gold), #fff3da, var(--tn-gold), transparent); transform-origin: 0 50%; animation: tn-arrive-line 1.4s cubic-bezier(.22, .8, .2, 1) both; pointer-events: none; }
+.tn-arrive .tn-title { animation: tn-arrive-title 1.2s cubic-bezier(.22, .8, .2, 1); }
+.tn-arrive .tn-eyebrow { animation: tn-arrive-eyebrow 1.2s cubic-bezier(.22, .8, .2, 1); }
+@keyframes tn-arrive-line { 0% { transform: scaleX(0); opacity: 1; } 60% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
+@keyframes tn-arrive-title { 0% { transform: translateY(16px); opacity: .4; filter: blur(4px); } 100% { transform: none; opacity: 1; filter: none; } }
+@keyframes tn-arrive-eyebrow { 0% { letter-spacing: .6em; opacity: 0; } 100% { letter-spacing: .32em; opacity: 1; } }
+.tn-menu-cover[data-cat="sobrancelhas"] img { object-position: 38% 42%; }
+
 /* ---------- Cookies ---------- */
 .tn-cookie { position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 80; display: flex; align-items: center; gap: 18px; width: min(680px, calc(100% - 24px)); padding: 16px 16px 16px 22px; background: var(--tn-ivory); color: var(--tn-text); border: 1px solid rgba(200, 165, 106, .45); box-shadow: 0 24px 60px -24px rgba(0, 0, 0, .75); transform: translateX(-50%); animation: tn-dock-in .6s var(--tn-ease) both; }
 .tn-cookie p { margin: 0; font-size: 12.5px; line-height: 1.55; color: var(--tn-muted); }

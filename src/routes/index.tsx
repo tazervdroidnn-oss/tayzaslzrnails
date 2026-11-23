@@ -64,6 +64,8 @@ const navigation = [
   { id: "perfil", label: "A Tayza" },
 ];
 
+const navLabels: Record<string, string> = { inicio: "Início", sobre: "O studio", vitrine: "Valores", portfolio: "Portfólio", agenda: "Agenda", dicas: "Dicas", perfil: "A Tayza" };
+
 const weekdayShort = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 const monthShort = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 type Day = { iso: string; weekday: string; day: string; month: string; off: boolean };
@@ -143,6 +145,8 @@ function TayzaHome() {
   const reelRef = useRef<HTMLDivElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
   const drag = useRef({ active: false, x: 0, left: 0, moved: false });
+  const travelRef = useRef<(() => void) | null>(null);
+  const [travel, setTravel] = useState<{ label: string; direction: "up" | "down"; duration: number } | null>(null);
 
   const category = content.menu.find((entry) => entry.id === activeCategory) ?? content.menu[0];
   const visiblePortfolio = filter === "todos" ? portfolio : portfolio.filter((item) => item.kind === filter);
@@ -351,12 +355,63 @@ function TayzaHome() {
     setSelected((items) => items.includes(key) ? items.filter((item) => item !== key) : [...items, key]);
   }
 
+  /**
+   * Cinematic navigation: letterbox bars close in, the page glides with an eased tween
+   * (interrupted by any touch or wheel), and the destination section "lands" with a gold sweep.
+   */
   function goTo(id: string) {
     const target = document.getElementById(id);
     if (!target) return;
-    const top = id === "inicio" ? 0 : target.getBoundingClientRect().top + window.scrollY - 64;
-    window.scrollTo({ top, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    const header = document.querySelector<HTMLElement>(".tn-header");
+    const offset = (header?.offsetHeight ?? 64) - 1;
+    const destination = id === "inicio" ? 0 : Math.max(0, target.getBoundingClientRect().top + window.scrollY - offset);
     window.history.replaceState(window.history.state, "", "#" + id);
+    travelRef.current?.();
+
+    const from = window.scrollY;
+    const distance = destination - from;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || Math.abs(distance) < 4) {
+      window.scrollTo(0, destination);
+      land(target);
+      return;
+    }
+
+    const duration = Math.min(1700, Math.max(900, Math.abs(distance) * 0.45));
+    const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const root = document.documentElement;
+    const previousBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    setTravel({ label: navLabels[id] ?? "", direction: distance > 0 ? "down" : "up", duration });
+
+    let frame = 0;
+    const start = performance.now();
+    const stop = (arrived: boolean) => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("wheel", cancel);
+      window.removeEventListener("touchstart", cancel);
+      root.style.scrollBehavior = previousBehavior;
+      travelRef.current = null;
+      setTravel(null);
+      if (arrived) land(target);
+    };
+    const cancel = () => stop(false);
+    travelRef.current = cancel;
+    window.addEventListener("wheel", cancel, { passive: true });
+    window.addEventListener("touchstart", cancel, { passive: true });
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      window.scrollTo(0, from + distance * ease(t));
+      if (t < 1) frame = requestAnimationFrame(step);
+      else stop(true);
+    };
+    frame = requestAnimationFrame(step);
+  }
+
+  function land(section: HTMLElement) {
+    section.classList.remove("tn-arrive");
+    void section.offsetWidth; // restart the arrival animation
+    section.classList.add("tn-arrive");
+    window.setTimeout(() => section.classList.remove("tn-arrive"), 1600);
   }
 
   function decideCookies(value: "all" | "essential") {
@@ -493,7 +548,7 @@ function TayzaHome() {
             </div>
 
             <div className="tn-menu" id="tn-menu-panel" role="tabpanel" aria-labelledby={"tab-" + category.id} key={category.id}>
-              <figure className="tn-menu-cover">
+              <figure className="tn-menu-cover" data-cat={category.id}>
                 <img src={category.image} alt={"Serviço de " + category.title.toLowerCase() + " da " + content.brand} loading="lazy" decoding="async" />
                 <figcaption>
                   <strong>{category.title}</strong>
@@ -756,6 +811,14 @@ function TayzaHome() {
           <ArrowUpRight size={13} aria-hidden="true" />
         </a>
       </footer>
+
+      {travel && (
+        <div className={"tn-travel tn-travel--" + travel.direction} style={{ ["--travel" as string]: travel.duration + "ms" }} aria-hidden="true">
+          <span className="tn-travel-bar tn-travel-bar--top"><i /></span>
+          <span className="tn-travel-bar tn-travel-bar--bottom" />
+          <span className="tn-travel-label"><Star /> {travel.label}</span>
+        </div>
+      )}
 
       <TayzaGuide suppressed={bookingOpen || cookieOpen || selected.length > 0} category={category.id} />
 
