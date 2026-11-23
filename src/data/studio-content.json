@@ -1,13 +1,13 @@
 {
   "brand": "Tayza Nails",
   "hero": {
-    "eyebrow": "Nails · Lashes · Brows",
+    "eyebrow": "Unhas · Cílios · Sobrancelhas",
     "title": "O detalhe que",
     "emphasis": "faz brilhar",
     "intro": "Unhas, cílios e sobrancelhas com acabamento impecável. A agenda de dezembro já está aberta para as festas.",
     "images": [
       "/alongamento2.jpeg",
-      "/volume%20brasileiro.jpg",
+      "/volume%20fio%20a%20fio.jpg",
       "/alongamento1.jpeg"
     ]
   },
@@ -20,7 +20,7 @@
       "id": "cilios",
       "title": "Cílios",
       "subtitle": "Extensões, manutenção e lifting",
-      "image": "/volume%20brasileiro.jpg",
+      "image": "/volume%20fio%20a%20fio.jpg",
       "items": [
         {
           "id": "volume-brasileiro",

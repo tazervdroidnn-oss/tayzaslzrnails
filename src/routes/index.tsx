@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight, Check, Clock3, Instagram, MapPin, Plus, Wallet, X } from "lucide-react";
+import { ArrowUpRight, Check, Instagram, MapPin, Plus, Wallet, X } from "lucide-react";
 import studioContent from "@/data/studio-content.json";
 import TayzaIntro from "@/components/TayzaIntro";
+import TayzaGuide from "@/components/TayzaGuide";
 import type { StudioContent } from "@/lib/studio-content-schema";
 
 export const Route = createFileRoute("/")({
@@ -73,6 +74,32 @@ function Star({ className = "" }: { className?: string }) {
   );
 }
 
+/** Splits a heading into words for the blur-in reveal (Figma "smart animate" feel). */
+function Words({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/\s+/).filter(Boolean).map((word, index) => (
+        <Fragment key={index}>
+          {index > 0 && " "}
+          <span className="tn-w" style={{ ["--w" as string]: index }}>{word}</span>
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
+function Seam({ tone }: { tone: "dark" | "light" }) {
+  return (
+    <div className={"tn-seam tn-seam--" + tone} aria-hidden="true">
+      <div><span /><b><Star /></b><span /></div>
+    </div>
+  );
+}
+
+const COOKIE_KEY = "tayza-cookies";
+const [brandFirst, ...brandRest] = content.brand.trim().split(/\s+/);
+const brandSecond = brandRest.join(" ") || "Nails";
+
 function WhatsAppIcon({ size = 22 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
@@ -87,11 +114,13 @@ function TayzaHome() {
   const [filter, setFilter] = useState<"todos" | "unhas" | "cilios">("todos");
   const [selected, setSelected] = useState<string[]>([]);
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [cookieOpen, setCookieOpen] = useState(false);
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
   const [minDate, setMinDate] = useState("");
-  const stackRef = useRef<HTMLDivElement>(null);
+  const tiltRef = useRef<HTMLDivElement>(null);
+  const clockRef = useRef<HTMLDivElement>(null);
 
   const category = content.menu.find((entry) => entry.id === activeCategory) ?? content.menu[0];
   const visiblePortfolio = filter === "todos" ? portfolio : portfolio.filter((item) => item.kind === filter);
@@ -112,6 +141,16 @@ function TayzaHome() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Cookie notice: shown once, after the opening has finished.
+  useEffect(() => {
+    let decided = false;
+    try { decided = Boolean(localStorage.getItem(COOKIE_KEY)); } catch { /* sem armazenamento: mostra o aviso */ }
+    if (decided) return;
+    const wait = document.documentElement.classList.contains("tn-skip-intro") ? 1400 : 4200;
+    const timer = window.setTimeout(() => setCookieOpen(true), wait);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   // Scroll reveal. Content is visible by default; the "tn-js" class (set before paint) enables the effect.
   useEffect(() => {
     const elements = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-in)"));
@@ -130,6 +169,34 @@ function TayzaHome() {
     return () => observer.disconnect();
   }, [filter]);
 
+  // Opening hours count up from 00 when the clock scrolls into view.
+  useEffect(() => {
+    const clock = clockRef.current;
+    if (!clock || !("IntersectionObserver" in window)) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const digits = Array.from(clock.querySelectorAll<HTMLElement>("[data-count]"));
+    let frame = 0;
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      clock.classList.add("is-counting");
+      const start = performance.now();
+      const duration = 1900;
+      const step = (now: number) => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        digits.forEach((digit) => {
+          digit.textContent = String(Math.round(Number(digit.dataset.count) * eased)).padStart(2, "0");
+        });
+        if (t < 1) frame = requestAnimationFrame(step);
+        else { clock.classList.remove("is-counting"); clock.classList.add("is-counted"); }
+      };
+      frame = requestAnimationFrame(step);
+    }, { threshold: 0.6 });
+    observer.observe(clock);
+    return () => { observer.disconnect(); cancelAnimationFrame(frame); };
+  }, []);
+
   useEffect(() => {
     if (!bookingOpen) return;
     const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setBookingOpen(false); };
@@ -142,21 +209,21 @@ function TayzaHome() {
     };
   }, [bookingOpen]);
 
-  // 3D tilt on the hero photo stack, only for mouse/trackpad users.
+  // Subtle 3D parallax on the opening scene, only for mouse/trackpad users.
   function tilt(event: ReactPointerEvent<HTMLDivElement>) {
     if (event.pointerType !== "mouse") return;
-    const stack = stackRef.current;
-    if (!stack) return;
-    const rect = stack.getBoundingClientRect();
+    const scene = tiltRef.current;
+    if (!scene) return;
+    const rect = scene.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width - 0.5;
     const y = (event.clientY - rect.top) / rect.height - 0.5;
-    stack.style.setProperty("--ry", (x * 14).toFixed(2) + "deg");
-    stack.style.setProperty("--rx", (y * -10).toFixed(2) + "deg");
+    scene.style.setProperty("--ry", (x * 8).toFixed(2) + "deg");
+    scene.style.setProperty("--rx", (y * -6).toFixed(2) + "deg");
   }
 
   function resetTilt() {
-    stackRef.current?.style.removeProperty("--ry");
-    stackRef.current?.style.removeProperty("--rx");
+    tiltRef.current?.style.removeProperty("--ry");
+    tiltRef.current?.style.removeProperty("--rx");
   }
 
   function toggle(key: string) {
@@ -169,6 +236,11 @@ function TayzaHome() {
     const top = id === "inicio" ? 0 : target.getBoundingClientRect().top + window.scrollY - 64;
     window.scrollTo({ top, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     window.history.replaceState(window.history.state, "", "#" + id);
+  }
+
+  function decideCookies(value: "all" | "essential") {
+    try { localStorage.setItem(COOKIE_KEY, value); } catch { /* ignora */ }
+    setCookieOpen(false);
   }
 
   function sendBooking() {
@@ -189,14 +261,14 @@ function TayzaHome() {
 
   return (
     <div className="tn-page">
-      <TayzaIntro images={content.hero.images} />
+      <TayzaIntro />
       <a href="#conteudo" className="tn-skip-link">Pular para o conteúdo</a>
 
       <header className={"tn-header" + (scrolled ? " is-solid" : "")}>
         <div className="tn-wrap tn-header-row">
-          <a href="#inicio" className="tn-logo" onClick={(event) => { event.preventDefault(); goTo("inicio"); }} aria-label="Tayza Nails, início">
-            <span className="tn-logo-word">Tayza</span>
-            <span className="tn-logo-tag">Nails Studio</span>
+          <a href="#inicio" className="tn-logo" onClick={(event) => { event.preventDefault(); goTo("inicio"); }} aria-label={content.brand + ", início"}>
+            <span className="tn-logo-word">{brandFirst}</span>
+            <span className="tn-logo-tag">{brandSecond}</span>
           </a>
           <nav className="tn-nav" aria-label="Seções">
             {navigation.map((item) => (
@@ -210,53 +282,71 @@ function TayzaHome() {
       </header>
 
       <main id="conteudo">
-        <section className="tn-hero" id="inicio" aria-labelledby="tn-hero-title">
+        <section className="tn-hero" id="inicio" aria-label={content.brand}>
           <div className="tn-snow" aria-hidden="true">
             {Array.from({ length: 18 }, (_, index) => <i key={index} />)}
           </div>
-          <div className="tn-wrap tn-hero-grid">
-            <div className="tn-hero-copy">
-              <p className="tn-season" data-hero style={{ ["--i" as string]: 0 }}>
-                <Star className="tn-season-star" /> Agenda de Natal aberta
-              </p>
-              <p className="tn-eyebrow" data-hero style={{ ["--i" as string]: 1 }}>{content.hero.eyebrow}</p>
-              <h1 id="tn-hero-title" className="tn-hero-title" data-hero style={{ ["--i" as string]: 2 }}>
-                {content.hero.title} <em>{content.hero.emphasis}</em>
-              </h1>
-              <p className="tn-hero-lead" data-hero style={{ ["--i" as string]: 3 }}>{content.hero.intro}</p>
-              <div className="tn-hero-actions" data-hero style={{ ["--i" as string]: 4 }}>
-                <button type="button" className="tn-btn tn-btn--gold" onClick={() => setBookingOpen(true)}>
-                  Agendar horário <ArrowUpRight size={17} aria-hidden="true" />
-                </button>
-                <a href="#vitrine" className="tn-btn tn-btn--line" onClick={(event) => { event.preventDefault(); goTo("vitrine"); }}>
-                  Ver valores
-                </a>
-              </div>
-              <ul className="tn-hero-facts" data-hero style={{ ["--i" as string]: 5 }}>
-                <li><span>Seg a Sáb</span>08h às 17h30</li>
-                {lowestPrice && <li><span>A partir de</span>{lowestPrice}</li>}
-                <li><span>Pagamento</span>{paymentLabels.join(", ")}</li>
-              </ul>
-            </div>
 
-            <div className="tn-hero-visual" onPointerMove={tilt} onPointerLeave={resetTilt}>
-              <div className="tn-stack" ref={stackRef}>
+          <p className="tn-season" data-hero style={{ ["--i" as string]: 0 }}>
+            <Star className="tn-season-star" /> Agenda de Natal aberta
+          </p>
+
+          <div className="tn-stage" onPointerMove={tilt} onPointerLeave={resetTilt}>
+            <div className="tn-cam">
+              <div className="tn-tilt" ref={tiltRef}>
                 {content.hero.images.slice(0, 3).map((src, index) => (
-                  <figure className={"tn-stack-card tn-stack-card--" + (index + 1)} key={src + index}>
-                    <img src={src} alt={index === 0 ? "Trabalho de unhas da Tayza Nails" : ""} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+                  <figure className={"tn-card tn-card--" + (index + 1)} key={src + index}>
+                    <div className="tn-card-inner">
+                      <img src={src} alt={index === 0 ? "Trabalho da " + content.brand : ""} loading="eager" decoding="async" />
+                    </div>
                   </figure>
                 ))}
-                <span className="tn-stack-seal" aria-hidden="true"><Star /> <b>Edição</b> Natal</span>
+                <h1 className="tn-mark" aria-label={content.brand}>
+                  <span className="tn-mark-word" aria-hidden="true">
+                    {Array.from(brandFirst).map((letter, index) => (
+                      <span key={index} style={{ ["--l" as string]: index }}>{letter}</span>
+                    ))}
+                  </span>
+                  <span className="tn-mark-sub" aria-hidden="true"><i />{brandSecond}<i /></span>
+                </h1>
+                <p className="tn-mark-tag">{content.hero.eyebrow}</p>
               </div>
             </div>
           </div>
+
+          <div className="tn-hero-foot" data-hero style={{ ["--i" as string]: 1 }}>
+            <div className="tn-hero-actions">
+              <button type="button" className="tn-btn tn-btn--gold" onClick={() => setBookingOpen(true)}>
+                Agendar horário <ArrowUpRight size={17} aria-hidden="true" />
+              </button>
+              <a href="#vitrine" className="tn-btn tn-btn--line" onClick={(event) => { event.preventDefault(); goTo("vitrine"); }}>
+                Ver valores
+              </a>
+            </div>
+            <ul className="tn-hero-facts">
+              <li><span>Seg a Sáb</span>08h às 17h30</li>
+              {lowestPrice && <li><span>A partir de</span>{lowestPrice}</li>}
+              <li><span>Pagamento</span>{paymentLabels.join(", ")}</li>
+            </ul>
+          </div>
         </section>
 
+        <section className="tn-about" id="sobre" aria-labelledby="tn-about-title">
+          <div className="tn-wrap tn-about-inner" data-reveal>
+            <p className="tn-eyebrow">O studio</p>
+            <h2 id="tn-about-title" className="tn-title tn-title--light tn-about-title">
+              <Words text={content.hero.title} /> <em><Words text={content.hero.emphasis} /></em>
+            </h2>
+            <p className="tn-about-lead">{content.hero.intro}</p>
+          </div>
+        </section>
+
+        <Seam tone="light" />
         <section className="tn-vitrine" id="vitrine" aria-labelledby="tn-vitrine-title">
           <div className="tn-wrap">
             <div className="tn-head" data-reveal>
               <p className="tn-eyebrow tn-eyebrow--dark">Vitrine</p>
-              <h2 id="tn-vitrine-title" className="tn-title">Tabela de <em>valores</em></h2>
+              <h2 id="tn-vitrine-title" className="tn-title"><Words text="Tabela de" /> <em><Words text="valores" /></em></h2>
               <p className="tn-head-note">Toque nos serviços para montar seu atendimento e enviar tudo de uma vez pelo WhatsApp.</p>
             </div>
 
@@ -279,7 +369,7 @@ function TayzaHome() {
 
             <div className="tn-menu" id="tn-menu-panel" role="tabpanel" aria-labelledby={"tab-" + category.id} key={category.id}>
               <figure className="tn-menu-cover">
-                <img src={category.image} alt={"Serviço de " + category.title.toLowerCase() + " da Tayza Nails"} loading="lazy" decoding="async" />
+                <img src={category.image} alt={"Serviço de " + category.title.toLowerCase() + " da " + content.brand} loading="lazy" decoding="async" />
                 <figcaption>
                   <strong>{category.title}</strong>
                   <span>{category.subtitle}</span>
@@ -309,12 +399,13 @@ function TayzaHome() {
           </div>
         </section>
 
+        <Seam tone="dark" />
         <section className="tn-portfolio" id="portfolio" aria-labelledby="tn-portfolio-title">
           <div className="tn-wrap">
             <div className="tn-head tn-head--split" data-reveal>
               <div>
                 <p className="tn-eyebrow">Portfólio</p>
-                <h2 id="tn-portfolio-title" className="tn-title tn-title--light">Feito por <em>Tayza</em></h2>
+                <h2 id="tn-portfolio-title" className="tn-title tn-title--light"><Words text="Feito por" /> <em><Words text={brandFirst} /></em></h2>
               </div>
               <div className="tn-filters" role="group" aria-label="Filtrar portfólio">
                 {([["todos", "Todos"], ["unhas", "Unhas"], ["cilios", "Cílios"]] as const).map(([id, label]) => (
@@ -343,28 +434,46 @@ function TayzaHome() {
           </div>
         </section>
 
+        <Seam tone="light" />
         <section className="tn-info" id="info" aria-labelledby="tn-info-title">
           <div className="tn-wrap">
-            <h2 id="tn-info-title" className="sr-only">Informações de atendimento</h2>
+            <div className="tn-hours" data-reveal>
+              <div className="tn-hours-head">
+                <p className="tn-eyebrow tn-eyebrow--dark">Atendimento</p>
+                <h2 id="tn-info-title" className="tn-title"><Words text="Horário do" /> <em><Words text="studio" /></em></h2>
+                <ul className="tn-days" aria-label="Segunda a sábado">
+                  {["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].map((day, index) => (
+                    <li key={day} className={index === 6 ? "is-off" : ""} style={{ ["--i" as string]: index }}>{day}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="tn-clock" ref={clockRef} role="img" aria-label="Das 08h00 às 17h30">
+                <div className="tn-time" aria-hidden="true">
+                  <small>Abre</small>
+                  <span><b data-count="8">08</b><i>h</i><b data-count="0">00</b></span>
+                </div>
+                <span className="tn-clock-line" aria-hidden="true"><span /></span>
+                <div className="tn-time" aria-hidden="true">
+                  <small>Fecha</small>
+                  <span><b data-count="17">17</b><i>h</i><b data-count="30">30</b></span>
+                </div>
+              </div>
+            </div>
+
             <div className="tn-info-grid">
               <article data-reveal style={{ ["--i" as string]: 0 }}>
-                <Clock3 size={20} strokeWidth={1.5} aria-hidden="true" />
-                <h3>Horário</h3>
-                <p>Segunda a sábado<br />08h00 às 17h30</p>
-              </article>
-              <article data-reveal style={{ ["--i" as string]: 1 }}>
                 <Wallet size={20} strokeWidth={1.5} aria-hidden="true" />
                 <h3>Pagamento</h3>
                 <p>{paymentLabels.join(" · ")}</p>
               </article>
-              <article data-reveal style={{ ["--i" as string]: 2 }}>
+              <article data-reveal style={{ ["--i" as string]: 1 }}>
                 <MapPin size={20} strokeWidth={1.5} aria-hidden="true" />
                 <h3>Endereço</h3>
                 <button type="button" className="tn-link" onClick={() => openWhatsApp("Olá, Tayza! Pode me enviar a localização do studio?")}>
                   Pedir localização <ArrowUpRight size={14} aria-hidden="true" />
                 </button>
               </article>
-              <article data-reveal style={{ ["--i" as string]: 3 }}>
+              <article data-reveal style={{ ["--i" as string]: 2 }}>
                 <Instagram size={20} strokeWidth={1.5} aria-hidden="true" />
                 <h3>Instagram</h3>
                 <a className="tn-link" href={instagramUrl} target="_blank" rel="noreferrer">
@@ -377,7 +486,7 @@ function TayzaHome() {
               <Star className="tn-xmas-star" />
               <div>
                 <p className="tn-eyebrow">Dezembro</p>
-                <h2 className="tn-title tn-title--light">Chegue nas festas <em>pronta.</em></h2>
+                <h2 className="tn-title tn-title--light"><Words text="Chegue nas festas" /> <em><Words text="pronta." /></em></h2>
                 <p>Os horários de dezembro costumam esgotar primeiro. Reserve o seu com antecedência.</p>
               </div>
               <button type="button" className="tn-btn tn-btn--gold" onClick={() => setBookingOpen(true)}>
@@ -390,11 +499,17 @@ function TayzaHome() {
 
       <footer className="tn-footer">
         <div className="tn-wrap tn-footer-row">
-          <span className="tn-logo tn-logo--small"><span className="tn-logo-word">Tayza</span><span className="tn-logo-tag">Nails Studio</span></span>
-          <span>© {new Date().getFullYear()} {content.brand}</span>
+          <span className="tn-logo tn-logo--small"><span className="tn-logo-word">{brandFirst}</span><span className="tn-logo-tag">{brandSecond}</span></span>
           <a href={instagramUrl} target="_blank" rel="noreferrer">@{content.contact.instagram}</a>
         </div>
+        <div className="tn-wrap tn-footer-base">
+          <span>© {new Date().getFullYear()} {content.brand}</span>
+          <button type="button" onClick={() => setCookieOpen(true)}>Cookies</button>
+          <a href="https://instagram.com/joaodstudio" target="_blank" rel="noreferrer">Site por @joaodstudio</a>
+        </div>
       </footer>
+
+      <TayzaGuide suppressed={bookingOpen || cookieOpen || selected.length > 0} />
 
       {selected.length > 0 && !bookingOpen ? (
         <aside className="tn-dock" aria-label="Seu atendimento">
@@ -408,11 +523,21 @@ function TayzaHome() {
           </button>
         </aside>
       ) : (
-        !bookingOpen && (
+        !bookingOpen && !cookieOpen && (
           <button type="button" className="tn-wa" aria-label="Conversar no WhatsApp" onClick={() => openWhatsApp("Olá, Tayza! Gostaria de saber mais sobre os horários.")}>
             <WhatsAppIcon />
           </button>
         )
+      )}
+
+      {cookieOpen && !bookingOpen && (
+        <div className="tn-cookie" role="dialog" aria-label="Aviso de cookies">
+          <p><strong>Cookies</strong> Usamos apenas armazenamento essencial para o site funcionar bem, como lembrar que você já viu a abertura. Não usamos cookies de anúncio.</p>
+          <div>
+            <button type="button" className="tn-cookie-ghost" onClick={() => decideCookies("essential")}>Só essenciais</button>
+            <button type="button" className="tn-btn tn-btn--gold" onClick={() => decideCookies("all")}>Aceitar</button>
+          </div>
+        </div>
       )}
 
       {bookingOpen && (
